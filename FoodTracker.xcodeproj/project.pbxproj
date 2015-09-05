@@ -16,6 +16,7 @@
 		A148A3F61B9A8BC6001F9110 /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A148A3F51B9A8BC6001F9110 /* RatingControl.swift */; settings = {ASSET_TAGS = (); }; };
 		A148A3F81B9AACBC001F9110 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A148A3F71B9AACBC001F9110 /* Meal.swift */; settings = {ASSET_TAGS = (); }; };
 		A148A3F91B9AACBC001F9110 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A148A3F71B9AACBC001F9110 /* Meal.swift */; settings = {ASSET_TAGS = (); }; };
+		A1B759EE1B9AC504004364FB /* MealTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B759ED1B9AC504004364FB /* MealTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +42,7 @@
 		A128DE081B987A39007C0762 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A148A3F51B9A8BC6001F9110 /* RatingControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
 		A148A3F71B9AACBC001F9110 /* Meal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
+		A1B759ED1B9AC504004364FB /* MealTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MealTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				A128DDF11B987A39007C0762 /* AppDelegate.swift */,
+				A1B759ED1B9AC504004364FB /* MealTableViewCell.swift */,
 				A128DDF31B987A39007C0762 /* ViewController.swift */,
 				A128DDF51B987A39007C0762 /* Main.storyboard */,
 				A148A3F71B9AACBC001F9110 /* Meal.swift */,
@@ -206,6 +209,7 @@
 				A128DDF41B987A39007C0762 /* ViewController.swift in Sources */,
 				A148A3F61B9A8BC6001F9110 /* RatingControl.swift in Sources */,
 				A128DDF21B987A39007C0762 /* AppDelegate.swift in Sources */,
+				A1B759EE1B9AC504004364FB /* MealTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
