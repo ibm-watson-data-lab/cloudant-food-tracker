@@ -14,6 +14,8 @@
 		A128DDFC1B987A39007C0762 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A128DDFA1B987A39007C0762 /* LaunchScreen.storyboard */; };
 		A128DE071B987A39007C0762 /* FoodTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A128DE061B987A39007C0762 /* FoodTrackerTests.swift */; };
 		A148A3F61B9A8BC6001F9110 /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A148A3F51B9A8BC6001F9110 /* RatingControl.swift */; settings = {ASSET_TAGS = (); }; };
+		A148A3F81B9AACBC001F9110 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A148A3F71B9AACBC001F9110 /* Meal.swift */; settings = {ASSET_TAGS = (); }; };
+		A148A3F91B9AACBC001F9110 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A148A3F71B9AACBC001F9110 /* Meal.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +40,7 @@
 		A128DE061B987A39007C0762 /* FoodTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodTrackerTests.swift; sourceTree = "<group>"; };
 		A128DE081B987A39007C0762 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A148A3F51B9A8BC6001F9110 /* RatingControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
+		A148A3F71B9AACBC001F9110 /* Meal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +85,7 @@
 				A128DDF11B987A39007C0762 /* AppDelegate.swift */,
 				A128DDF31B987A39007C0762 /* ViewController.swift */,
 				A128DDF51B987A39007C0762 /* Main.storyboard */,
+				A148A3F71B9AACBC001F9110 /* Meal.swift */,
 				A128DDF81B987A39007C0762 /* Assets.xcassets */,
 				A128DDFA1B987A39007C0762 /* LaunchScreen.storyboard */,
 				A128DDFD1B987A39007C0762 /* Info.plist */,
@@ -198,6 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A148A3F81B9AACBC001F9110 /* Meal.swift in Sources */,
 				A128DDF41B987A39007C0762 /* ViewController.swift in Sources */,
 				A148A3F61B9A8BC6001F9110 /* RatingControl.swift in Sources */,
 				A128DDF21B987A39007C0762 /* AppDelegate.swift in Sources */,
@@ -208,6 +213,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A148A3F91B9AACBC001F9110 /* Meal.swift in Sources */,
 				A128DE071B987A39007C0762 /* FoodTrackerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
