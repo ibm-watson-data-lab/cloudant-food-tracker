@@ -24,6 +24,9 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         // Do any additional setup after loading the view, typically from a nib.
         
         nameTextField.delegate = self
+        
+        // Enable the Save button only when the text field has a valid name.
+        checkValidMealName()
     }
     
     // MARK: UITextFieldDelegate
@@ -34,8 +37,20 @@ class MealViewController: UIViewController, UITextFieldDelegate, UIImagePickerCo
         return true
     }
     
+    func textFieldDidBeginEditing(textField: UITextField) {
+        // Disable the Save button while editing.
+        saveButton.enabled = false
+    }
+    
+    func checkValidMealName() {
+        let text = nameTextField.text ?? ""
+        saveButton.enabled = !text.isEmpty
+    }
+    
     func textFieldDidEndEditing(textField: UITextField) {
-        NSLog("Text field ended editing")
+        print("Text field ended editing")
+        checkValidMealName()
+        navigationItem.title = textField.text
     }
 
     // MARK: UIImagePickerControllerDelegate
