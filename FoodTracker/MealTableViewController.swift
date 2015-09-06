@@ -17,6 +17,9 @@ class MealTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Use the edit button provided by the table view controller.
+        navigationItem.leftBarButtonItem = editButtonItem()
+        
         // Load the sample data.
         loadSampleMeals()
     }
