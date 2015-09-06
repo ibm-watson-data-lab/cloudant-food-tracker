@@ -41,6 +41,7 @@
                                     <outlet property="nameLabel" destination="MIo-S9-QQ1" id="jky-Qx-NjY"/>
                                     <outlet property="photoImageView" destination="ZGe-ZL-whC" id="L0c-Kx-0Q3"/>
                                     <outlet property="ratingControl" destination="Cn1-EA-udz" id="piO-c7-Soy"/>
+                                    <segue destination="BYZ-38-t0r" kind="show" identifier="ShowDetail" id="U0B-Tm-B4W"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -81,7 +82,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                     </textField>
-                                    <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="320" image="defaultPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="tCq-ov-UdX">
+                                    <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="320" image="defaultPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="tCq-ov-UdX">
                                         <rect key="frame" x="120" y="42" width="320" height="320"/>
                                         <gestureRecognizers/>
                                         <constraints>
@@ -172,10 +173,13 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EsB-qT-Mu8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1154" y="563"/>
+            <point key="canvasLocation" x="1206" y="1059"/>
         </scene>
     </scenes>
     <resources>
         <image name="defaultPhoto" width="320" height="320"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="U0B-Tm-B4W"/>
+    </inferredMetricsTieBreakers>
 </document>
