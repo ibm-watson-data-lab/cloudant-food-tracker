@@ -1,5 +1,5 @@
 # Xcode
-#
+.DS_Store
 build/
 *.pbxuser
 !default.pbxuser
@@ -24,6 +24,9 @@ DerivedData
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 # Pods/
+
+Pods
+Podfile.lock
 
 # Carthage
 #
