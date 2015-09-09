@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CDTDatastore
 
 class MealTableViewController: UITableViewController {
     
