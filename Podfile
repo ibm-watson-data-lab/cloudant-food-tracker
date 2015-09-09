@@ -8,5 +8,6 @@ target 'FoodTracker' do
 
   # Cloudant Sync is not working yet on XCode 7.
   #pod "CDTDatastore", '~> 0.17.1'
-  pod 'CDTDatastore', :git => 'https://github.com/cloudant/CDTDatastore.git', :branch => 'master'
+  #pod 'CDTDatastore', :git => 'https://github.com/cloudant/CDTDatastore.git', :branch => 'master'
+  pod 'CDTDatastore', :path => '~/src/cloudant/CDTDatastore'
 end
