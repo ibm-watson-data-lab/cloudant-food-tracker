@@ -48,6 +48,7 @@
 		A148A3F71B9AACBC001F9110 /* Meal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
 		A1B759ED1B9AC504004364FB /* MealTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MealTableViewCell.swift; sourceTree = "<group>"; };
 		A1B759EF1B9ACC47004364FB /* MealTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MealTableViewController.swift; sourceTree = "<group>"; };
+		A1C67A1F1BCCD64A00283702 /* CloudantSync-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CloudantSync-Bridging-Header.h"; sourceTree = "<group>"; };
 		B2C03EB4B05D803C8611D636 /* Pods_FoodTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FoodTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -103,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				A128DDF11B987A39007C0762 /* AppDelegate.swift */,
+				A1C67A1F1BCCD64A00283702 /* CloudantSync-Bridging-Header.h */,
 				A1B759ED1B9AC504004364FB /* MealTableViewCell.swift */,
 				A128DDF31B987A39007C0762 /* MealViewController.swift */,
 				A128DDF51B987A39007C0762 /* Main.storyboard */,
