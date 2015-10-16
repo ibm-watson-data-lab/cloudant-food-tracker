@@ -6,6 +6,6 @@ target 'FoodTracker' do
   # pod 'ORStackView', '~> 2.0'
   # pod 'SwiftyJSON', '~> 2.1'
 
-  pod "CDTDatastore", '~> 0.19.1'
+  pod "CDTDatastore", '~> 0.19'
   #pod 'CDTDatastore', :git => 'https://github.com/cloudant/CDTDatastore.git', :branch => 'master'
 end
