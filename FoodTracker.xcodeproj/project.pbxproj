@@ -147,6 +147,7 @@
 				A128DDEB1B987A39007C0762 /* Frameworks */,
 				A128DDEC1B987A39007C0762 /* Resources */,
 				678E1C63A6A5822CB28842EA /* Copy Pods Resources */,
+				44F371C90D088BB1EBCCCDB5 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -234,6 +235,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		44F371C90D088BB1EBCCCDB5 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FoodTracker/Pods-FoodTracker-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		678E1C63A6A5822CB28842EA /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
