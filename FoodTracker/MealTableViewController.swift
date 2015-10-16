@@ -22,7 +22,7 @@ class MealTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem = editButtonItem()
           
         initDatastore()
-        if let savedMeals = loadMeals() {
+        if let savedMeals = loadMealsFromDataStore() {
             meals += savedMeals
         } else {
             // Load the sample data.
@@ -125,31 +125,32 @@ class MealTableViewController: UITableViewController {
         }
     }
     
-    func loadMealsFromDataStore() {
-        do {
-            // Create a document
-//            let body = ["description":"Buy Milk",
-//                "completed": false,
-//                "type":"com.cloudant.sync.example.task"]
-//            let attachments = [NSObject: AnyObject]()
-//            let rev = CDTMutableDocumentRevision(docId: "foo", revisionId: nil, body: body, attachments:nil)
-//            
-            // Add an attachment - binary data like a JPEG
-//            let att1 = CDTUnsavedFileAttachment(path: "/path/to/image/jpg",
-//                name: "cute_cat.jpg",
-//                type: "image/jpeg")
-//            rev.attachments[att1.name] = att1
-            
-            // Save the document to the database
-//            let revision = try datastore!.createDocumentFromRevision(rev)
+    func loadMealsFromDataStore() -> [Meal]? {
+        let docs = datastore!.getAllDocuments()
+        print("getAllDocuments: \(docs)")
+        // Create a document
+        //            let body = ["description":"Buy Milk",
+        //                "completed": false,
+        //                "type":"com.cloudant.sync.example.task"]
+        //            let attachments = [NSObject: AnyObject]()
+        //            let rev = CDTMutableDocumentRevision(docId: "foo", revisionId: nil, body: body, attachments:nil)
+        //
+        // Add an attachment - binary data like a JPEG
+        //            let att1 = CDTUnsavedFileAttachment(path: "/path/to/image/jpg",
+        //                name: "cute_cat.jpg",
+        //                type: "image/jpeg")
+        //            rev.attachments[att1.name] = att1
         
-            // Read a document
-//            let docId = revision.docId
-//            let retrieved = try datastore!.getDocumentWithId(docId)
-//            print("retrieved = \(retrieved)")
-        } catch {
-            print("Encountered an error: \(error)")
-        }
+        // Save the document to the database
+        //            let revision = try datastore!.createDocumentFromRevision(rev)
+        
+        // Read a document
+        //            let docId = revision.docId
+        //            let retrieved = try datastore!.getDocumentWithId(docId)
+        //            print("retrieved = \(retrieved)")
+    
+        let mealsFromDB : [Meal] = []
+        return mealsFromDB
     }
 
     // MARK: - Navigation
@@ -194,9 +195,5 @@ class MealTableViewController: UITableViewController {
         print("Save meals: \(path)")
         let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(meals, toFile: path)
         print("  Save result: \(isSuccessfulSave)")
-    }
-    
-    func loadMeals() -> [Meal]? {
-        return NSKeyedUnarchiver.unarchiveObjectWithFile(Meal.ArchiveURL.path!) as? [Meal]
     }
 }
