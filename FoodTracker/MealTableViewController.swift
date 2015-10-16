@@ -112,35 +112,39 @@ class MealTableViewController: UITableViewController {
     func storeSampleMeals() {
         let photo1 = UIImage(named: "meal1")!
         let meal1  = Meal(name: "Caprese Salad", photo: photo1, rating: 4)!
-        storeMeal(meal1)
+        createMeal(meal1)
         
         let photo2 = UIImage(named: "meal2")!
         let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5)!
-        storeMeal(meal2)
+        createMeal(meal2)
         
         let photo3 = UIImage(named: "meal3")
         let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3)!
-        storeMeal(meal3)
+        createMeal(meal3)
     }
     
-    func storeMeal(meal:Meal) {
+    func createMeal(meal:Meal) {
         let id = meal.name
+        let body = meal.docBody() //as NSMutableDictionary
+        
+        print("Create meal \(id): \(body)")
+        //let attachments = [NSObject:AnyObject]()
+        let rev = CDTMutableDocumentRevision()
+//        let rev = CDTMutableDocumentRevision(docId: <#T##String!#>, revisionId: <#T##String!#>, body: <#T##[NSObject : AnyObject]!#>, attachments: <#T##[NSObject : AnyObject]!#>)
+        //let rev = CDTMutableDocumentRevision(docId: id, revisionId: meal.revId, body: body, attachments: attachments)
+        rev.docId = id
+        rev.setBody(body)
+        //rev.revId = meal.revId
         
         do {
-            print("Store meal: \(meal)")
-            let body = meal.docBody() //as NSMutableDictionary
-            print("Meal doc: \(body)")
-            let rev = CDTMutableDocumentRevision()
-            rev.docId = id
-            rev.setBody(body)
             let revision = try datastore!.createDocumentFromRevision(rev)
-            print("Store ok \(id) = \(revision.revId!)")
+            print("Created meal: \(id), \(revision.revId!)")
         } catch let error as NSError {
-            if let reason = error.userInfo["NSLocalizedFailureReason"] {
-                if (reason as! String == "conflict") {
-                    print("Just a conflict, no big deal: \(id)")
+            if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
+                if (reason == "conflict") {
+                    print("No problem, meal was already initialized: \(id)")
                 } else {
-                    print("Error storing meal \(id): \(reason)")
+                    print("Error creating meal \(id): \(reason)")
                 }
             } else {
                 print("Unknown error storing meal \(id): \(error)")
@@ -149,8 +153,14 @@ class MealTableViewController: UITableViewController {
     }
 
     func loadMealsFromDataStore() -> [Meal] {
-        let docs = datastore!.getAllDocuments()
+        let docs = datastore!.getAllDocuments() as! [CDTDocumentRevision]
         print("Found \(docs.count) meal documents in datastore: \(docs)")
+        
+        for doc in docs {
+            if let meal = Meal(aDoc: doc) {
+                meals += [meal]
+            }
+        }
 
         // Add an attachment - binary data like a JPEG
         //            let att1 = CDTUnsavedFileAttachment(path: "/path/to/image/jpg",

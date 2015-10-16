@@ -43,6 +43,11 @@ class Meal: NSObject, NSCoding {
         }
     }
     
+    required convenience init?(aDoc doc:CDTDocumentRevision) {
+        print("Hey I need to init \(doc)")
+        self.init(name:"hi", photo:nil, rating:3)
+    }
+    
     // MARK: NSCoding
     
     func encodeWithCoder(aCoder: NSCoder) {
