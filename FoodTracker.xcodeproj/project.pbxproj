@@ -188,6 +188,7 @@
 				TargetAttributes = {
 					A128DDED1B987A39007C0762 = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 54G4QBGFYA;
 					};
 					A128DE011B987A39007C0762 = {
 						CreatedOnToolsVersion = 7.0;
@@ -425,11 +426,14 @@
 			baseConfigurationReference = 6F637DDAD7A32E86DC6D3489 /* Pods-FoodTracker.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = FoodTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.FoodTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "FoodTracker/CloudantSync-Bridging-Header.h";
 			};
 			name = Debug;
@@ -439,11 +443,14 @@
 			baseConfigurationReference = 1060C69D2082D4F5E295F995 /* Pods-FoodTracker.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = FoodTracker/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.FoodTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "FoodTracker/CloudantSync-Bridging-Header.h";
 			};
 			name = Release;
