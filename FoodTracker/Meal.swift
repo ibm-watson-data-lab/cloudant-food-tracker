@@ -14,7 +14,7 @@ class Meal: NSObject, NSCoding {
     var name: String
     var photo: UIImage?
     var rating: Int
-    var revId: String?
+    var revId: String
     
     // MARK: Archiving Paths
     
@@ -31,7 +31,7 @@ class Meal: NSObject, NSCoding {
     
     // MARK: Initialization
     
-    init?(name: String, photo: UIImage?, rating: Int, revId: String?) {
+    init?(name: String, photo: UIImage?, rating: Int, revId: String) {
         // Initialize the properties.
         self.name = name
         self.photo = photo
@@ -46,7 +46,7 @@ class Meal: NSObject, NSCoding {
     }
     
     required convenience init?(name: String, photo: UIImage?, rating: Int) {
-        self.init(name:name, photo:photo, rating:rating, revId:nil)
+        self.init(name:name, photo:photo, rating:rating, revId:"")
     }
     
     // MARK: NSCoding
