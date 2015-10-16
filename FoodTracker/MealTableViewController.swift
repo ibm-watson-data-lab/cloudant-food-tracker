@@ -13,13 +13,15 @@ class MealTableViewController: UITableViewController {
     // MARK: Properties
     
     var meals = [Meal]()
-
+    var datastore: CDTDatastore?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Use the edit button provided by the table view controller.
         navigationItem.leftBarButtonItem = editButtonItem()
           
+        initDatastore()
         if let savedMeals = loadMeals() {
             meals += savedMeals
         } else {
@@ -103,6 +105,52 @@ class MealTableViewController: UITableViewController {
         return true
     }
     */
+    
+    // MARK: Datastore
+    
+    func initDatastore() {
+        do {
+            let fileManager = NSFileManager.defaultManager()
+            
+            let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
+                inDomains: .UserDomainMask).last!
+            
+            let storeURL = documentsDir.URLByAppendingPathComponent("cloudant-sync-datastore")
+            let path = storeURL.path
+            
+            let manager = try CDTDatastoreManager(directory: path)
+            datastore = try manager.datastoreNamed("my_datastore")
+        } catch {
+            print("Error initializing datastore: \(error)")
+        }
+    }
+    
+    func loadMealsFromDataStore() {
+        do {
+            // Create a document
+//            let body = ["description":"Buy Milk",
+//                "completed": false,
+//                "type":"com.cloudant.sync.example.task"]
+//            let attachments = [NSObject: AnyObject]()
+//            let rev = CDTMutableDocumentRevision(docId: "foo", revisionId: nil, body: body, attachments:nil)
+//            
+            // Add an attachment - binary data like a JPEG
+//            let att1 = CDTUnsavedFileAttachment(path: "/path/to/image/jpg",
+//                name: "cute_cat.jpg",
+//                type: "image/jpeg")
+//            rev.attachments[att1.name] = att1
+            
+            // Save the document to the database
+//            let revision = try datastore!.createDocumentFromRevision(rev)
+        
+            // Read a document
+//            let docId = revision.docId
+//            let retrieved = try datastore!.getDocumentWithId(docId)
+//            print("retrieved = \(retrieved)")
+        } catch {
+            print("Encountered an error: \(error)")
+        }
+    }
 
     // MARK: - Navigation
 
