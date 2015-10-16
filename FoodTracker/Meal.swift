@@ -51,6 +51,10 @@ class Meal: NSObject, NSCoding {
         aCoder.encodeInteger(rating, forKey: PropertyKey.ratingKey)
     }
     
+    func docBody() -> [NSString: NSObject] {
+        return ["name":name, "rating":rating]
+    }
+    
     required convenience init?(coder aDecoder: NSCoder) {
         let name = aDecoder.decodeObjectForKey(PropertyKey.nameKey) as! String
         
