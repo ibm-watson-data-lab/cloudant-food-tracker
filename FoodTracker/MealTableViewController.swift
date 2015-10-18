@@ -23,8 +23,7 @@ class MealTableViewController: UITableViewController {
           
         initDatastore()
         storeSampleMeals()
-        let savedMeals = loadMealsFromDataStore()
-        meals += savedMeals
+        loadMealsFromDataStore()
     }
     
     override func didReceiveMemoryWarning() {
@@ -188,7 +187,7 @@ class MealTableViewController: UITableViewController {
         print("delete meal: \(meal.name)")
     }
 
-    func loadMealsFromDataStore() -> [Meal] {
+    func loadMealsFromDataStore() {
         let docs = datastore!.getAllDocuments() as! [CDTDocumentRevision]
         print("Found \(docs.count) meal documents in datastore: \(docs)")
         
@@ -197,23 +196,6 @@ class MealTableViewController: UITableViewController {
                 meals.append(meal)
             }
         }
-
-        // Add an attachment - binary data like a JPEG
-        //            let att1 = CDTUnsavedFileAttachment(path: "/path/to/image/jpg",
-        //                name: "cute_cat.jpg",
-        //                type: "image/jpeg")
-        //            rev.attachments[att1.name] = att1
-        
-        // Save the document to the database
-        //            let revision = try datastore!.createDocumentFromRevision(rev)
-        
-        // Read a document
-        //            let docId = revision.docId
-        //            let retrieved = try datastore!.getDocumentWithId(docId)
-        //            print("retrieved = \(retrieved)")
-    
-        let mealsFromDB : [Meal] = []
-        return mealsFromDB
     }
 
     // MARK: - Navigation
@@ -248,15 +230,5 @@ class MealTableViewController: UITableViewController {
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
             }
         }
-    }
-
-    // MARK: NSCoding
-    
-    func saveMeals() {
-        let path = Meal.ArchiveURL.path!
-        
-        print("Save meals: \(path)")
-        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(meals, toFile: path)
-        print("  Save result: \(isSuccessfulSave)")
     }
 }
