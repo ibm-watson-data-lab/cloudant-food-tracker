@@ -44,8 +44,14 @@ class Meal: NSObject, NSCoding {
     }
     
     required convenience init?(aDoc doc:CDTDocumentRevision) {
-        print("Hey I need to init \(doc)")
-        self.init(name:"hi", photo:nil, rating:3)
+        if let body = doc.body() as? [String: AnyObject] {
+            let name = body["name"] as! String
+            let rating = body["rating"] as! Int
+            self.init(name:name, photo:nil, rating:rating)
+        } else {
+            print("Error initializing meal from document: \(doc)")
+            return nil
+        }
     }
     
     // MARK: NSCoding
