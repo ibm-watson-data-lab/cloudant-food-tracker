@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Meal: NSObject, NSCoding {
+class Meal: NSObject {
     // MARK: Properties
     
     var name: String
@@ -71,17 +71,5 @@ class Meal: NSObject, NSCoding {
     
     func docBody() -> [NSString: NSObject] {
         return ["name":name, "rating":rating]
-    }
-    
-    required convenience init?(coder aDecoder: NSCoder) {
-        let name = aDecoder.decodeObjectForKey(PropertyKey.nameKey) as! String
-        
-        // Because photo is an optional property, use a conditional cast.
-        let photo = aDecoder.decodeObjectForKey(PropertyKey.photoKey) as? UIImage
-        
-        let rating = aDecoder.decodeIntegerForKey(PropertyKey.ratingKey)
-        
-        // Call the designated initializer.
-        self.init(name: name, photo: photo, rating: rating)
     }
 }
