@@ -14,7 +14,6 @@ class Meal: NSObject {
     var name: String
     var photo: UIImage?
     var rating: Int
-    var dbRevision: CDTMutableDocumentRevision?
     
     // MARK: Archiving Paths
     
@@ -36,7 +35,6 @@ class Meal: NSObject {
         self.name = name
         self.photo = photo
         self.rating = rating
-        self.dbRevision = rev
         
         super.init()
         

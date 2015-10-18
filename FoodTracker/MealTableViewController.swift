@@ -112,31 +112,46 @@ class MealTableViewController: UITableViewController {
     func storeSampleMeals() {
         let photo1 = UIImage(named: "meal1")!
         let meal1  = Meal(name: "Caprese Salad", photo: photo1, rating: 4)!
-        saveMeal(meal1)
+        saveMeal(meal1, isCreate: true)
         
         let photo2 = UIImage(named: "meal2")!
         let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5)!
-        saveMeal(meal2)
+        saveMeal(meal2, isCreate: true)
         
         let photo3 = UIImage(named: "meal3")
         let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3)!
-        saveMeal(meal3)
+        saveMeal(meal3, isCreate: true)
     }
     
     func saveMeal(meal:Meal) {
+        saveMeal(meal, isCreate: false)
+    }
+    
+    func saveMeal(meal:Meal, isCreate: Bool) {
         let id = meal.name
-        let body: [NSString: NSObject] = ["name":meal.name, "rating":meal.rating]
-
-        if (meal.dbRevision == nil) {
-            print("Create meal \(id)")
-            meal.dbRevision = CDTMutableDocumentRevision()
-            meal.dbRevision!.docId = id
-        } else {
-            print("Update meal \(id)")
+        
+        var rev = CDTMutableDocumentRevision()
+        
+        // First, fetch the latest revision from the DB.
+        do {
+            print("Fetch: \(id)")
+            rev = try datastore!.getDocumentWithId(id).mutableCopy()
+            print("retrieved", rev)
+        } catch let error as NSError {
+            let reason = error.userInfo["NSLocalizedFailureReason"] as? String
+            if (reason == "not_found") {
+                print("Create new meal: \(id)")
+            } else {
+                print("Error loading meal \(id): \(reason)")
+                return
+            }
         }
         
-        let rev = meal.dbRevision!
-        rev.setBody(body)
+
+        rev.docId = id
+        let body = rev.body()
+        body["name"] = meal.name
+        body["rating"] = meal.rating
         
         if let data = UIImagePNGRepresentation(meal.photo!) {
             let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
@@ -145,15 +160,23 @@ class MealTableViewController: UITableViewController {
         }
         
         do {
-            let revision = try datastore!.createDocumentFromRevision(rev)
-            print("Stored meal: \(id), \(revision.revId!)")
-            meal.dbRevision = revision.mutableCopy()
+            var revision: CDTDocumentRevision
+            if isCreate {
+                revision = try datastore!.createDocumentFromRevision(rev)
+                print("Created \(id)")
+            } else {
+                revision = try datastore!.updateDocumentFromRevision(rev)
+                print("Updated \(id)")
+            }
+            
+            print("Stored meal: \(id), \(revision.revId)")
+            //meal.dbRevision = revision.mutableCopy()
         } catch let error as NSError {
             if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
-                if (reason == "conflict") {
-                    print("No problem, meal was already initialized: \(id)")
+                if (reason == "conflict" && isCreate) {
+                    print("Update conflict is ok: \(id)")
                 } else {
-                    print("Error creating meal \(id): \(reason)")
+                    print("Error storing meal \(id): \(reason)")
                 }
             } else {
                 print("Unknown error storing meal \(id): \(error)")
@@ -215,15 +238,15 @@ class MealTableViewController: UITableViewController {
             if let selectedIndexPath = tableView.indexPathForSelectedRow {
                 // Update an existing meal.
                 meals[selectedIndexPath.row] = meal
+                saveMeal(meal)
                 tableView.reloadRowsAtIndexPaths([selectedIndexPath], withRowAnimation: .None)
             } else {
                 // Add the new meal.
                 let newIndexPath = NSIndexPath(forRow: meals.count, inSection: 0)
                 meals.append(meal)
+                saveMeal(meal)
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
             }
-            
-            saveMeals()
         }
     }
 
