@@ -110,44 +110,43 @@ class MealTableViewController: UITableViewController {
     
     func storeSampleMeals() {
         let photo1 = UIImage(named: "meal1")!
-        let meal1  = Meal(name: "Caprese Salad", photo: photo1, rating: 4)!
-        saveMeal(meal1, isCreate: true)
+        let meal1  = Meal(name: "Caprese Salad", photo: photo1, rating: 4, docId: "meal1")!
+        saveMeal(meal1, create:true)
         
         let photo2 = UIImage(named: "meal2")!
-        let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5)!
-        saveMeal(meal2, isCreate: true)
+        let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"meal2")!
+        saveMeal(meal2, create:true)
         
         let photo3 = UIImage(named: "meal3")
-        let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3)!
-        saveMeal(meal3, isCreate: true)
+        let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3, docId:"meal3")!
+        saveMeal(meal3, create:true)
     }
     
     func saveMeal(meal:Meal) {
-        saveMeal(meal, isCreate: false)
+        saveMeal(meal, create:false)
     }
     
-    func saveMeal(meal:Meal, isCreate: Bool) {
-        let id = meal.name
-        
+    func saveMeal(meal:Meal, create:Bool) {
         var rev = CDTMutableDocumentRevision()
+        let docId = meal.docId
         
         // First, fetch the latest revision from the DB.
-        do {
-            print("Fetch: \(id)")
-            rev = try datastore!.getDocumentWithId(id).mutableCopy()
-            print("retrieved", rev)
-        } catch let error as NSError {
-            let reason = error.userInfo["NSLocalizedFailureReason"] as? String
-            if (reason == "not_found") {
-                print("Create new meal: \(id)")
-            } else {
-                print("Error loading meal \(id): \(reason)")
+        if docId != nil && !create {
+            do {
+                print("Update meal: \(docId)")
+                rev = try datastore!.getDocumentWithId(docId).mutableCopy()
+                print("retrieved", rev)
+            } catch let error as NSError {
+                if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
+                    print("Error loading meal \(docId): \(reason)")
+                } else {
+                    print("Error loading meal \(docId): \(error)")
+                }
                 return
             }
         }
         
-
-        rev.docId = id
+        rev.docId = docId
         let body = rev.body()
         body["name"] = meal.name
         body["rating"] = meal.rating
@@ -155,30 +154,27 @@ class MealTableViewController: UITableViewController {
         if let data = UIImagePNGRepresentation(meal.photo!) {
             let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
             rev.attachments()[attachment.name] = attachment
-            print("Meal \(id) attachment: \(attachment.size) bytes")
+            print("Meal \(docId) attachment: \(attachment.size) bytes")
         }
         
         do {
             var revision: CDTDocumentRevision
-            if isCreate {
+            if create {
                 revision = try datastore!.createDocumentFromRevision(rev)
-                print("Created \(id)")
+                print("Created \(revision.docId)")
             } else {
                 revision = try datastore!.updateDocumentFromRevision(rev)
-                print("Updated \(id)")
+                print("Updated \(revision.docId)")
             }
-            
-            print("Stored meal: \(id), \(revision.revId)")
-            //meal.dbRevision = revision.mutableCopy()
         } catch let error as NSError {
             if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
-                if (reason == "conflict" && isCreate) {
-                    print("Update conflict is ok: \(id)")
+                if (reason == "conflict" && create) {
+                    print("Update conflict is ok: \(docId)")
                 } else {
-                    print("Error storing meal \(id): \(reason)")
+                    print("Error storing meal \(docId): \(reason)")
                 }
             } else {
-                print("Unknown error storing meal \(id): \(error)")
+                print("Unknown error storing meal \(docId): \(error)")
             }
         }
     }
