@@ -112,38 +112,42 @@ class MealTableViewController: UITableViewController {
     func storeSampleMeals() {
         let photo1 = UIImage(named: "meal1")!
         let meal1  = Meal(name: "Caprese Salad", photo: photo1, rating: 4)!
-        createMeal(meal1)
+        saveMeal(meal1)
         
         let photo2 = UIImage(named: "meal2")!
         let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5)!
-        createMeal(meal2)
+        saveMeal(meal2)
         
         let photo3 = UIImage(named: "meal3")
         let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3)!
-        createMeal(meal3)
+        saveMeal(meal3)
     }
     
-    func createMeal(meal:Meal) {
+    func saveMeal(meal:Meal) {
         let id = meal.name
-        let body = meal.docBody() //as NSMutableDictionary
+        let body: [NSString: NSObject] = ["name":meal.name, "rating":meal.rating]
+
+        if (meal.dbRevision == nil) {
+            print("Create meal \(id)")
+            meal.dbRevision = CDTMutableDocumentRevision()
+            meal.dbRevision!.docId = id
+        } else {
+            print("Update meal \(id)")
+        }
         
-        print("Create meal \(id): \(body)")
-        //let attachments = [NSObject:AnyObject]()
-        let rev = CDTMutableDocumentRevision()
-//        let rev = CDTMutableDocumentRevision(docId: <#T##String!#>, revisionId: <#T##String!#>, body: <#T##[NSObject : AnyObject]!#>, attachments: <#T##[NSObject : AnyObject]!#>)
-        //let rev = CDTMutableDocumentRevision(docId: id, revisionId: meal.revId, body: body, attachments: attachments)
-        rev.docId = id
+        let rev = meal.dbRevision!
         rev.setBody(body)
         
         if let data = UIImagePNGRepresentation(meal.photo!) {
-            let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.png", type: "image/png")
+            let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
             rev.attachments()[attachment.name] = attachment
-            print("Attached to \(id): \(attachment.size)")
+            print("Meal \(id) attachment: \(attachment.size) bytes")
         }
         
         do {
             let revision = try datastore!.createDocumentFromRevision(rev)
-            print("Created meal: \(id), \(revision.revId!)")
+            print("Stored meal: \(id), \(revision.revId!)")
+            meal.dbRevision = revision.mutableCopy()
         } catch let error as NSError {
             if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
                 if (reason == "conflict") {
