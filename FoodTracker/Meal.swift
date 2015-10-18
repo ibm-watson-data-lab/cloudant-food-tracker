@@ -45,6 +45,10 @@ class Meal: NSObject {
         }
     }
     
+    required convenience init?(name: String, photo: UIImage?, rating: Int) {
+        self.init(name:name, photo:photo, rating:rating, rev:nil)
+    }
+    
     required convenience init?(aDoc doc:CDTDocumentRevision) {
         if let body = doc.body() as? [String: AnyObject] {
             let name = body["name"] as! String
