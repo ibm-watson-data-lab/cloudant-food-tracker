@@ -47,7 +47,14 @@ class Meal: NSObject, NSCoding {
         if let body = doc.body() as? [String: AnyObject] {
             let name = body["name"] as! String
             let rating = body["rating"] as! Int
-            self.init(name:name, photo:nil, rating:rating)
+            
+            var photo : UIImage? = nil
+            if let photoAttachment = doc.attachments()["photo.png"] {
+                print("Attachment! \(photoAttachment)")
+                photo = UIImage(data: photoAttachment.dataFromAttachmentContent())
+            }
+
+            self.init(name:name, photo:photo, rating:rating)
         } else {
             print("Error initializing meal from document: \(doc)")
             return nil
