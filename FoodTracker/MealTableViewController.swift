@@ -134,7 +134,12 @@ class MealTableViewController: UITableViewController {
         //let rev = CDTMutableDocumentRevision(docId: id, revisionId: meal.revId, body: body, attachments: attachments)
         rev.docId = id
         rev.setBody(body)
-        //rev.revId = meal.revId
+        
+        if let data = UIImagePNGRepresentation(meal.photo!) {
+            let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.png", type: "image/png")
+            rev.attachments()[attachment.name] = attachment
+            print("Attached to \(id): \(attachment.size)")
+        }
         
         do {
             let revision = try datastore!.createDocumentFromRevision(rev)
