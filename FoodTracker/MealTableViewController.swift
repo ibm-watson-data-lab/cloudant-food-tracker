@@ -158,7 +158,7 @@ class MealTableViewController: UITableViewController {
         
         for doc in docs {
             if let meal = Meal(aDoc: doc) {
-                meals += [meal]
+                meals.append(meal)
             }
         }
 
