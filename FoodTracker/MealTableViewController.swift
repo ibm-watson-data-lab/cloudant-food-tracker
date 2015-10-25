@@ -13,6 +13,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
     // MARK: Properties
     
     var meals = [Meal]()
+    var datastoreManager: CDTDatastoreManager?
     var datastore: CDTDatastore?
     var pushReplication: CDTPushReplication?
     var pushReplicator: CDTReplicator?
@@ -95,9 +96,13 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
     
     // MARK: Datastore
     
+    func cloudURL() -> NSURL {
+        let cloudUsername = "dsomentypianshavesientan"
+        return NSURL(string: "https://\(cloudUsername):42ec1fdd001520ec09f17947f14d079927c0b5ea@nodejs.cloudant.com/food_tracker")!
+
+    }
+    
     func initDatastore() {
-        var manager: CDTDatastoreManager
-        
         do {
             let fileManager = NSFileManager.defaultManager()
             
@@ -107,35 +112,86 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
             let storeURL = documentsDir.URLByAppendingPathComponent("cloudant-sync-datastore")
             let path = storeURL.path
             
-            manager = try CDTDatastoreManager(directory: path)
-            datastore = try manager.datastoreNamed("my_datastore")
+            datastoreManager = try CDTDatastoreManager(directory: path)
+            datastore = try datastoreManager!.datastoreNamed("my_datastore")
         } catch {
             print("Error initializing datastore: \(error)")
             return
         }
         
-        let username = "dsomentypianshavesientan"
-        let url = NSURL(string: "https://\(username):42ec1fdd001520ec09f17947f14d079927c0b5ea@nodejs.cloudant.com/food_tracker")
+        cloudPush()
+        //cloudPull()
+    }
+    
+    func cloudPush() {
+        if pushReplicator != nil && pushReplication != nil {
+            print("Push replication already underway")
+            return
+        }
         
+        print("Push data to cloud")
         // Create a "push" replicator, to copy local changes to the remote database.
-        let replicatorFactory = CDTReplicatorFactory(datastoreManager: manager)
-        pushReplication = CDTPushReplication(source: datastore, target: url)
-        pullReplication = CDTPullReplication(source: url, target: datastore)
+        let replicatorFactory = CDTReplicatorFactory(datastoreManager: datastoreManager)
+        pushReplication = CDTPushReplication(source: datastore, target: cloudURL())
         
         do {
             pushReplicator = try replicatorFactory.oneWay(pushReplication)
             pushReplicator!.delegate = self
             try pushReplicator!.start()
-            
-            pullReplicator = try replicatorFactory.oneWay(pullReplication)
-            pullReplicator!.delegate = self
-            try pullReplicator!.start()
-            
-            print("Initialized replication")
+            print("Initialized cloud push")
         } catch {
             print("Error initializing push replication: \(error)")
             return
         }
+    }
+    
+    func cloudPull() {
+        if pullReplicator != nil && pullReplicator != nil {
+            print("Pull replication already underway")
+            return
+        }
+        
+        print("Pull data from cloud")
+        let replicatorFactory = CDTReplicatorFactory(datastoreManager: datastoreManager)
+        pullReplication = CDTPullReplication(source: cloudURL(), target: datastore)
+        
+        do {
+            pullReplicator = try replicatorFactory.oneWay(pullReplication)
+            pullReplicator!.delegate = self
+            try pullReplicator!.start()
+            print("Initialized cloud pull")
+        } catch {
+            print("Error initializing pull replication: \(error)")
+            return
+        }
+    }
+    
+    func replicatorDidChangeState(replicator: CDTReplicator!) {
+        print("Replicator changed state: \(replicator)")
+    }
+    
+    func replicatorDidChangeProgress(replicator: CDTReplicator!) {
+        print("Replicator changed progress: \(replicator)")
+    }
+    
+    func replicatorDidComplete(replicator: CDTReplicator!) {
+        print("Replicator complete \(replicator)")
+        if (replicator === pushReplicator) {
+            print("Push to cloud: sync complete")
+            pushReplicator = nil
+            pushReplication = nil
+            
+            // Once a push is finished, trigger another pull to catch up that state too.
+            cloudPull()
+        } else if (replicator === pullReplicator) {
+            print("Pull from cloud: sync complete")
+            pullReplicator = nil
+            pullReplication = nil
+        }
+    }
+    
+    func replicatorDidError(replicator: CDTReplicator!, info: NSError!) {
+        print("Replicator error: \(replicator): \(info)")
     }
     
     func storeSampleMeals() {
@@ -196,6 +252,8 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
                 revision = try datastore!.updateDocumentFromRevision(rev)
                 print("Updated \(revision.docId)")
             }
+            
+            cloudPush()
         } catch let error as NSError {
             if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
                 if (reason == "conflict" && create) {
