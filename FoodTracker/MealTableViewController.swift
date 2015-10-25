@@ -8,12 +8,14 @@
 
 import UIKit
 
-class MealTableViewController: UITableViewController {
+class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
     
     // MARK: Properties
     
     var meals = [Meal]()
     var datastore: CDTDatastore?
+    var pushReplicator: CDTReplicator?
+    var pullReplicator: CDTReplicator?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,6 +94,8 @@ class MealTableViewController: UITableViewController {
     // MARK: Datastore
     
     func initDatastore() {
+        var manager: CDTDatastoreManager
+        
         do {
             let fileManager = NSFileManager.defaultManager()
             
@@ -101,10 +105,31 @@ class MealTableViewController: UITableViewController {
             let storeURL = documentsDir.URLByAppendingPathComponent("cloudant-sync-datastore")
             let path = storeURL.path
             
-            let manager = try CDTDatastoreManager(directory: path)
+            manager = try CDTDatastoreManager(directory: path)
             datastore = try manager.datastoreNamed("my_datastore")
         } catch {
             print("Error initializing datastore: \(error)")
+            return
+        }
+        
+        let username = "dsomentypianshavesientan"
+        let url = NSURL(string: "https://\(username):42ec1fdd001520ec09f17947f14d079927c0b5ea@nodejs.cloudant.com/food_tracker")
+        
+        // Create a "push" replicator, to copy local changes to the remote database.
+        let push = CDTPushReplication(source: datastore, target: url)
+        let replicatorFactory = CDTReplicatorFactory(datastoreManager: manager)
+        
+        do {
+            pushReplicator = try replicatorFactory.oneWay(push)
+            try pushReplicator!.start()
+        } catch {
+            print("Error initializing push replication: \(error)")
+            return
+        }
+        
+        while pushReplicator!.isActive() {
+            print(" -> ", CDTReplicator.stringForReplicatorState(pushReplicator!.state))
+            NSThread.sleepForTimeInterval(1.0)
         }
     }
     
