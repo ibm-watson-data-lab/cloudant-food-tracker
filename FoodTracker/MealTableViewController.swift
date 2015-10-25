@@ -14,7 +14,9 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
     
     var meals = [Meal]()
     var datastore: CDTDatastore?
+    var pushReplication: CDTPushReplication?
     var pushReplicator: CDTReplicator?
+    var pullReplication: CDTPullReplication?
     var pullReplicator: CDTReplicator?
     
     override func viewDidLoad() {
@@ -116,20 +118,23 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
         let url = NSURL(string: "https://\(username):42ec1fdd001520ec09f17947f14d079927c0b5ea@nodejs.cloudant.com/food_tracker")
         
         // Create a "push" replicator, to copy local changes to the remote database.
-        let push = CDTPushReplication(source: datastore, target: url)
         let replicatorFactory = CDTReplicatorFactory(datastoreManager: manager)
+        pushReplication = CDTPushReplication(source: datastore, target: url)
+        pullReplication = CDTPullReplication(source: url, target: datastore)
         
         do {
-            pushReplicator = try replicatorFactory.oneWay(push)
+            pushReplicator = try replicatorFactory.oneWay(pushReplication)
+            pushReplicator!.delegate = self
             try pushReplicator!.start()
+            
+            pullReplicator = try replicatorFactory.oneWay(pullReplication)
+            pullReplicator!.delegate = self
+            try pullReplicator!.start()
+            
+            print("Initialized replication")
         } catch {
             print("Error initializing push replication: \(error)")
             return
-        }
-        
-        while pushReplicator!.isActive() {
-            print(" -> ", CDTReplicator.stringForReplicatorState(pushReplicator!.state))
-            NSThread.sleepForTimeInterval(1.0)
         }
     }
     
