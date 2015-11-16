@@ -8,8 +8,7 @@ This document picks up where that document leaves off: syncing data between devi
 
 These lessons assume that you have completed the [FoodTracker app][apple-doc] from Apple's walkthrough. We begin with the completed sample project from the final lesson: [Persist Data][apple-doc-download].
 
-![Image of FoodTracker][foodtracker-img]
+<img src="https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Art/8_sim_navbar_2x.png" alt="Image of FoodTracker app" height="559" width="320">
 
 [apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
 [apple-doc-download]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Lesson10.html#//apple_ref/doc/uid/TP40015214-CH14-SW3
-[foodtracker-img]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Art/8_sim_navbar_2x.png
