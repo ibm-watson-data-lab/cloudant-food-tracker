@@ -49,6 +49,25 @@ The CocoaPods web site has an excellent page, [Getting Started][cocoapods-gettin
   0.39.0
   ```
 
+### Install CDTDatastore using CocoaPods
+
+To install CDTDatastore as a dependency, create a *Podfile*, a simple configuration files which tell CocoaPods which packages this project needs.
+
+**To create a Podfile**
+
+  1. Choose File > New > File (or press Command-N)
+  1. On the left of the dialog that appears, select Other under iOS.
+  1. Select Empty, and click Next.
+  1. In the Save As field, type `Podfile`.
+  1. The save location defaults to your project directory.
+
+     The Group option defaults to your app name, FoodTracker.
+
+     In the Targets section, make sure both your app and the tests for your app are not selected.
+  1. Click Create.
+
+     Xcode creates a file called Meal.swift.
+
 ## Switch to CDTDatastore
 
 ## Sync with IBM Cloudant
