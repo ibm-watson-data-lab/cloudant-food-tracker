@@ -10,11 +10,51 @@ These lessons assume that you have completed the [FoodTracker app][apple-doc] fr
 
 <img src="https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Art/8_sim_navbar_2x.png" alt="Image of FoodTracker app" height="559" width="320">
 
-[apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
-[apple-doc-download]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Lesson10.html#//apple_ref/doc/uid/TP40015214-CH14-SW3
-
 ## CocoaPods
+
+The first step is to connect with the broader open source iOS software community by installing free software packages using [CocoaPods][cocoapods]. We will use the CocoaPods repository to integrate the [Cloudant Sync Datastore][cdtdatastore-pod] library.
+
+### Learning Objectives
+
+At the end of the lesson, you’ll be able to:
+
+  1. Install CocoaPods on your Mac
+  1. Configure your project's CocoaPods environment
+  1. Use CocoaPods to integrate CDTDatastore with FoodTracker
+
+### Install CocoaPods on your Mac
+
+The CocoaPods web site has an excellent page, [Getting Started][cocoapods-getting-started], which covers intalling and upgrading. For our purposes, we will use the most simple, using the command-line `gem` program.
+
+**To install CocoaPods**
+
+  1. Open the Terminal application
+    1. Click the Spotlight icon (a magnifying glass) in the Mac OS taskbar
+    1. Type "terminal" in the Spotlight prompt, and press return
+  1. In Terminal, type this command:
+
+  ```
+  sudo gem install cocoapods
+  ```
+
+  1. Confirm that CocoaPods is installed with this command:
+
+  ```
+  pod --version
+  ```
+
+  You should see the CocoaPods version displayed in Terminal:
+
+  ```
+  0.39.0
+  ```
 
 ## Switch to CDTDatastore
 
 ## Sync with IBM Cloudant
+
+[apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
+[apple-doc-download]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Lesson10.html#//apple_ref/doc/uid/TP40015214-CH14-SW3
+[cdtdatastore-pod]: https://cocoapods.org/pods/CDTDatastore
+[cocoapods]: https://cocoapods.org/
+[cocoapods-getting-started]: https://guides.cocoapods.org/using/getting-started.html
