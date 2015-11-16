@@ -12,3 +12,9 @@ These lessons assume that you have completed the [FoodTracker app][apple-doc] fr
 
 [apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
 [apple-doc-download]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Lesson10.html#//apple_ref/doc/uid/TP40015214-CH14-SW3
+
+## CocoaPods
+
+## Switch to CDTDatastore
+
+## Sync with IBM Cloudant
