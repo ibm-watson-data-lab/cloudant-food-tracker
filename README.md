@@ -66,7 +66,52 @@ To install CDTDatastore as a dependency, create a *Podfile*, a simple configurat
      In the Targets section, make sure both your app and the tests for your app are not selected.
   1. Click Create.
 
-     Xcode creates a file called Meal.swift.
+     Xcode creates a file called `Podfile`.
+
+Next, configure CDTDatastore in the Podfile.
+
+**To configure the Podfile**
+
+  1. Open `Podfile`.
+  1. Add the following code
+
+     ```
+     platform :ios, '9.1'
+     pod "CDTDatastore", '~> 1.0.0'
+     ```
+  1. Choose File > Save (or press Command-N)
+
+With your Podfile in place, simply run the CocoaPods command in Terminal to install the CDTDatastore pod.
+
+**To install CDTDatastore**
+
+  1. Open Terminal
+  1. Change to your project directory, the directory containing your new Podfile. For example,
+
+     ```
+     cd "FoodTracker - Cloud Data Sync" # Your 'cd' command may be different; change to the folder you use.
+     ```
+  1. Type this command
+
+     ```
+     pod install
+     ```
+
+You will see colorful output from CocoaPods in the terminal.
+
+### Change from a Project to a Workspace
+
+Because you are now integrating FoodTracker with the third-party CDTDatastore library, your project is really a *group* of projects combined into one useful whole. XCode supports this, and CocoaPods has already prepared you for this transition by creating `FoodTracker.xcworkspace` for you&mdash;a *workspace* encompassing both FoodTracker and CDTDatastore.
+
+**To change to your project workspace**
+
+  1. Choose File > Close Window (or press Command-W)
+  1. Choose File > Open (or press Command-O)
+  1. Select `FoodTracker.xcworkspace` and click Open
+
+You will see a similar XCode view as before, but notice that you now have two projects now.
+
+-![FoodTracker workspace has two projects](img/workspace.png)
 
 ## Switch to CDTDatastore
 
