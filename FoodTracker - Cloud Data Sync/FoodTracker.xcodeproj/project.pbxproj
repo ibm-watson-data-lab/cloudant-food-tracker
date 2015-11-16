@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		40ADB93AA12AF0E3643C6119 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64A1F15722E4DE643018E37D /* libPods.a */; };
 		CA1292781B150DF500303C8D /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA1292771B150DF500303C8D /* RatingControl.swift */; };
 		CA1902E01B10E523000271C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA1902DF1B10E523000271C4 /* AppDelegate.swift */; };
 		CA1902E21B10E523000271C4 /* MealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA1902E11B10E523000271C4 /* MealViewController.swift */; };
@@ -31,6 +32,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		051CDFEE2A89E8E52334ABDB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		64A1F15722E4DE643018E37D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B088A72FE6B28B65007D71F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		A13A47271BFA0111002553FA /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		CA1292771B150DF500303C8D /* RatingControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
 		CA1902DC1B10E523000271C4 /* FoodTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA1902DF1B10E523000271C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -52,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40ADB93AA12AF0E3643C6119 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,12 +71,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1EE1248B1A34ABA9A94BBC68 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				64A1F15722E4DE643018E37D /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5D85FC042FC689B516586569 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9B088A72FE6B28B65007D71F /* Pods.debug.xcconfig */,
+				051CDFEE2A89E8E52334ABDB /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		CA1902D31B10E523000271C4 = {
 			isa = PBXGroup;
 			children = (
+				A13A47271BFA0111002553FA /* Podfile */,
 				CA1902DE1B10E523000271C4 /* FoodTracker */,
 				CA1902F31B10E523000271C4 /* FoodTrackerTests */,
 				CA1902DD1B10E523000271C4 /* Products */,
+				5D85FC042FC689B516586569 /* Pods */,
+				1EE1248B1A34ABA9A94BBC68 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -116,9 +142,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CA1902F91B10E523000271C4 /* Build configuration list for PBXNativeTarget "FoodTracker" */;
 			buildPhases = (
+				9DEA3E29F474C5C6E8A76631 /* Check Pods Manifest.lock */,
 				CA1902D81B10E523000271C4 /* Sources */,
 				CA1902D91B10E523000271C4 /* Frameworks */,
 				CA1902DA1B10E523000271C4 /* Resources */,
+				CC3353A48A13BC55E34D899D /* Embed Pods Frameworks */,
+				ABEA1B341E84517C15B1FB0E /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -203,6 +232,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9DEA3E29F474C5C6E8A76631 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		ABEA1B341E84517C15B1FB0E /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CC3353A48A13BC55E34D899D /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CA1902D81B10E523000271C4 /* Sources */ = {
@@ -342,6 +419,7 @@
 		};
 		CA1902FA1B10E523000271C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9B088A72FE6B28B65007D71F /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = FoodTracker/Info.plist;
@@ -353,6 +431,7 @@
 		};
 		CA1902FB1B10E523000271C4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 051CDFEE2A89E8E52334ABDB /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = FoodTracker/Info.plist;
