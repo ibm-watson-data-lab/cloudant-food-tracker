@@ -113,6 +113,8 @@ You will see a similar XCode view as before, but notice that you now have two pr
 
 -![FoodTracker workspace has two projects](img/workspace.png)
 
+Test that everthing still works by running your project again (Command-R). It should behave exactly as before; so you know that everything is in its place and working correctly.
+
 ## Switch to CDTDatastore
 
 ## Sync with IBM Cloudant
