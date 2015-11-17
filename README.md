@@ -160,11 +160,69 @@ The header file contents are done. But, despite its name, this file is not yet a
      FoodTracker/CloudantSync-Bridging-Header.h
      ```
      ![Input the bridging header value](img/input-bridging-header.png)
+  1. Press return
 
-## Store Data With CDTDatastore
+Your bridging header is done! Xcode should look like this:
 
-Your next step is to 
-## Use CDTDatastore for Storage
+![Final bridging header setup](img/bridging-header.png)
+
+*Checkpoint:* Run your app. This will confirm that the code compiles and runs. While you have not changed any user-facing app code, you have begun the first step to Cloudant Sync by compiling CDTDatastore into your project.
+
+## Store Data Locally with Cloudant Sync
+
+With CDTDatastore compiled and working, the next step is to replace the NSCoder persistence system with CDTDatastore. Currently, in `MealTableViewController.swift`, during initialization, the encoded array of meals is loaded from local storage. When we add or change a meal, the entire `meals` array is encoded and stored on disk. You will replace that system with a document-based architecture&mdash;in other words, each meal will be one record in the Cloudant Sync datastore.
+
+Keep in mind, this first step of using Cloudant Sync *does not use the Internet at all*. The first goal is simply to store app data locally. After that works correctly, you will add cloud sync features. This is the *offline-first* architecture, with Internet access being *optional* to use the app. All data operations are on the local device. (If the device has an Internet connection, then the app will sync its data to the cloud&mdash;covered in the next section.)
+
+### Remove NSCoding
+
+Begin cleanly by removing the current NSCoding system from the model and the table view controller.
+
+**To remove NSCoding from the model**
+
+  1. Open `Meal.swift`
+  1. Find the class declaration, which says:
+
+     ``` swift
+     class Meal: NSObject, NSCoding {
+     ```
+  1. Remove the word `NSCoding` and also the comma before it, making the new class declaration look like this:
+
+     ``` swift
+     class Meal: NSObject {
+     ```
+  1. Delete the comment line, `// MARK: NSCoding`.
+  1. Delete the method below that, `encodeWithCoder(_:)`.
+  1. Delete the method below that, `init?(coder aDecoder: NSCoder)`.
+
+Next, clean out the table view controller.
+
+**To remove NSCoding from the table view controller**
+
+  1. Open `MealTableViewController.swift`
+  1. Find the method `viewDidLoad()`, and delete the comment `// Load any saved meals`... and also the if/else code below it:
+
+     ``` swift
+     // Load any saved meals, otherwise load sample data.
+     if let savedMeals = loadMeals() {
+         meals += savedMeals
+     } else {
+         // Load the sample data.
+         loadSampleMeals()
+     }
+     ```
+  1. Find the method `tableView(_:commitEditingStyle:forRowAtIndexPath:)` and delete the line of code `saveMeals()`.
+  1. Find the method `unwindToMealList(_:) and delete its last two lines of code: a comment, and a call to `saveMeals()`.
+
+     ``` swift
+     // Save the meals.
+     saveMeals()
+     ```
+  1. Delete the comment line, `// MARK: NSCoding`
+  1. Delete the function below that, `func saveMeals()`.
+  1. Delete the function below that, `func loadMeals()`.
+
+*Checkpoint:* Run your app. The app will obviously lose some functionality: loading stored meals, and creating the first three sample meals; although you can still create, edit, and remove meals (but they will not persist if you quit the app). That is okay. In the next step, you will restore these functions using Cloudant Sync instead.
 
 ## Sync with IBM Cloudant
 
