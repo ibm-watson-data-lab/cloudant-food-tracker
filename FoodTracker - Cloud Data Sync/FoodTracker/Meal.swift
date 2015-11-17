@@ -15,6 +15,7 @@ class Meal: NSObject {
     var name: String
     var photo: UIImage?
     var rating: Int
+    var docId: String?
     
     // MARK: Archiving Paths
     
@@ -31,11 +32,12 @@ class Meal: NSObject {
 
     // MARK: Initialization
     
-    init?(name: String, photo: UIImage?, rating: Int) {
+    init?(name: String, photo: UIImage?, rating: Int, docId: String) {
         // Initialize stored properties.
         self.name = name
         self.photo = photo
         self.rating = rating
+        self.docId = docId
         
         super.init()
         
@@ -44,5 +46,21 @@ class Meal: NSObject {
             return nil
         }
     }
-    
+
+    required convenience init?(aDoc doc:CDTDocumentRevision) {
+        if let body = doc.body {
+            let name = body["name"] as! String
+            let rating = body["rating"] as! Int
+            
+            var photo : UIImage? = nil
+            if let photoAttachment = doc.attachments["photo.jpg"] {
+                photo = UIImage(data: photoAttachment.dataFromAttachmentContent())
+            }
+            
+            self.init(name:name, photo:photo, rating:rating, docId:doc.docId)
+        } else {
+            print("Error initializing meal from document: \(doc)")
+            return nil
+        }
+    }
 }

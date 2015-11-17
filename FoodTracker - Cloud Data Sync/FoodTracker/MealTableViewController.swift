@@ -15,7 +15,7 @@ class MealTableViewController: UITableViewController {
     var meals = [Meal]()
     var datastoreManager: CDTDatastoreManager?
     var datastore: CDTDatastore?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,24 +35,10 @@ class MealTableViewController: UITableViewController {
             datastoreManager = try CDTDatastoreManager(directory: path)
             datastore = try datastoreManager!.datastoreNamed("meals")
         } catch {
-            print("Error initializing datastore: \(error)")
-            return
+            fatalError("Failed to initialize datastore: \(error)")
         }
     }
     
-    func loadSampleMeals() {
-        let photo1 = UIImage(named: "meal1")!
-        let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4)!
-        
-        let photo2 = UIImage(named: "meal2")!
-        let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5)!
-        
-        let photo3 = UIImage(named: "meal3")!
-        let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3)!
-        
-        meals += [meal1, meal2, meal3]
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -152,4 +138,8 @@ class MealTableViewController: UITableViewController {
             }
         }
     }
+    
+    // MARK: Datastore
+    
+    
 }
