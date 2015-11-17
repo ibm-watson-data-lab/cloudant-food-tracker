@@ -75,7 +75,7 @@ Next, configure CDTDatastore in the Podfile.
   1. Open `Podfile`.
   1. Add the following code
 
-     ```
+     ``` ruby
      platform :ios, '9.1'
      pod "CDTDatastore", '~> 1.0.0'
      ```
@@ -164,6 +164,7 @@ The header file contents are done. But, despite its name, this file is not yet a
 ## Store Data With CDTDatastore
 
 Your next step is to 
+## Use CDTDatastore for Storage
 
 ## Sync with IBM Cloudant
 
