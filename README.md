@@ -56,7 +56,7 @@ To install CDTDatastore as a dependency, create a *Podfile*, a simple configurat
 **To create a Podfile**
 
   1. Choose File > New > File (or press Command-N)
-  1. On the left of the dialog that appears, select Other under iOS.
+  1. On the left side of the dialog that appears, select Other under iOS.
   1. Select Empty, and click Next.
   1. In the Save As field, type `Podfile`.
   1. The save location defaults to your project directory.
@@ -113,14 +113,63 @@ You will see a similar XCode view as before, but notice that you now have two pr
 
 -![FoodTracker workspace has two projects](img/workspace.png)
 
-Test that everthing still works by running your project again (Command-R). It should behave exactly as before; so you know that everything is in its place and working correctly.
+Test that everything still works by running your project again (Command-R). It should behave exactly as before; so you know that everything is in its place and working correctly.
 
-## Switch to CDTDatastore
+## Compile with CDTDatastore
+
+Your next step is to compile the Food Tracker along with CDTDatastore. You will not change any major FoodTracker code yet; however, this will confirm that CDTDatastore and FoodTracker integrate and compile correctly.
+
+### Create the CDTDatastore Bridging Header
+
+CDTDatastore is written in Objective-C. Your FoodTracker is a Swift project. Currently, the best way to integrate these projects together is with a [bridging header][bridging-header]. The bridging header, `CloudantSync-Bridging-Header.h` will tell Xcode to compile CDTDatastore into the final app. ("CloudantSync" is the name of the IBM Cloudant sync service, `CDTDatastore` is its iOS implementation.)
+
+**To create a header file**
+
+  1. Choose File > New > File (or press Command-N)
+  1. On the left side of the dialog that appears, select Source under iOS.
+  1. Select Header File, and click Next.
+  1. In the Save As field, type `CloudantSync-Bridging-Header`.
+  1. The save location defaults to your project directory.
+
+     The Group option defaults to your app name, FoodTracker.
+
+  1. In the Targets section, check the FoodTracker target.
+  1. Click Create.
+
+     Xcode creates and opens a file called `CloudantSync-Bridging-Header.h`.
+  1. Under the line which says `#define CloudantSync_Bridging_Header_h`, insert the following code:
+
+     ``` c
+     #import <CloudantSync.h>
+     ```
+
+The header file contents are done. But, despite its name, this file is not yet a *bridging header* as far as Xcode cares. The final step is to tell Xcode that this file will serve as the Objective-C bridging header.
+
+**To specify a project bridging header**
+
+  1. Enter the Project Navigator view by clicking the upper-left folder icon (or press Command-1).
+  1. Select the FoodTracker project
+  1. Currently, only basic build settings are displayed; click All to show all build settings
+  1. In the search bar, type "bridging header." You should see **Swift Compiler - Code Generation** and inside it, **Objective-C Bridging Header**.
+
+     ![Finding the bridging header value](img/find-bridging-header.png)
+  1. Double-click the empty space in the right column, in the row **Objective-C Bridging Header** (i.e. neither **Debug** nor **Release**, but above them).
+  1. A prompt window will pop up. Input the following:
+
+     ```
+     FoodTracker/CloudantSync-Bridging-Header.h
+     ```
+     ![Input the bridging header value](img/input-bridging-header.png)
+
+## Store Data With CDTDatastore
+
+Your next step is to 
 
 ## Sync with IBM Cloudant
 
 [apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
 [apple-doc-download]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Lesson10.html#//apple_ref/doc/uid/TP40015214-CH14-SW3
+[bridging-header]: https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html
 [cdtdatastore-pod]: https://cocoapods.org/pods/CDTDatastore
 [cocoapods]: https://cocoapods.org/
 [cocoapods-getting-started]: https://guides.cocoapods.org/using/getting-started.html
