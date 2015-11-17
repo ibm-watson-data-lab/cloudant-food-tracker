@@ -10,6 +10,11 @@ These lessons assume that you have completed the [FoodTracker app][apple-doc] fr
 
 <img src="https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Art/8_sim_navbar_2x.png" alt="Image of FoodTracker app" height="559" width="320">
 
+## Table of Contents
+
+1. [CocoaPods](#cocoapods)
+  1. [Learning Objectives](#learning-objectives)
+
 ## CocoaPods
 
 The first step is to connect with the broader open source iOS software community by installing free software packages using [CocoaPods][cocoapods]. You will use the CocoaPods repository to integrate the [Cloudant Sync Datastore][cdtdatastore-pod] library.
