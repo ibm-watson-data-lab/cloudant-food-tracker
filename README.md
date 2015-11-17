@@ -24,7 +24,7 @@ At the end of the lesson, you’ll be able to:
 
 ### Install CocoaPods on your Mac
 
-The CocoaPods web site has an excellent page, [Getting Started][cocoapods-getting-started], which covers intalling and upgrading. For your purposes, we will use the most simple, using the command-line `gem` program.
+The CocoaPods web site has an excellent page, [Getting Started][cocoapods-getting-started], which covers intalling and upgrading. For your purposes, you will use the most simple, using the command-line `gem` program.
 
 **To install CocoaPods**
 
@@ -170,7 +170,7 @@ Your bridging header is done! Xcode should look like this:
 
 ## Store Data Locally with Cloudant Sync
 
-With CDTDatastore compiled and working, the next step is to replace the NSCoder persistence system with CDTDatastore. Currently, in `MealTableViewController.swift`, during initialization, the encoded array of meals is loaded from local storage. When we add or change a meal, the entire `meals` array is encoded and stored on disk. You will replace that system with a document-based architecture&mdash;in other words, each meal will be one record in the Cloudant Sync datastore.
+With CDTDatastore compiled and working, the next step is to replace the NSCoder persistence system with CDTDatastore. Currently, in `MealTableViewController.swift`, during initialization, the encoded array of meals is loaded from local storage. When you add or change a meal, the entire `meals` array is encoded and stored on disk. You will replace that system with a document-based architecture&mdash;in other words, each meal will be one record in the Cloudant Sync datastore.
 
 Keep in mind, this first step of using Cloudant Sync *does not use the Internet at all*. The first goal is simply to store app data locally. After that works correctly, you will add cloud sync features. This is the *offline-first* architecture, with Internet access being *optional* to use the app. All data operations are on the local device. (If the device has an Internet connection, then the app will sync its data to the cloud&mdash;covered in the next section.)
 
@@ -195,7 +195,7 @@ Begin cleanly by removing the current NSCoding system from the model and the tab
   1. Delete the method below that, `encodeWithCoder(_:)`.
   1. Delete the method below that, `init?(coder aDecoder: NSCoder)`.
 
-Next, clean out the table view controller.
+Next, remove NSCoding from the table view controller.
 
 **To remove NSCoding from the table view controller**
 
@@ -223,6 +223,47 @@ Next, clean out the table view controller.
   1. Delete the function below that, `func loadMeals()`.
 
 *Checkpoint:* Run your app. The app will obviously lose some functionality: loading stored meals, and creating the first three sample meals; although you can still create, edit, and remove meals (but they will not persist if you quit the app). That is okay. In the next step, you will restore these functions using Cloudant Sync instead.
+
+### Initialize the Cloudant Sync Datastore
+
+Now you will add meal loading, saving, and initializing functionality back to the app, using the Cloudant Sync datastore. One consideration is that if you delete a sample meal, you do not want it to be re-created the next time you run the app. To support this requirement, you will use *document conflicts* to do nothing if the meal had already been initialized.
+
+This will be the basic design:
+
+  * Each meal is a single document, which will contain the meal name, its rating, and a photo attachment.
+  * To initialize the first three meals, simply attempt to create their documents.
+    * If the meals are not yet in the datastore, they will be created normally;
+    * If the meals already exist, CDTDatastore will return a "conflict" result, which you will ignore. Even if you editing or deleting a sample meal, its existence (or its "tombstone") will still be in the datastore, so restarting the app will not accidentally re-create it.
+
+**To initialize the datastore**
+
+  1. Open `MealTableViewController.swift`
+  1. In `MealTableViewController.swift`, find the `MARK: Properties` section, append the following code beneath the line `var meals = [Meal]()`:
+
+     ``` swift
+     var datastoreManager: CDTDatastoreManager?
+     var datastore: CDTDatastore?
+     ```
+  1. In `MealTableViewController.swift`, append the following code to the method `viewDidLoad()`:
+
+     ``` swift
+     // Initialize the Cloudant Sync local datastore.
+     let fileManager = NSFileManager.defaultManager()
+
+     let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
+         inDomains: .UserDomainMask).last!
+
+     let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-data")
+     let path = storeURL.path
+
+     do {
+         datastoreManager = try CDTDatastoreManager(directory: path)
+         datastore = try datastoreManager!.datastoreNamed("meals")
+     } catch {
+         print("Error initializing datastore: \(error)")
+         return
+     }
+     ```
 
 ## Sync with IBM Cloudant
 

@@ -13,12 +13,31 @@ class MealTableViewController: UITableViewController {
     // MARK: Properties
     
     var meals = [Meal]()
+    var datastoreManager: CDTDatastoreManager?
+    var datastore: CDTDatastore?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Use the edit button item provided by the table view controller.
         navigationItem.leftBarButtonItem = editButtonItem()
+        
+        // Initialize the Cloudant Sync local datastore.
+        let fileManager = NSFileManager.defaultManager()
+        
+        let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
+            inDomains: .UserDomainMask).last!
+        
+        let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-data")
+        let path = storeURL.path
+        
+        do {
+            datastoreManager = try CDTDatastoreManager(directory: path)
+            datastore = try datastoreManager!.datastoreNamed("meals")
+        } catch {
+            print("Error initializing datastore: \(error)")
+            return
+        }
     }
     
     func loadSampleMeals() {
