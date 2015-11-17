@@ -188,6 +188,16 @@ With CDTDatastore compiled and working, the next step is to replace the NSCoder 
 
 Keep in mind, this first step of using Cloudant Sync *does not use the Internet at all*. The first goal is simply to store app data locally. After that works correctly, you will add cloud sync features. This is the *offline-first* architecture, with Internet access being *optional* to use the app. All data operations are on the local device. (If the device has an Internet connection, then the app will sync its data to the cloud&mdash;covered in the next section.)
 
+### Learning Objectives
+
+At the end of the lesson, you’ll be able to:
+
+  1. Understand the Cloudant document model:
+    1. Key-value storage for basic data types
+    1. Attachment storage for binary photos
+    1. The document ID and revision ID
+  1. Store and retrieve meal data using the Cloudant Sync datastore
+
 ### Remove NSCoding
 
 Begin cleanly by removing the current NSCoding system from the model and the table view controller.
