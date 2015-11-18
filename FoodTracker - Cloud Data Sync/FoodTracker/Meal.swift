@@ -32,7 +32,7 @@ class Meal: NSObject {
 
     // MARK: Initialization
     
-    init?(name: String, photo: UIImage?, rating: Int, docId: String) {
+    init?(name: String, photo: UIImage?, rating: Int, docId: String?) {
         // Initialize stored properties.
         self.name = name
         self.photo = photo

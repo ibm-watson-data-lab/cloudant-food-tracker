@@ -15,6 +15,7 @@ This document picks up where that document leaves off: syncing data between devi
   1. [Compile with Cloudant Sync](#compile-with-cloudant-sync)
 1. [Store Data Locally with Cloudant Sync](#store-data-locally-with-cloudant-sync)
   1. [Learning Objectives](#learning-objectives-1)
+  1. [The Cloudant Document Model](#the-cloudant-document-model)
   1. [Remove NSCoding](#remove-nscoding)
   1. [Initialize the Cloudant Sync Datastore](#initialize-the-cloudant-sync-datastore)
 
@@ -199,11 +200,11 @@ At the end of the lesson, you’ll be able to:
     1. The document ID and revision ID
   1. Store and retrieve meal data using the Cloudant Sync datastore
 
-### The Cloudant document model
+### The Cloudant Document Model
 
 Let's begin with a discussion of Cloudant basics. The *document* is the primary data model of all IBM Cloudant databases, not only Cloudant Sync for iOS, but also for Android, as well as the Cloudant hosted database. This makes sense, because all databases can replicate to and from each other (and also to and from [Apache CouchDB][couchdb]).
 
-A document, often called a *doc*, is a just a bunch of key-value data. Do not think "Microsoft Office document"; think "JSON object." A document is a JSON object: keys (strings) can have values (in Swift: Ints, Doubles, Bools, Strings, as well as nested Arrays and Dictionaries).
+A document, often called a *doc*, is a *body* of key-value data. But do not think "Microsoft Office document"; think "JSON object." A document is a JSON object: keys (strings) can have values (Ints, Doubles, Bools, Strings, as well as nested Arrays and Dictionaries).
 
 Documents can also contain binary blobs, called *attachments*. You can add, change, or remove attachments in a very similar way as you would add, change, or remove key-value data in a doc.
 
@@ -214,6 +215,17 @@ The *revision ID* (sometimes called *_rev* or *revision*) is a string generated 
 * The revision ID changes every time you store a change to a document
 * When you update a document, you provide the current revision ID to the datastore, and the datastore will return to you the *new* revision ID of the new document
 * When you create a document, you *do not* provide a revision ID (since there is no "current" document with a "current" revision ID to provide)
+
+Finally, note that deleting a document is actually an update, with metadata set to indicate deletion (sometimes called a document "tombstone"). Since a delete is an update just like any other, the deleted document will have its own revision ID.
+
+With this in mind, consider: how will the sample meals work? At first, you might think to create meals documents when the app starts. That will work correctly the first time the user runs the app; however, if the user changes or deletes the sample meals, *those changes must persist*. For example, if the user deletes the sample meals and then restarts the app later, those meals must remain deleted.
+
+To support this requirement, you will use the "tomstones" feature of documents. This will be the basic design:
+
+  * Each meal is a single document, which will contain the meal name, its rating, and a photo attachment.
+  * To initialize the first three meals, simply attempt to create the documents, with no prior revision ID
+    * If the meals are not yet in the datastore, they will be created normally;
+    * If the meals already exist, CDTDatastore will return a "conflict" result, which you will ignore. Even after the user updates or deletes a sample meal, its tombstone will persist in the datastore.
 
 Now, you can put this understanding into practice by transitioning to Cloudant Sync for local app data storage.
 
@@ -270,18 +282,11 @@ Next, remove NSCoding from the table view controller.
 
 ### Initialize the Cloudant Sync Datastore
 
-Now you will add meal loading, saving, and initializing functionality back to the app, using the Cloudant Sync datastore. One consideration is that if you delete a sample meal, you do not want it to be re-created the next time you run the app. To support this requirement, you will use *document conflicts* to do nothing if the meal had already been initialized.
+Now you will add loading and saving back to the app, using the Cloudant Sync datastore. A meal will be a document, with its name and rating stored as key-value data, and its photo stored as an attachment.
 
-This will be the basic design:
+Begin with the Meal model, the file `Meal.swift`. You will add a new initialization method which can create a Meal object from a document. In other words, the `init()` method will set the meal name and rating from the document key-value data; and it will set the meal photo from the document attachment.
 
-  * Each meal is a single document, which will contain the meal name, its rating, and a photo attachment.
-  * To initialize the first three meals, simply attempt to create their documents.
-    * If the meals are not yet in the datastore, they will be created normally;
-    * If the meals already exist, CDTDatastore will return a "conflict" result, which you will ignore. Even if you editing or deleting a sample meal, its existence (or its "tombstone") will still be in the datastore, so restarting the app will not accidentally re-create it.
-
-Begin with the Meal model. You will add a new initialization method which can create a Meal object when given a datastore document representing a meal. In other words, the `init()` method will set the meal name and rating from the document key-value data; and it will set the meal photo from the document attachment.
-
-Representing a Meal as a Cloudant Sync document requires few changes besides the initialization function. The only change the the actual model is to add a variable to store the document ID. Document IDs are unique strings identifying the document. For this example, document IDs will be random, generated by Cloudant Sync.
+Representing a Meal as a Cloudant Sync document requires few changes besides the initialization function. The only change the the actual model is to add a variable for the underlying document ID. By remembering a meal's document ID, you will be able to change that doc when the user changes the meal (e.g. by changing its rating, its name, or its photo).
 
 **To add Cloudant Sync datastore support**
 
@@ -294,7 +299,7 @@ Representing a Meal as a Cloudant Sync document requires few changes besides the
   1. In `Meal.swift`, edit the `init?` method to accept a docId as a final argument, and to set the docId property. When you are finished, the method will look like this:
 
      ``` swift
-     init?(name: String, photo: UIImage?, rating: Int, docId: String) {
+     init?(name: String, photo: UIImage?, rating: Int, docId: String?) {
          // Initialize stored properties.
          self.name = name
          self.photo = photo
