@@ -141,5 +141,58 @@ class MealTableViewController: UITableViewController {
     
     // MARK: Datastore
     
+    func saveMeal(meal:Meal) {
+        saveMeal(meal, create:false)
+    }
     
+    func saveMeal(meal:Meal, create:Bool) {
+        let docId = meal.docId
+        var rev = CDTDocumentRevision(docId: docId)
+        
+        // First, fetch the latest revision from the DB.
+        if docId != nil && !create {
+            do {
+                print("Update meal: \(docId)")
+                rev = try datastore!.getDocumentWithId(docId)
+                print("retrieved", rev)
+            } catch let error as NSError {
+                if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
+                    print("Error loading meal \(docId): \(reason)")
+                } else {
+                    print("Error loading meal \(docId): \(error)")
+                }
+                return
+            }
+        }
+        
+        rev.body["name"] = meal.name
+        rev.body["rating"] = meal.rating
+        
+        if let data = UIImagePNGRepresentation(meal.photo!) {
+            let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
+            rev.attachments[attachment.name] = attachment
+            print("Meal \(docId) attachment: \(attachment.size) bytes")
+        }
+        
+        do {
+            var revision: CDTDocumentRevision
+            if create {
+                revision = try datastore!.createDocumentFromRevision(rev)
+                print("Created \(revision.docId)")
+            } else {
+                revision = try datastore!.updateDocumentFromRevision(rev)
+                print("Updated \(revision.docId)")
+            }
+        } catch let error as NSError {
+            if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
+                if (reason == "conflict" && create) {
+                    print("Update conflict is ok: \(docId)")
+                } else {
+                    print("Error storing meal \(docId): \(reason)")
+                }
+            } else {
+                print("Unknown error storing meal \(docId): \(error)")
+            }
+        }
+    }
 }

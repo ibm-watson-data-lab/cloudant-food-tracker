@@ -18,6 +18,7 @@ This document picks up where that document leaves off: syncing data between devi
   1. [The Cloudant Document Model](#the-cloudant-document-model)
   1. [Remove NSCoding](#remove-nscoding)
   1. [Initialize the Cloudant Sync Datastore](#initialize-the-cloudant-sync-datastore)
+  1. [Create Sample Meals in the Datastore](#create-sample-meals-in-the-datastore)
 
 
 ## About the Lessons
@@ -315,7 +316,7 @@ Representing a Meal as a Cloudant Sync document requires few changes besides the
      }
      ```
 
-The final step to add Cloudant Sync support to the model is to add a convenience initializer. This is a method which accepts a Cloudant Sync document, and it will create a Meal object.
+Now add a convenience initializer. This is a method which accepts a Cloudant Sync document, and creates a Meal object.
 
 **To create a convenience initializer**
 
@@ -341,9 +342,22 @@ The final step to add Cloudant Sync support to the model is to add a convenience
      }
      ```
 
-That's it for the model! The Meal class now tracks both its underlying document ID, and it supports convenient initialization directly from a Cloudant Sync datastore document (or simply, a "doc").
+That's it for the model. The Meal class now tracks both its underlying document ID, and it supports convenient initialization directly from a Cloudant Sync datastore document (or simply, a "doc").
 
-To put these new features to work, all that remains is to interface with the datastore in the Meal table view controller. Begin by initializing the datastore and data.
+Since the Meal model initializer has a new `docId: String?` parameter, you will need to update the one bit of code which initializes Meal objects, in the Meal view controller.
+
+**To update the meal view controller**
+
+  1. Open `MealViewController.swift`
+  1. In `MealViewController.swift`, find the function `prepareForSegue(_:sender:)` and change the last line of code to become this:
+
+     ``` swift
+     meal = Meal(name: name, photo: photo, rating: rating, docId: nil)
+     ```
+
+Now the model has been updated to work from Cloudant Sync documents.
+
+To put these new features to work, all that remains is to use the datastore from the Meal table view controller. Begin by initializing the datastore and data.
 
 **To initialize the datastore**
 
@@ -374,15 +388,19 @@ To put these new features to work, all that remains is to interface with the dat
      }
      ```
 
-Finally, create sample meal documents during app startup. To review, the initialization process will work this way:
+### Implement Storing and Retrieving Meals in the Datastore
+
+### Create Sample Meals in the Datastore
+
+Now is time to create sample meal documents during app startup. To review, the initialization process will work this way:
 
   1. The app starts, and quickly runs `viewDidLoad()` in the `MealTableViewController` class.
-  1. Attempt to create the sample meals, with known document IDs.
+  1. Attempt to create the sample meals, with hard-coded document IDs.
     1. If the meals had never been created, they will be added to the datastore
     1. If the meals had already been created (even if they have been subsequently deleted), the creation will quietly fail
   1. In any case, read all meals from the datastore into memory, for display to the user.
 
-Begin simply, create a code marker for the new Cloudant Sync code.
+Begin by creating a code marker for the new Cloudant Sync code.
 
 **To create a code marker for your code**
 
@@ -395,29 +413,80 @@ Begin simply, create a code marker for the new Cloudant Sync code.
   ```
   1. This will be the section of the code where you implement all Cloudant Sync datstore functionality.
 
-Next, you will write the method to save a meal to the datastore. Consider what this method must do during the lifetime of the app. When the app first starts, it must create the sample meals if they do not yet exist. But also, when the user creates or changes a meal (including deleting it), then this method must apply the user's changes.
-
-Let's explore exactly what behavior the method should support, in terms of Cloudant Sync's MVCC data model. Keep in mind the meaning and interaction of the two ID fields.
-
-  * **Revision ID**
-    * If `nil`, the operation is *document creation*
-    * If a string, the operation is a *document update*
-  * **Document ID**
-    * If `nil`, the ID will become a random GUID, so this is a way to *create documents with no update conflicts*
-    * If a string, the store either for creation or update, depending on the revision ID.
-
-
+Next, write the method to save a meal to the datastore. The method will support all of these scenarios:
 
   * **When creating sample meals:** Store the meal doc, *without* a revision ID, but *with* a hard-coded document ID (e.g. `"meal1"`, `"meal2"`, and `"meal3"`). This will have two possible outcomes:
     1. A document with that ID is not yet present, so creation succeeds, *or*
     1. A document with that ID is already present. Cloudant Sync will return a "conflict" error, which the method can ignore.
   * **When creating meals for the user:** Attempt to create the meal doc, *without a revision ID*, and *without* specifying a doc ID. Since you do do not specify a doc ID, the datastore will use a random UUID, and that will ensure that  and *without* a prior revision, because of course these are brand new records for the database
   * **When updating a meal:** You *will* specify the doc ID (to tell the datastore which record to update).
-    1. First first fetch the current record by ID, in order to get its current revision. Next
+    1. First first fetch the current record by ID, in order to get its current revision
+    1. Then, update its data (rating, name, and photo), and save the updates
 
+**To save meals to the datastore**
+
+  1. Open `MealTableViewController.swift`
+  1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, add a new method:
+
+     ``` swift
+     func saveMeal(meal:Meal) {
+         saveMeal(meal, create:false)
+     }
+
+     func saveMeal(meal:Meal, create:Bool) {
+         let docId = meal.docId
+         var rev = CDTDocumentRevision(docId: docId)
+
+         // First, fetch the latest revision from the DB.
+         if docId != nil && !create {
+             do {
+                 print("Update meal: \(docId)")
+                 rev = try datastore!.getDocumentWithId(docId)
+                 print("retrieved", rev)
+             } catch let error as NSError {
+                 if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
+                     print("Error loading meal \(docId): \(reason)")
+                 } else {
+                     print("Error loading meal \(docId): \(error)")
+                 }
+                 return
+             }
+         }
+
+         rev.body["name"] = meal.name
+         rev.body["rating"] = meal.rating
+
+         if let data = UIImagePNGRepresentation(meal.photo!) {
+             let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
+             rev.attachments[attachment.name] = attachment
+             print("Meal \(docId) attachment: \(attachment.size) bytes")
+         }
+
+         do {
+             var revision: CDTDocumentRevision
+             if create {
+                 revision = try datastore!.createDocumentFromRevision(rev)
+                 print("Created \(revision.docId)")
+             } else {
+                 revision = try datastore!.updateDocumentFromRevision(rev)
+                 print("Updated \(revision.docId)")
+             }
+         } catch let error as NSError {
+             if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
+                 if (reason == "conflict" && create) {
+                     print("Update conflict is ok: \(docId)")
+                 } else {
+                     print("Error storing meal \(docId): \(reason)")
+                 }
+             } else {
+                 print("Unknown error storing meal \(docId): \(error)")
+             }
+         }
+     }
+     ```
 
 **To create sample meals during app startup**
-  1. Below the 
+
   1. In the section `MARK: Datastore`, add a new method:
 
      ``` swift
