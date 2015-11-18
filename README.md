@@ -14,6 +14,7 @@ This document picks up where that document leaves off: syncing data between devi
   1. [Change from a Project to a Workspace](#change-from-a-project-to-a-workspace)
   1. [Compile with Cloudant Sync](#compile-with-cloudant-sync)
 1. [Store Data Locally with Cloudant Sync](#store-data-locally-with-cloudant-sync)
+  1. [Learning Objectives](#learning-objectives-1)
   1. [Remove NSCoding](#remove-nscoding)
   1. [Initialize the Cloudant Sync Datastore](#initialize-the-cloudant-sync-datastore)
 
@@ -193,8 +194,8 @@ Keep in mind, this first step of using Cloudant Sync *does not use the Internet 
 At the end of the lesson, you’ll be able to:
 
   1. Understand the Cloudant document model:
-    1. Key-value storage for basic data types
-    1. Attachment storage for binary photos
+    1. Key-value storage for simple data types
+    1. Attachment storage for binary data
     1. The document ID and revision ID
   1. Store and retrieve meal data using the Cloudant Sync datastore
 
@@ -213,6 +214,8 @@ The *revision ID* (sometimes called *_rev* or *revision*) is a string generated 
 * The revision ID changes every time you store a change to a document
 * When you update a document, you provide the current revision ID to the datastore, and the datastore will return to you the *new* revision ID of the new document
 * When you create a document, you *do not* provide a revision ID (since there is no "current" document with a "current" revision ID to provide)
+
+Now, you can put this understanding into practice by transitioning to Cloudant Sync for local app data storage.
 
 ### Remove NSCoding
 
