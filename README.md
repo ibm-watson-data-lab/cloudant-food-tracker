@@ -349,9 +349,10 @@ Since the Meal model initializer has a new `docId: String?` parameter, you will 
 **To update the meal view controller**
 
   1. Open `MealViewController.swift`
-  1. In `MealViewController.swift`, find the function `prepareForSegue(_:sender:)` and change the last line of code to become this:
+  1. In `MealViewController.swift`, find the function `prepareForSegue(_:sender:)` and change the last section of code to this:
 
      ``` swift
+     // Set the meal to be passed to MealListTableViewController after the unwind segue.
      meal = Meal(name: name, photo: photo, rating: rating, docId: nil)
      ```
 
@@ -487,23 +488,31 @@ Next, write the method to save a meal to the datastore. The method will support 
 
 **To create sample meals during app startup**
 
-  1. In the section `MARK: Datastore`, add a new method:
+1. Open `MealTableViewController.swift`
+1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, add a new method:
 
-     ``` swift
-     func storeSampleMeals() {
-         let photo1 = UIImage(named: "meal1")!
-         let photo2 = UIImage(named: "meal2")!
-         let photo3 = UIImage(named: "meal3")
+   ``` swift
+   func storeSampleMeals() {
+       let photo1 = UIImage(named: "meal1")!
+       let photo2 = UIImage(named: "meal2")!
+       let photo3 = UIImage(named: "meal3")
 
-         let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4, docId: "meal1")!
-         let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"meal2")!
-         let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3, docId:"meal3")!
+       let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4, docId: "meal1")!
+       let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"meal2")!
+       let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3, docId:"meal3")!
 
-         saveMeal(meal1, create:true)
-         saveMeal(meal2, create:true)
-         saveMeal(meal3, create:true)
-     }
-     ```
+       saveMeal(meal1, create:true)
+       saveMeal(meal2, create:true)
+       saveMeal(meal3, create:true)
+   }
+   ```
+1. In `MealTableViewController.swift`, in the method `viewDidLoad()`, add this code:
+
+  ``` swift
+  // The datastore is now ready. Next, initialize the sample meals.
+  storeSampleMeals()
+  ```
+
 
 ## Sync with IBM Cloudant
 

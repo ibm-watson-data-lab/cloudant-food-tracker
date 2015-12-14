@@ -37,6 +37,9 @@ class MealTableViewController: UITableViewController {
         } catch {
             fatalError("Failed to initialize datastore: \(error)")
         }
+        
+        // The datastore is now ready. Next, initialize the sample meals.
+        storeSampleMeals()
     }
     
     override func didReceiveMemoryWarning() {
@@ -194,5 +197,19 @@ class MealTableViewController: UITableViewController {
                 print("Unknown error storing meal \(docId): \(error)")
             }
         }
+    }
+    
+    func storeSampleMeals() {
+        let photo1 = UIImage(named: "meal1")!
+        let photo2 = UIImage(named: "meal2")!
+        let photo3 = UIImage(named: "meal3")
+        
+        let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4, docId: "meal1")!
+        let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"meal2")!
+        let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3, docId:"meal3")!
+        
+        saveMeal(meal1, create:true)
+        saveMeal(meal2, create:true)
+        saveMeal(meal3, create:true)
     }
 }
