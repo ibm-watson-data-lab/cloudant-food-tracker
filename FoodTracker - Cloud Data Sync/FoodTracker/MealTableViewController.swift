@@ -40,6 +40,9 @@ class MealTableViewController: UITableViewController {
         
         // The datastore is now ready. Next, initialize the sample meals.
         storeSampleMeals()
+        
+        // Everything is ready. Load all meals from the datastore.
+        loadMealsFromDataStore()
     }
     
     override func didReceiveMemoryWarning() {
@@ -83,6 +86,9 @@ class MealTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             // Delete the row from the data source
+            let meal = meals[indexPath.row]
+            deleteMeal(meal)
+            // XXX TODO
             meals.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else if editingStyle == .Insert {
@@ -118,6 +124,7 @@ class MealTableViewController: UITableViewController {
             if let selectedMealCell = sender as? MealTableViewCell {
                 let indexPath = tableView.indexPathForCell(selectedMealCell)!
                 let selectedMeal = meals[indexPath.row]
+                print("XXX selectedMeal = \(selectedMeal) id = \(selectedMeal.docId)")
                 mealDetailViewController.meal = selectedMeal
             }
         }
@@ -133,69 +140,101 @@ class MealTableViewController: UITableViewController {
                 // Update an existing meal.
                 meals[selectedIndexPath.row] = meal
                 tableView.reloadRowsAtIndexPaths([selectedIndexPath], withRowAnimation: .None)
+                updateMeal(meal)
             } else {
                 // Add a new meal.
                 let newIndexPath = NSIndexPath(forRow: meals.count, inSection: 0)
                 meals.append(meal)
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
+                createMeal(meal)
             }
         }
     }
     
     // MARK: Datastore
     
-    func saveMeal(meal:Meal) {
-        saveMeal(meal, create:false)
-    }
-    
-    func saveMeal(meal:Meal, create:Bool) {
-        let docId = meal.docId
-        var rev = CDTDocumentRevision(docId: docId)
-        
-        // First, fetch the latest revision from the DB.
-        if docId != nil && !create {
-            do {
-                print("Update meal: \(docId)")
-                rev = try datastore!.getDocumentWithId(docId)
-                print("retrieved", rev)
-            } catch let error as NSError {
-                if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
-                    print("Error loading meal \(docId): \(reason)")
-                } else {
-                    print("Error loading meal \(docId): \(error)")
-                }
-                return
-            }
-        }
-        
+    func populateRevision(meal: Meal, revision: CDTDocumentRevision?) {
+        // Populate a document revision from a Meal.
+        let rev: CDTDocumentRevision = revision ?? CDTDocumentRevision(docId: meal.docId)
         rev.body["name"] = meal.name
         rev.body["rating"] = meal.rating
         
         if let data = UIImagePNGRepresentation(meal.photo!) {
             let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
             rev.attachments[attachment.name] = attachment
-            print("Meal \(docId) attachment: \(attachment.size) bytes")
+        }
+    }
+
+    func deleteMeal(meal: Meal) {
+        updateMeal(meal, isDelete: true)
+    }
+    
+    func updateMeal(meal: Meal) {
+        updateMeal(meal, isDelete: false)
+    }
+    
+    func updateMeal(meal: Meal, isDelete: Bool) {
+        guard let docId = meal.docId else {
+            print("Cannot update a meal with no document ID")
+            return
+        }
+
+        let label = isDelete ? "Delete" : "Update"
+        print("\(label) \(docId)")
+        
+        // First, fetch the current document revision from the DB.
+        var rev: CDTDocumentRevision
+        do {
+            rev = try datastore!.getDocumentWithId(docId)
+            populateRevision(meal, revision: rev)
+        } catch {
+            print("Error loading meal \(docId): \(error)")
+            return
+        }
+
+        do {
+            var result: CDTDocumentRevision
+            if (isDelete) {
+                result = try datastore!.deleteDocumentFromRevision(rev)
+            } else {
+                result = try datastore!.updateDocumentFromRevision(rev)
+            }
+            print("\(label) \(docId): \(result.revId)")
+        } catch {
+            print("Error updating \(docId): \(error)")
+            return
+        }
+    }
+    
+    func createMeal(meal: Meal) {
+        // User-created meals will have docId == nil. Sample meals have a string docId.
+        // For sample meals, look up the existing doc. There will be three possibilities:
+        //   1. No exceptionThe sample has already been created (and is still present)
+        //   2. The sample has already been created, but was subsequently deleted.
+        //   3. The sample has never been created.
+        if let docId = meal.docId {
+            do {
+                try datastore!.getDocumentWithId(docId)
+                print("Skip \(docId) creation: already exists")
+                return
+            } catch let error as NSError {
+                if (error.userInfo["NSLocalizedFailureReason"] as? String != "not_found") {
+                    print("Skip \(docId) creation: already deleted by user")
+                    return
+                }
+                
+                print("Create sample meal: \(docId)")
+            }
         }
         
+        let rev = CDTDocumentRevision(docId: meal.docId)
+        populateRevision(meal, revision: rev)
+        
         do {
-            var revision: CDTDocumentRevision
-            if create {
-                revision = try datastore!.createDocumentFromRevision(rev)
-                print("Created \(revision.docId)")
-            } else {
-                revision = try datastore!.updateDocumentFromRevision(rev)
-                print("Updated \(revision.docId)")
-            }
-        } catch let error as NSError {
-            if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
-                if (reason == "conflict" && create) {
-                    print("Update conflict is ok: \(docId)")
-                } else {
-                    print("Error storing meal \(docId): \(reason)")
-                }
-            } else {
-                print("Unknown error storing meal \(docId): \(error)")
-            }
+            let result = try datastore!.createDocumentFromRevision(rev)
+            print("Created \(result.docId) \(result.revId)")
+        } catch {
+            print("Error creating meal: \(error)")
         }
     }
     
@@ -204,12 +243,23 @@ class MealTableViewController: UITableViewController {
         let photo2 = UIImage(named: "meal2")!
         let photo3 = UIImage(named: "meal3")
         
-        let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4, docId: "meal1")!
-        let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"meal2")!
-        let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3, docId:"meal3")!
+        let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4, docId: "sample-1")!
+        let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"sample-2")!
+        let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3, docId:"sample-3")!
         
-        saveMeal(meal1, create:true)
-        saveMeal(meal2, create:true)
-        saveMeal(meal3, create:true)
+        createMeal(meal1)
+        createMeal(meal2)
+        createMeal(meal3)
+    }
+    
+    func loadMealsFromDataStore() {
+        let docs = datastore!.getAllDocuments() as! [CDTDocumentRevision]
+        print("Found \(docs.count) meal documents in datastore: \(docs)")
+        
+        for doc in docs {
+            if let meal = Meal(aDoc: doc) {
+                meals.append(meal)
+            }
+        }
     }
 }

@@ -389,19 +389,11 @@ To put these new features to work, all that remains is to use the datastore from
      }
      ```
 
-### Implement Storing and Retrieving Meals in the Datastore
+### Implement Storing and Retrieving from the Datastore
 
-### Create Sample Meals in the Datastore
+With the datastore initialized, you need to write methods to store and retrieve meal documents from the datastore. Of course, this is the heart of this project. Fortunately, this step requires only a few methods to interact with the datastore; and subsequently you will enjoy all the benefits the Cloudant Sync datastore brings, like offline-first operation and cloud syncing.
 
-Now is time to create sample meal documents during app startup. To review, the initialization process will work this way:
-
-  1. The app starts, and quickly runs `viewDidLoad()` in the `MealTableViewController` class.
-  1. Attempt to create the sample meals, with hard-coded document IDs.
-    1. If the meals had never been created, they will be added to the datastore
-    1. If the meals had already been created (even if they have been subsequently deleted), the creation will quietly fail
-  1. In any case, read all meals from the datastore into memory, for display to the user.
-
-Begin by creating a code marker for the new Cloudant Sync code.
+Begin by creating a code marker for the new Cloudant Sync datastore methods.
 
 **To create a code marker for your code**
 
@@ -430,7 +422,7 @@ Next, write the method to save a meal to the datastore. The method will support 
   1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, add a new method:
 
      ``` swift
-     func saveMeal(meal:Meal) {
+     func saveMeal(meal: Meal) {
          saveMeal(meal, create:false)
      }
 
@@ -485,6 +477,17 @@ Next, write the method to save a meal to the datastore. The method will support 
          }
      }
      ```
+
+That's it! The most complex 
+### Create Sample Meals in the Datastore
+
+Now is time to create sample meal documents during app startup. To review, the initialization process will work this way:
+
+  1. The app starts, and quickly runs `viewDidLoad()` in the `MealTableViewController` class.
+  1. Attempt to create the sample meals, with hard-coded document IDs.
+    1. If the meals had never been created, they will be added to the datastore
+    1. If the meals had already been created (even if they have been subsequently deleted), the creation will quietly fail
+  1. In any case, read all meals from the datastore into memory, for display to the user.
 
 **To create sample meals during app startup**
 
