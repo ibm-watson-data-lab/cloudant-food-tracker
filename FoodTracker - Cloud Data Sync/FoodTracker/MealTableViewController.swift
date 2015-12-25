@@ -23,26 +23,7 @@ class MealTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem = editButtonItem()
         
         // Initialize the Cloudant Sync local datastore.
-        let fileManager = NSFileManager.defaultManager()
-        
-        let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
-            inDomains: .UserDomainMask).last!
-        
-        let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-data")
-        let path = storeURL.path
-        
-        do {
-            datastoreManager = try CDTDatastoreManager(directory: path)
-            datastore = try datastoreManager!.datastoreNamed("meals")
-        } catch {
-            fatalError("Failed to initialize datastore: \(error)")
-        }
-        
-        // The datastore is now ready. Next, initialize the sample meals.
-        storeSampleMeals()
-        
-        // Everything is ready. Load all meals from the datastore.
-        loadMealsFromDataStore()
+        initCloudantSync()
     }
     
     override func didReceiveMemoryWarning() {
@@ -150,6 +131,29 @@ class MealTableViewController: UITableViewController {
     }
     
     // MARK: Datastore
+
+    func initCloudantSync() {
+        let fileManager = NSFileManager.defaultManager()
+        
+        let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
+            inDomains: .UserDomainMask).last!
+        
+        let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-data")
+        let path = storeURL.path
+        
+        do {
+            datastoreManager = try CDTDatastoreManager(directory: path)
+            datastore = try datastoreManager!.datastoreNamed("meals")
+        } catch {
+            fatalError("Failed to initialize datastore: \(error)")
+        }
+        
+        // The datastore is now ready. Next, initialize the sample meals.
+        storeSampleMeals()
+        
+        // Everything is ready. Load all meals from the datastore.
+        loadMealsFromDataStore()
+    }
     
     func populateRevision(meal: Meal, revision: CDTDocumentRevision?) {
         // Populate a document revision from a Meal.
