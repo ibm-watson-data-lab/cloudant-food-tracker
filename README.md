@@ -378,7 +378,7 @@ To put these new features to work, all that remains is to use the datastore from
      let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
          inDomains: .UserDomainMask).last!
 
-     let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-data")
+     let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-meals")
      let path = storeURL.path
 
      do {
@@ -388,6 +388,18 @@ To put these new features to work, all that remains is to use the datastore from
          fatalError("Failed to initialize datastore")
      }
      ```
+
+### Deleting the Datastore in the iOS Simulator
+
+Sometimes during development, you may want to delete the datastore and start over. There are several ways to do this, for example, by deleting the app from the simulated device.
+
+However, here is a quick command you can paste into the terminal. It will remove the Cloudant Sync database. When you restart the app, the app will initialize a new datastore and behave as if this was its first time to run. For example, it will re-create the sample meals again.
+
+**To delete the datastore from the iOS Simulator**
+
+    rm -i -rv $HOME/Library/Developer/CoreSimulator/Devices/*/data/Containers/Data/Application/*/Documents/foodtracker-meals
+
+This command will prompt you to remove the files. If you are confident that the command is working correct, you can omit the `-i` option.
 
 ### Implement Storing and Retrieving from the Datastore
 
