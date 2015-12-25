@@ -88,7 +88,6 @@ class MealTableViewController: UITableViewController {
             // Delete the row from the data source
             let meal = meals[indexPath.row]
             deleteMeal(meal)
-            // XXX TODO
             meals.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else if editingStyle == .Insert {
@@ -124,7 +123,6 @@ class MealTableViewController: UITableViewController {
             if let selectedMealCell = sender as? MealTableViewCell {
                 let indexPath = tableView.indexPathForCell(selectedMealCell)!
                 let selectedMeal = meals[indexPath.row]
-                print("XXX selectedMeal = \(selectedMeal) id = \(selectedMeal.docId)")
                 mealDetailViewController.meal = selectedMeal
             }
         }
