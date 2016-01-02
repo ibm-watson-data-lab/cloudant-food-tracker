@@ -9,13 +9,20 @@
 
 import UIKit
 
-class MealTableViewController: UITableViewController {
+class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
     // MARK: Properties
     
     var meals = [Meal]()
+    
     var datastoreManager: CDTDatastoreManager?
     var datastore: CDTDatastore?
-    
+    var pullReplicator: CDTReplicator?
+    var pushReplicator: CDTReplicator?
+//    var pushReplicator: CDTReplicator?
+//    var pullReplicator: CDTReplicator?
+//    var pushReplication: CDTPushReplication?
+//    var pullReplication: CDTPullReplication?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,7 +30,8 @@ class MealTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem = editButtonItem()
         
         // Initialize the Cloudant Sync local datastore.
-        initCloudantSync()
+        initDatastore()
+        cloudPush() // XXX
     }
     
     override func didReceiveMemoryWarning() {
@@ -132,7 +140,7 @@ class MealTableViewController: UITableViewController {
     
     // MARK: Datastore
 
-    func initCloudantSync() {
+    func initDatastore() {
         let fileManager = NSFileManager.defaultManager()
         
         let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
@@ -263,5 +271,53 @@ class MealTableViewController: UITableViewController {
                 meals.append(meal)
             }
         }
+    }
+    
+    // MARK: Cloudant Sync
+    
+    func cloudURL() -> NSURL {
+        // Change these to reflect your own Cloudant account and credentials.
+        let account = "foodtracker"
+        let dbName = "meals"
+        let apiKey = "andifecternarlitirsetion"
+        let apiPassword = "356dcd854fe9930cbca96e77dccbfd2af3f5f83f"
+        
+        let url = "https://\(apiKey):\(apiPassword)@\(account).cloudant.com/\(dbName)"
+        return NSURL(string: url)!
+    }
+    
+    func cloudPush() {
+        // Push local data to the central cloud.
+        
+        // Describe the replication "direction" (pull from remote, or push from local).
+        let job = CDTPullReplication(source: cloudURL(), target: datastore!)
+        let factory = CDTReplicatorFactory(datastoreManager: datastoreManager)
+        
+        do {
+            pullReplicator = try factory.oneWay(job)
+            let p = pullReplicator!
+            p.delegate = self
+            print("Start")
+            try p.start()
+            print("Started")
+        } catch {
+            print("Error initializing sync: \(error)")
+        }
+    }
+    
+    func replicatorDidChangeState(replicator: CDTReplicator!) {
+        print("Replication state \(replicator)")
+    }
+    
+    func replicatorDidChangeProgress(replicator: CDTReplicator!) {
+        print("Replication progress \(replicator)")
+    }
+    
+    func replicatorDidComplete(replicator: CDTReplicator!) {
+        print("Replication complete \(replicator)")
+    }
+    
+    func replicatorDidError(replicator: CDTReplicator!, info: NSError!) {
+        print("Replicator error \(replicator) \(info)")
     }
 }
