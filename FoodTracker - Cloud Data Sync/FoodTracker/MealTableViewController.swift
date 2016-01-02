@@ -17,9 +17,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
     var datastoreManager: CDTDatastoreManager?
     var datastore: CDTDatastore?
     var replications = [SyncDirection: CDTReplicator]()
-    
-    //var pullReplicator: CDTReplicator?
-    //var pushReplicator: CDTReplicator?
+    var pullTimer = NSTimer.init()
     
     enum SyncDirection {
         case Push
@@ -34,7 +32,10 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
         
         // Initialize the Cloudant Sync local datastore.
         initDatastore()
-        sync(.Push)
+        
+        let pollSeconds = 5 * 60.0
+        pullTimer = NSTimer.scheduledTimerWithTimeInterval(pollSeconds, target: self, selector: "poll", userInfo: nil, repeats: true)
+        poll()
     }
     
     override func didReceiveMemoryWarning() {
@@ -217,6 +218,9 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
             print("Error updating \(docId): \(error)")
             return
         }
+        
+        // Begin a push sync to get this update in Cloudant quickly.
+        sync(.Push)
     }
     
     func createMeal(meal: Meal) {
@@ -287,6 +291,11 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
         
         let url = "https://\(apiKey):\(apiPassword)@\(account).cloudant.com/\(dbName)"
         return NSURL(string: url)!
+    }
+    
+    func poll() {
+        print("Poll")
+        sync(.Pull)
     }
     
     func sync(direction: SyncDirection) {
