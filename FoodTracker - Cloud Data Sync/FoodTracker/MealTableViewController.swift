@@ -16,12 +16,15 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
     
     var datastoreManager: CDTDatastoreManager?
     var datastore: CDTDatastore?
-    var pullReplicator: CDTReplicator?
-    var pushReplicator: CDTReplicator?
-//    var pushReplicator: CDTReplicator?
-//    var pullReplicator: CDTReplicator?
-//    var pushReplication: CDTPushReplication?
-//    var pullReplication: CDTPullReplication?
+    var replications = [SyncDirection: CDTReplicator]()
+    
+    //var pullReplicator: CDTReplicator?
+    //var pushReplicator: CDTReplicator?
+    
+    enum SyncDirection {
+        case Push
+        case Pull
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +34,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
         
         // Initialize the Cloudant Sync local datastore.
         initDatastore()
-        cloudPush() // XXX
+        sync(.Push)
     }
     
     override func didReceiveMemoryWarning() {
@@ -286,23 +289,31 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
         return NSURL(string: url)!
     }
     
-    func cloudPush() {
-        // Push local data to the central cloud.
+    func sync(direction: SyncDirection) {
+        // Sync local data to or from the central cloud.
+        let replication = replications[direction]
+        print("Current for \(direction): \(replication)")
         
-        // Describe the replication "direction" (pull from remote, or push from local).
-        let job = CDTPullReplication(source: cloudURL(), target: datastore!)
+        guard replication == nil else {
+            print("Ignore \(direction) replication; already running")
+            return
+        }
+        
         let factory = CDTReplicatorFactory(datastoreManager: datastoreManager)
+        let job = (direction == .Push)
+            ? CDTPushReplication(source: datastore!, target: cloudURL())
+            : CDTPullReplication(source: cloudURL(), target: datastore!)
         
         do {
-            pullReplicator = try factory.oneWay(job)
-            let p = pullReplicator!
-            p.delegate = self
-            print("Start")
-            try p.start()
-            print("Started")
+            replications[direction] = try factory.oneWay(job)
+            replications[direction]!.delegate = self
+            try replications[direction]!.start()
         } catch {
-            print("Error initializing sync: \(error)")
+            print("Error initializing \(direction) sync: \(error)")
+            return
         }
+        
+        print("Started \(direction) sync: \(replications[direction])")
     }
     
     func replicatorDidChangeState(replicator: CDTReplicator!) {
@@ -315,9 +326,20 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
     
     func replicatorDidComplete(replicator: CDTReplicator!) {
         print("Replication complete \(replicator)")
+        clearReplicator(replicator)
     }
     
     func replicatorDidError(replicator: CDTReplicator!, info: NSError!) {
         print("Replicator error \(replicator) \(info)")
+        clearReplicator(replicator)
+    }
+    
+    func clearReplicator(replicator: CDTReplicator!) {
+        let direction = (replicator == replications[.Push])
+            ? SyncDirection.Push
+            : SyncDirection.Pull
+        
+        print("Clear replication: \(direction)")
+        replications[direction] = nil
     }
 }
