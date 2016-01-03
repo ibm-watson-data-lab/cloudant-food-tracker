@@ -189,6 +189,13 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         rev.body["name"] = meal.name
         rev.body["rating"] = meal.rating
         
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        let createdAtISO = dateFormatter.stringFromDate(meal.createdAt) //.stringByAppendingString("Z")
+        rev.body["created_at"] = createdAtISO
+        
         if let data = UIImagePNGRepresentation(meal.photo!) {
             let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
             rev.attachments[attachment.name] = attachment
@@ -277,6 +284,19 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"sample-2")!
         let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3, docId:"sample-3")!
         
+        // Hard-code the createdAt property to get consistent revision IDs. That way, devices that share
+        // a common cloud database will not generate conflicts as they sync their own sample meals.
+        let comps = NSDateComponents()
+        comps.day = 1
+        comps.month = 1
+        comps.year = 2016
+        comps.timeZone = NSTimeZone(abbreviation: "GMT")
+        let newYear = NSCalendar.currentCalendar().dateFromComponents(comps)!
+        
+        meal1.createdAt = newYear
+        meal2.createdAt = newYear
+        meal3.createdAt = newYear
+
         createMeal(meal1)
         createMeal(meal2)
         createMeal(meal3)

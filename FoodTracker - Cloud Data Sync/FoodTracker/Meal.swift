@@ -16,6 +16,7 @@ class Meal: NSObject {
     var photo: UIImage?
     var rating: Int
     var docId: String?
+    var createdAt: NSDate
     
     // MARK: Archiving Paths
     
@@ -38,6 +39,7 @@ class Meal: NSObject {
         self.photo = photo
         self.rating = rating
         self.docId = docId
+        self.createdAt = NSDate()
         
         super.init()
         
