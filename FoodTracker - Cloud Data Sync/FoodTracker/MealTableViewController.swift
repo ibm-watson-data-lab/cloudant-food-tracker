@@ -64,8 +64,6 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         let cellIdentifier = "MealTableViewCell"
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! MealTableViewCell
         
-        cell.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.10)
-        cell.ratingControl.backgroundColor = cell.backgroundColor
         // Fetches the appropriate meal for the data source layout.
         let meal = meals[indexPath.row]
         
@@ -91,6 +89,9 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
             deleteMeal(meal)
             meals.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            
+            // Immediately sync to Cloudant.
+            sync(.Push)
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
@@ -140,13 +141,23 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
                 meals[selectedIndexPath.row] = meal
                 tableView.reloadRowsAtIndexPaths([selectedIndexPath], withRowAnimation: .None)
                 updateMeal(meal)
+                
+                // Mark the meal in-flight. When sync completes, the indicator will stop.
+                let cell = tableView.cellForRowAtIndexPath(selectedIndexPath) as! MealTableViewCell
+                cell.syncIndicator.startAnimating()
             } else {
                 // Add a new meal.
                 let newIndexPath = NSIndexPath(forRow: meals.count, inSection: 0)
                 meals.append(meal)
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
                 createMeal(meal)
+                
+                // Mark the meal in-flight. When sync completes, the indicator will stop.
+                let cell = tableView.cellForRowAtIndexPath(newIndexPath) as! MealTableViewCell
+                cell.syncIndicator.startAnimating()
             }
+            
+            sync(.Push)
         }
     }
     
@@ -226,9 +237,6 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
             print("Error updating \(docId): \(error)")
             return
         }
-        
-        // Begin a push sync to get this update in Cloudant quickly.
-        sync(.Push)
     }
     
     func createMeal(meal: Meal) {
@@ -261,9 +269,6 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         } catch {
             print("Error creating meal: \(error)")
         }
-
-        // Begin a push sync to get this update in Cloudant quickly.
-        sync(.Push)
     }
     
     func storeSampleMeals() {
@@ -366,6 +371,14 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
             }
             
             refreshControl?.endRefreshing()
+        } else if (replicator == replications[.Push]) {
+            // Stop all active spinners. Note, this does not perfectly reflect the real replication
+            // state; however, it is very simple, and it typically works well enough.
+            dispatch_async(dispatch_get_main_queue(), {
+                for cell in self.tableView.visibleCells as! [MealTableViewCell] {
+                    cell.syncIndicator.stopAnimating()
+                }
+            })
         }
         
         clearReplicator(replicator)
