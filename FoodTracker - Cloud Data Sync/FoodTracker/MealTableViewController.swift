@@ -176,6 +176,8 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
             fatalError("Failed to initialize datastore: \(error)")
         }
         
+        datastore?.ensureIndexed(["created_at"], withName: "timestamps")
+        
         // The datastore is now ready. Next, initialize the sample meals.
         storeSampleMeals()
         
@@ -303,15 +305,19 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     }
     
     func loadMealsFromDataStore() {
-        let docs = datastore!.getAllDocuments() as! [CDTDocumentRevision]
-        print("Found \(docs.count) meal documents in datastore: \(docs)")
+        let query = ["created_at": ["$gt":""]]
+        let result = datastore?.find(query, skip: 0, limit: 0, fields:nil, sort: [["created_at":"asc"]])
+        guard result != nil else {
+            print("Failed to query for meals")
+            return
+        }
         
         meals.removeAll()
-        for doc in docs {
+        result!.enumerateObjectsUsingBlock({ (doc, idx, stop) -> Void in
             if let meal = Meal(aDoc: doc) {
-                meals.append(meal)
+                self.meals.append(meal)
             }
-        }
+        })
     }
     
     // MARK: Cloudant Sync
