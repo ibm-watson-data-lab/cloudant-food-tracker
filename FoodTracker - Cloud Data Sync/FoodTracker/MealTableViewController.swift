@@ -9,7 +9,7 @@
 
 import UIKit
 
-class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
+class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDTHTTPInterceptor {
     // MARK: Properties
     
     var meals = [Meal]()
@@ -282,6 +282,15 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
     
     // MARK: Cloudant Sync
     
+    func interceptRequestInContext(context: CDTHTTPInterceptorContext) -> CDTHTTPInterceptorContext {
+        let appVer: AnyObject = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]!
+        let osVer = NSProcessInfo().operatingSystemVersionString
+        let ua = "FoodTracker/\(appVer) (iOS \(osVer))"
+
+        context.request.setValue(ua, forHTTPHeaderField: "User-Agent")
+        return context
+    }
+    
     func cloudURL() -> NSURL {
         // Change these to reflect your own Cloudant account and credentials.
         let account = "foodtracker"
@@ -312,6 +321,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate {
         let job = (direction == .Push)
             ? CDTPushReplication(source: datastore!, target: cloudURL())
             : CDTPullReplication(source: cloudURL(), target: datastore!)
+        job.addInterceptor(self)
         
         do {
             replications[direction] = try factory.oneWay(job)
