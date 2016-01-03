@@ -39,9 +39,6 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         
         // Initialize the Cloudant Sync local datastore.
         initDatastore()
-
-        refreshControl?.beginRefreshing()
-        sync(.Pull)
     }
     
     override func didReceiveMemoryWarning() {
