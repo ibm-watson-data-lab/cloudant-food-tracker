@@ -348,11 +348,11 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     }
     
     func replicatorDidChangeState(replicator: CDTReplicator!) {
-        print("Replication state \(replicator)")
+        // The new state is in replicator.state.
     }
     
     func replicatorDidChangeProgress(replicator: CDTReplicator!) {
-        print("Replication progress \(replicator)")
+        // See replicator.changesProcessed and replicator.changesTotal for progress data.
     }
     
     func replicatorDidComplete(replicator: CDTReplicator!) {
