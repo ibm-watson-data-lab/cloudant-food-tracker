@@ -24,18 +24,24 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         case Pull
     }
 
+//    override func viewWillAppear(animated: Bool) {
+//        super.viewWillAppear(animated)
+//        
+//        print("Automatic sync upon load up")
+//    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.refreshControl?.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         
         // Use the edit button item provided by the table view controller.
         navigationItem.leftBarButtonItem = editButtonItem()
         
         // Initialize the Cloudant Sync local datastore.
         initDatastore()
-        
-        let pollSeconds = 5 * 60.0
-        pullTimer = NSTimer.scheduledTimerWithTimeInterval(pollSeconds, target: self, selector: "poll", userInfo: nil, repeats: true)
-        poll()
+
+        refreshControl?.beginRefreshing()
+        sync(.Pull)
     }
     
     override func didReceiveMemoryWarning() {
@@ -58,6 +64,8 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         let cellIdentifier = "MealTableViewCell"
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! MealTableViewCell
         
+        cell.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.10)
+        cell.ratingControl.backgroundColor = cell.backgroundColor
         // Fetches the appropriate meal for the data source layout.
         let meal = meals[indexPath.row]
         
@@ -150,7 +158,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
             inDomains: .UserDomainMask).last!
         
-        let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-data")
+        let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-meals")
         let path = storeURL.path
         
         do {
@@ -253,6 +261,9 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         } catch {
             print("Error creating meal: \(error)")
         }
+
+        // Begin a push sync to get this update in Cloudant quickly.
+        sync(.Push)
     }
     
     func storeSampleMeals() {
@@ -273,6 +284,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         let docs = datastore!.getAllDocuments() as! [CDTDocumentRevision]
         print("Found \(docs.count) meal documents in datastore: \(docs)")
         
+        meals.removeAll()
         for doc in docs {
             if let meal = Meal(aDoc: doc) {
                 meals.append(meal)
@@ -302,16 +314,14 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         return NSURL(string: url)!
     }
     
-    func poll() {
-        print("Poll")
+    func handleRefresh(refreshControl: UIRefreshControl) {
+        print("Refresh!")
         sync(.Pull)
     }
     
     func sync(direction: SyncDirection) {
         // Sync local data to or from the central cloud.
         let replication = replications[direction]
-        print("Current for \(direction): \(replication)")
-        
         guard replication == nil else {
             print("Ignore \(direction) replication; already running")
             return
@@ -345,6 +355,19 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     
     func replicatorDidComplete(replicator: CDTReplicator!) {
         print("Replication complete \(replicator)")
+        
+        if (replicator == replications[.Pull]) {
+            if (replicator.changesProcessed > 0) {
+                // Refresh the meals and reflect them in the main thread.
+                loadMealsFromDataStore()
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
+                })
+            }
+            
+            refreshControl?.endRefreshing()
+        }
+        
         clearReplicator(replicator)
     }
     
