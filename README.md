@@ -1,8 +1,10 @@
-# Start Developing iOS Apps (Swift) - With Cloud Data Sync
+# Start Developing iOS Apps (Swift) - With Cloud Data Sync; Part 1: The Datastore
 
 This walkthrough is a "sequel" to Apple's well-known iOS programming introduction, [Start Developing iOS Apps (Swift)][apple-doc]. Apple's introduction walks us through the process of building the UI, data, and logic of an example food tracker app, culiminating with a section on data persistence: storing the app data as files in the iOS device.
 
-This document picks up where that document leaves off: syncing data between devices, through the cloud, with an offline-first design. You will achieve this using open source tools and the IBM Cloudant service.
+This series picks up where that document leaves off: syncing data between devices, through the cloud, with an offline-first design. You will achieve this using open source tools and the IBM Cloudant service.
+
+This document is the first in the series, showing you how to use the Cloudant Sync datastore (CDTDatastore) for FoodTracker on the iOS device. Subsequent posts will cover syncing to the cloud and other advanced features such as accounts and data management.
 
 ## Table of Contents
 
@@ -37,7 +39,7 @@ At the end of the lesson, you’ll be able to:
 
   1. Install CocoaPods on your Mac
   1. Use CocoaPods to download and integrate CDTDatastore with FoodTracker
-  1. Build a bridging header to compile CDTDatastore into FoodTracker
+  1. Write a bridging header to compile CDTDatastore into FoodTracker
 
 ### Install CocoaPods on your Mac
 
@@ -199,7 +201,8 @@ At the end of the lesson, you’ll be able to:
     1. Key-value storage for simple data types
     1. Attachment storage for binary data
     1. The document ID and revision ID
-  1. Store and retrieve meal data using the Cloudant Sync datastore
+  1. Store meals in the Cloudant Sync datastore
+  1. Query for meals in chronological order, from the datastore
 
 ### The Cloudant Document Model
 
