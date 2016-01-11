@@ -14,7 +14,8 @@ This document is the first in the series, showing you how to use the Cloudant Sy
   1. [Install CocoaPods on your Mac](#install-cocoapods-on-your-mac)
   1. [Install Cloudant Sync using CocoaPods](#install-cloudant-sync-using-cocoapods)
   1. [Change from a Project to a Workspace](#change-from-a-project-to-a-workspace)
-  1. [Compile with Cloudant Sync](#compile-with-cloudant-sync)
+1. [Compile with Cloudant Sync](#compile-with-cloudant-sync)
+  1. [Create the CDTDatastore Bridging Header](#create-the-cdtdatastore-bridging-header)
 1. [Store Data Locally with Cloudant Sync](#store-data-locally-with-cloudant-sync)
   1. [Learning Objectives](#learning-objectives-1)
   1. [The Cloudant Document Model](#the-cloudant-document-model)
@@ -108,12 +109,13 @@ With your Podfile in place, simply run the CocoaPods command in Terminal to inst
   1. Change to your project directory, the directory containing your new Podfile. For example,
 
      ```
-     cd "FoodTracker - Cloud Data Sync" # Your 'cd' command may be different; change to the folder you use.
+     # Your 'cd' command may be different; change to the folder you use.
+     cd "FoodTracker - Cloud Data Sync"
      ```
   1. Type this command
 
      ```
-     pod install
+     pod install --verbose
      ```
 
 You will see colorful output from CocoaPods in the terminal.
@@ -494,6 +496,7 @@ Next, write the method to save a meal to the datastore. The method will support 
      ```
 
 That's it! The most complex 
+
 ### Create Sample Meals in the Datastore
 
 Now is time to create sample meal documents during app startup. To review, the initialization process will work this way:
