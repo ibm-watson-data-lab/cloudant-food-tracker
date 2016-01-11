@@ -21,6 +21,8 @@ This document is the first in the series, showing you how to use the Cloudant Sy
   1. [The Cloudant Document Model](#the-cloudant-document-model)
   1. [Remove NSCoding](#remove-nscoding)
   1. [Initialize the Cloudant Sync Datastore](#initialize-the-cloudant-sync-datastore)
+  1. [Deleting the Datastore in the iOS Simulator](#deleting-the-datastore-in-the-ios-simulator)
+  1. [Implement Storing and Querying Meals](#implement-storing-and-querying-meals)
   1. [Create Sample Meals in the Datastore](#create-sample-meals-in-the-datastore)
 
 
