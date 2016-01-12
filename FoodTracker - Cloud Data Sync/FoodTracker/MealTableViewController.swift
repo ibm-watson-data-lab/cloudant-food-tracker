@@ -280,7 +280,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     func storeSampleMeals() {
         let photo1 = UIImage(named: "meal1")!
         let photo2 = UIImage(named: "meal2")!
-        let photo3 = UIImage(named: "meal3")
+        let photo3 = UIImage(named: "meal3")!
         
         let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4, docId: "sample-1")!
         let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"sample-2")!

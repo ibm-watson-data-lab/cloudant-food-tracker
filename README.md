@@ -16,6 +16,7 @@ This document is the first in the series, showing you how to use the Cloudant Sy
   1. [Change from a Project to a Workspace](#change-from-a-project-to-a-workspace)
 1. [Compile with Cloudant Sync](#compile-with-cloudant-sync)
   1. [Create the CDTDatastore Bridging Header](#create-the-cdtdatastore-bridging-header)
+  1. [Check the Build](#check-the-build)
 1. [Store Data Locally with Cloudant Sync](#store-data-locally-with-cloudant-sync)
   1. [Learning Objectives](#learning-objectives-1)
   1. [The Cloudant Document Model](#the-cloudant-document-model)
@@ -189,6 +190,8 @@ Your bridging header is done! Xcode should look like this:
 
 ![Final bridging header setup](img/bridging-header.png)
 
+### Check the Build
+
 *Checkpoint:* Run your app. This will confirm that the code compiles and runs. While you have not changed any user-facing app code, you have begun the first step to Cloudant Sync by compiling CDTDatastore into your project.
 
 ## Store Data Locally with Cloudant Sync
@@ -294,7 +297,7 @@ Now you will add loading and saving back to the app, using the Cloudant Sync dat
 
 Begin with the Meal model, the file `Meal.swift`. You will add a new initialization method which can create a Meal object from a document. In other words, the `init()` method will set the meal name and rating from the document key-value data; and it will set the meal photo from the document attachment.
 
-Representing a Meal as a Cloudant Sync document requires few changes besides the initialization function. The only change the the actual model is to add a variable for the underlying document ID. By remembering a meal's document ID, you will be able to change that doc when the user changes the meal (e.g. by changing its rating, its name, or its photo).
+Representing a Meal as a Cloudant Sync document requires few changes besides the initialization function. The only change the the actual model is to add variables for the underlying document ID, and the creation time. By remembering a meal's document ID, you will be able to change that doc when the user changes the meal (e.g. by changing its rating, its name, or its photo). And by storing its creation time, you can later query the database for meals in the order that the user created them.
 
 **To add Cloudant Sync datastore support**
 
@@ -303,8 +306,9 @@ Representing a Meal as a Cloudant Sync document requires few changes besides the
 
      ``` swift
      var docId: String?
+     var createdAt: NSDate
      ```
-  1. In `Meal.swift`, edit the `init?` method to accept a docId as a final argument, and to set the docId property. When you are finished, the method will look like this:
+  1. In `Meal.swift`, edit the `init?` method to accept a docId as a final argument, and to set the `docId` and `createdAt` properties. When you are finished, the method will look like this:
 
      ``` swift
      init?(name: String, photo: UIImage?, rating: Int, docId: String?) {
@@ -313,6 +317,7 @@ Representing a Meal as a Cloudant Sync document requires few changes besides the
          self.photo = photo
          self.rating = rating
          self.docId = docId
+         self.createdAt = NSDate()
 
          super.init()
 
@@ -349,7 +354,7 @@ Now add a convenience initializer. This is a method which accepts a Cloudant Syn
      }
      ```
 
-That's it for the model. The Meal class now tracks both its underlying document ID, and it supports convenient initialization directly from a Cloudant Sync datastore document (or simply, a "doc").
+That's it for the model. The Meal class now tracks its underlying document ID and creation time; and it supports convenient initialization directly from a Cloudant Sync datastore document (or simply, a "doc").
 
 Since the Meal model initializer has a new `docId: String?` parameter, you will need to update the one bit of code which initializes Meal objects, in the Meal view controller.
 
@@ -360,7 +365,8 @@ Since the Meal model initializer has a new `docId: String?` parameter, you will 
 
      ``` swift
      // Set the meal to be passed to MealListTableViewController after the unwind segue.
-     meal = Meal(name: name, photo: photo, rating: rating, docId: nil)
+     let docId = meal?.docId
+     meal = Meal(name: name, photo: photo, rating: rating, docId: docId)
      ```
 
 Now the model has been updated to work from Cloudant Sync documents.
@@ -380,21 +386,44 @@ To put these new features to work, all that remains is to use the datastore from
 
      ``` swift
      // Initialize the Cloudant Sync local datastore.
-     let fileManager = NSFileManager.defaultManager()
-
-     let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
-         inDomains: .UserDomainMask).last!
-
-     let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-meals")
-     let path = storeURL.path
-
-     do {
-         datastoreManager = try CDTDatastoreManager(directory: path)
-         datastore = try datastoreManager!.datastoreNamed("meals")
-     } catch {
-         fatalError("Failed to initialize datastore")
-     }
+     initDatastore()
      ```
+
+Now write the initialization function. Begin by creating a code marker for the new Cloudant Sync datastore methods.
+
+**To create a code marker for your code**
+
+  1. Open `MealTableViewController.swift`
+  1. In `MealTableViewController.swift`, find the last method in the class, `unwindToMealList(_:)`
+  1. Below that method, add the following:
+
+  ``` swift
+  // MARK: Datastore
+  ```
+
+This will be the section of the code where you implement all Cloudant Sync datstore functionality.
+
+**To make the datastore initialization function**
+
+  1. In `MealTableViewController.swift`, append the following code in the section `MARK: Datastore`:
+     ``` swift
+     func initDatastore() {
+        let fileManager = NSFileManager.defaultManager()
+
+        let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory,
+            inDomains: .UserDomainMask).last!
+
+        let storeURL = documentsDir.URLByAppendingPathComponent("foodtracker-meals")
+        let path = storeURL.path
+
+        do {
+            datastoreManager = try CDTDatastoreManager(directory: path)
+            datastore = try datastoreManager!.datastoreNamed("meals")
+        } catch {
+            fatalError("Failed to initialize datastore: \(error)")
+        }
+    }
+    ```
 
 ### Deleting the Datastore in the iOS Simulator
 
@@ -408,134 +437,202 @@ However, here is a quick command you can paste into the terminal. It will remove
 
 This command will prompt you to remove the files. If you are confident that the command is working correct, you can omit the `-i` option.
 
-### Implement Storing and Retrieving from the Datastore
+### Implement Storing and Querying Meals
 
-With the datastore initialized, you need to write methods to store and retrieve meal documents from the datastore. Of course, this is the heart of this project. Fortunately, this step requires only a few methods to interact with the datastore; and subsequently you will enjoy all the benefits the Cloudant Sync datastore brings, like offline-first operation and cloud syncing.
+With the datastore initialized, you need to write methods to store and retrieve meal documents from the datastore. Of course, this is the heart of your project. Fortunately, this step requires only a few methods to interact with the datastore; and subsequently you will enjoy all the benefits the Cloudant Sync datastore brings, like offline-first operation and cloud syncing.
 
-Begin by creating a code marker for the new Cloudant Sync datastore methods.
+For FoodTracker, you will have two primary ways of persisting meals in the datastore: creating meals and updating meals. Each of these will have its own method, but the methods will share a common method to populate a meal document with the correct data. Begin by writing this method. Given a Meal object and a Cloudant document, it will copy all of the meal data to the document, so that the latter can be created or updated as needed.
 
-**To create a code marker for your code**
-
-  1. Open `MealTableViewController.swift`
-  1. In `MealTableViewController.swift`, find the last method in the class, `unwindToMealList(_:)`
-  1. Below that method, add the following:
-
-  ``` swift
-  // MARK: Datastore
-  ```
-  1. This will be the section of the code where you implement all Cloudant Sync datstore functionality.
-
-Next, write the method to save a meal to the datastore. The method will support all of these scenarios:
-
-  * **When creating sample meals:** Store the meal doc, *without* a revision ID, but *with* a hard-coded document ID (e.g. `"meal1"`, `"meal2"`, and `"meal3"`). This will have two possible outcomes:
-    1. A document with that ID is not yet present, so creation succeeds, *or*
-    1. A document with that ID is already present. Cloudant Sync will return a "conflict" error, which the method can ignore.
-  * **When creating meals for the user:** Attempt to create the meal doc, *without a revision ID*, and *without* specifying a doc ID. Since you do do not specify a doc ID, the datastore will use a random UUID, and that will ensure that  and *without* a prior revision, because of course these are brand new records for the database
-  * **When updating a meal:** You *will* specify the doc ID (to tell the datastore which record to update).
-    1. First first fetch the current record by ID, in order to get its current revision
-    1. Then, update its data (rating, name, and photo), and save the updates
-
-**To save meals to the datastore**
+**To implement populating a meal document**
 
   1. Open `MealTableViewController.swift`
-  1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, add a new method:
+  1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, append a new method:
 
      ``` swift
-     func saveMeal(meal: Meal) {
-         saveMeal(meal, create:false)
+     func populateRevision(meal: Meal, revision: CDTDocumentRevision?) {
+        // Populate a document revision from a Meal.
+        let rev: CDTDocumentRevision = revision ?? CDTDocumentRevision(docId: meal.docId)
+        rev.body["name"] = meal.name
+        rev.body["rating"] = meal.rating
+
+        // Set created_at as an ISO 8601-formatted string.
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        let createdAtISO = dateFormatter.stringFromDate(meal.createdAt)
+        rev.body["created_at"] = createdAtISO
+
+        if let data = UIImagePNGRepresentation(meal.photo!) {
+            let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
+            rev.attachments[attachment.name] = attachment
+        }
+     }
+     ```
+
+Next, implement the method to create new meal documents. Note that sample meals will have hard-coded document IDs, so that you can detect if they have already been created or not. User-created meals will have no particular doc ID.
+
+**To implement meal document creation**
+
+  1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, append a new method:
+
+     ``` swift
+    func createMeal(meal: Meal) {
+        // User-created meals will have docId == nil. Sample meals have a string docId.
+        // For sample meals, look up the existing doc. There will be three possibilities:
+        //   1. No exceptionThe sample has already been created (and is still present)
+        //   2. The sample has already been created, but was subsequently deleted.
+        //   3. The sample has never been created.
+        if let docId = meal.docId {
+            do {
+                try datastore!.getDocumentWithId(docId)
+                print("Skip \(docId) creation: already exists")
+                return
+            } catch let error as NSError {
+                if (error.userInfo["NSLocalizedFailureReason"] as? String != "not_found") {
+                    print("Skip \(docId) creation: already deleted by user")
+                    return
+                }
+
+                print("Create sample meal: \(docId)")
+            }
+        }
+
+        let rev = CDTDocumentRevision(docId: meal.docId)
+        populateRevision(meal, revision: rev)
+
+        do {
+            let result = try datastore!.createDocumentFromRevision(rev)
+            print("Created \(result.docId) \(result.revId)")
+        } catch {
+            print("Error creating meal: \(error)")
+        }
+    }
+    ```
+
+Now you are ready to write the update method. Note that "deleting" a Cloudant document is in fact a type of *update*, the update method will accept a Bool parameter indicating whether to delete the document or not. However, to keep the rest of the code simple, you will write one-line convenience methods `deleteMeal(_)` and `updateMeal(_)` to set the deletion flag automatically.
+
+**To implement deleting and updating meal documents**
+  1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, append the two convenience methods and then the full implementation.
+
+     ``` swift
+     func deleteMeal(meal: Meal) {
+         updateMeal(meal, isDelete: true)
      }
 
-     func saveMeal(meal:Meal, create:Bool) {
-         let docId = meal.docId
-         var rev = CDTDocumentRevision(docId: docId)
+     func updateMeal(meal: Meal) {
+         updateMeal(meal, isDelete: false)
+     }
 
-         // First, fetch the latest revision from the DB.
-         if docId != nil && !create {
-             do {
-                 print("Update meal: \(docId)")
-                 rev = try datastore!.getDocumentWithId(docId)
-                 print("retrieved", rev)
-             } catch let error as NSError {
-                 if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
-                     print("Error loading meal \(docId): \(reason)")
-                 } else {
-                     print("Error loading meal \(docId): \(error)")
-                 }
-                 return
-             }
+     func updateMeal(meal: Meal, isDelete: Bool) {
+         guard let docId = meal.docId else {
+             print("Cannot update a meal with no document ID")
+             return
          }
 
-         rev.body["name"] = meal.name
-         rev.body["rating"] = meal.rating
+         let label = isDelete ? "Delete" : "Update"
+         print("\(label) \(docId)")
 
-         if let data = UIImagePNGRepresentation(meal.photo!) {
-             let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
-             rev.attachments[attachment.name] = attachment
-             print("Meal \(docId) attachment: \(attachment.size) bytes")
+         // First, fetch the current document revision from the DB.
+         var rev: CDTDocumentRevision
+         do {
+             rev = try datastore!.getDocumentWithId(docId)
+             populateRevision(meal, revision: rev)
+         } catch {
+             print("Error loading meal \(docId): \(error)")
+             return
          }
 
          do {
-             var revision: CDTDocumentRevision
-             if create {
-                 revision = try datastore!.createDocumentFromRevision(rev)
-                 print("Created \(revision.docId)")
+             var result: CDTDocumentRevision
+             if (isDelete) {
+                 result = try datastore!.deleteDocumentFromRevision(rev)
              } else {
-                 revision = try datastore!.updateDocumentFromRevision(rev)
-                 print("Updated \(revision.docId)")
+                 result = try datastore!.updateDocumentFromRevision(rev)
              }
-         } catch let error as NSError {
-             if let reason = error.userInfo["NSLocalizedFailureReason"] as? String {
-                 if (reason == "conflict" && create) {
-                     print("Update conflict is ok: \(docId)")
-                 } else {
-                     print("Error storing meal \(docId): \(reason)")
-                 }
-             } else {
-                 print("Unknown error storing meal \(docId): \(error)")
-             }
+             print("\(label) \(docId): \(result.revId)")
+         } catch {
+             print("Error updating \(docId): \(error)")
+             return
          }
      }
      ```
 
-That's it! The most complex 
+The final method to write is the method to query for meals in the datastore. This code has two parts: initializing an index during app startup (to query by timestamp), and of course the code to query that index.
+
+**To support querying for meals**
+
+1. In `MealTableViewController.swift`, in the method `initDatastore()`, append this code:
+
+   ``` swift
+   datastore?.ensureIndexed(["created_at"], withName: "timestamps")
+
+   // Everything is ready. Load all meals from the datastore.
+   loadMealsFromDataStore()
+   ```
+1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, append this method:
+
+   ``` swift
+   func loadMealsFromDataStore() {
+       let query = ["created_at": ["$gt":""]]
+       let result = datastore?.find(query, skip: 0, limit: 0, fields:nil, sort: [["created_at":"asc"]])
+       guard result != nil else {
+           print("Failed to query for meals")
+           return
+       }
+
+       meals.removeAll()
+       result!.enumerateObjectsUsingBlock({ (doc, idx, stop) -> Void in
+           if let meal = Meal(aDoc: doc) {
+               self.meals.append(meal)
+           }
+       })
+   }
+   ```
+That's it! The most complex part of your code is finished.
 
 ### Create Sample Meals in the Datastore
 
-Now is time to create sample meal documents during app startup. To review, the initialization process will work this way:
-
-  1. The app starts, and quickly runs `viewDidLoad()` in the `MealTableViewController` class.
-  1. Attempt to create the sample meals, with hard-coded document IDs.
-    1. If the meals had never been created, they will be added to the datastore
-    1. If the meals had already been created (even if they have been subsequently deleted), the creation will quietly fail
-  1. In any case, read all meals from the datastore into memory, for display to the user.
+Now is time to create sample meal documents during app startup. This method will run every time the app initializes. Mostly, the method will naively attempt to create three meals. If they do not exist yet, then they will be created for the user; but if they already exist, then the app will make no datastore updates.
 
 **To create sample meals during app startup**
 
-1. Open `MealTableViewController.swift`
 1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, add a new method:
 
    ``` swift
    func storeSampleMeals() {
        let photo1 = UIImage(named: "meal1")!
        let photo2 = UIImage(named: "meal2")!
-       let photo3 = UIImage(named: "meal3")
+       let photo3 = UIImage(named: "meal3")!
 
-       let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4, docId: "meal1")!
-       let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"meal2")!
-       let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3, docId:"meal3")!
+       let meal1 = Meal(name: "Caprese Salad", photo: photo1, rating: 4, docId: "sample-1")!
+       let meal2 = Meal(name: "Chicken and Potatoes", photo: photo2, rating: 5, docId:"sample-2")!
+       let meal3 = Meal(name: "Pasta with Meatballs", photo: photo3, rating: 3, docId:"sample-3")!
 
-       saveMeal(meal1, create:true)
-       saveMeal(meal2, create:true)
-       saveMeal(meal3, create:true)
+       // Hard-code the createdAt property to get consistent revision IDs. That way, devices that share
+       // a common cloud database will not generate conflicts as they sync their own sample meals.
+       let comps = NSDateComponents()
+       comps.day = 1
+       comps.month = 1
+       comps.year = 2016
+       comps.timeZone = NSTimeZone(abbreviation: "GMT")
+       let newYear = NSCalendar.currentCalendar().dateFromComponents(comps)!
+
+       meal1.createdAt = newYear
+       meal2.createdAt = newYear
+       meal3.createdAt = newYear
+
+       createMeal(meal1)
+       createMeal(meal2)
+       createMeal(meal3)
    }
    ```
-1. In `MealTableViewController.swift`, in the method `viewDidLoad()`, add this code:
+1. In `MealTableViewController.swift`, in the method `viewDidLoad()`, append this code:
 
   ``` swift
   // The datastore is now ready. Next, initialize the sample meals.
   storeSampleMeals()
   ```
-
 
 ## Sync with IBM Cloudant
 
