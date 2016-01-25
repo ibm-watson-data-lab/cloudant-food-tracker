@@ -8,7 +8,7 @@ This document is the first in the series, showing you how to use the Cloudant Sy
 
 ## Table of Contents
 
-1. [About the Lessons](#about-the-lessons)
+1. [Getting Started](#getting-started)
 1. [CocoaPods](#cocoapods)
   1. [Learning Objectives](#learning-objectives)
   1. [Install CocoaPods on your Mac](#install-cocoapods-on-your-mac)
@@ -21,11 +21,14 @@ This document is the first in the series, showing you how to use the Cloudant Sy
 1. [Store Data Locally with Cloudant Sync](#store-data-locally-with-cloudant-sync)
   1. [Learning Objectives](#learning-objectives-2)
   1. [The Cloudant Document Model](#the-cloudant-document-model)
+  1. [Design Plan](#design-plan)
   1. [Remove NSCoding](#remove-nscoding)
   1. [Initialize the Cloudant Sync Datastore](#initialize-the-cloudant-sync-datastore)
   1. [Deleting the Datastore in the iOS Simulator](#deleting-the-datastore-in-the-ios-simulator)
   1. [Implement Storing and Querying Meals](#implement-storing-and-querying-meals)
   1. [Create Sample Meals in the Datastore](#create-sample-meals-in-the-datastore)
+1. [Conclusion](#conclusion)
+1. [Download This Project](#download-this-project)
 
 ## Getting Started
 
@@ -241,7 +244,7 @@ The *revision ID* (sometimes called *_rev* or *revision*) is a string generated 
 
 Finally, note that deleting a document is actually an update, with metadata set to indicate deletion (sometimes called a document "tombstone"). Since a delete is an update just like any other, the deleted document will have its own revision ID. The tombstones are necessary for replication: replicating a tombstone from one database to another will cause both databases to reflect the deletion.
 
-### The Design
+### Design Plan
 
 With this in mind, consider: how will the sample meals work? At first, you might think to create meal documents when FoodTracker starts. That will work correctly the first time the user runs the app; however, if the user changes or deletes the sample meals, *those changes must persist*. For example, if the user deletes the sample meals and then restarts the app later, those meals must remain deleted.
 
@@ -719,12 +722,19 @@ Congratulations! While the app remains unchanged superfically, you have made a v
 
 In fact, the next update of this series will cover replicating this data to the cloud using IBM Cloudant. Indeed, implementing cloud syncing is much simpler than the work from this lesson. You have completed laying the foundation!
 
+## Download This Project
+
+To see the completed sample project for this lesson, download the file and view it in Xcode.
+
+[Download File][code-download]
+
 [END]: ------------------------------------------------
 
 [apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
 [apple-doc-download]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Lesson10.html#//apple_ref/doc/uid/TP40015214-CH14-SW3
 [bridging-header]: https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html
 [cdtdatastore-pod]: https://cocoapods.org/pods/CDTDatastore
+[code-download]: img/FoodTracker-Cloudant-Sync-1.zip
 [cocoapods]: https://cocoapods.org/
 [cocoapods-getting-started]: https://guides.cocoapods.org/using/getting-started.html
 [couchdb]: http://couchdb.apache.org
