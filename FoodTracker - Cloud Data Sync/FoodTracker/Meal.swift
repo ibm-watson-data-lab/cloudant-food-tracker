@@ -15,6 +15,8 @@ class Meal: NSObject {
     var name: String
     var photo: UIImage?
     var rating: Int
+    
+    // Data for Cloudant Sync
     var docId: String?
     var createdAt: NSDate
     
@@ -54,7 +56,7 @@ class Meal: NSObject {
             let name = body["name"] as! String
             let rating = body["rating"] as! Int
             
-            var photo : UIImage? = nil
+            var photo: UIImage? = nil
             if let photoAttachment = doc.attachments["photo.jpg"] {
                 photo = UIImage(data: photoAttachment.dataFromAttachmentContent())
             }

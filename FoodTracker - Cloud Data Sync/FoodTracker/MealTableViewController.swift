@@ -248,7 +248,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     func createMeal(meal: Meal) {
         // User-created meals will have docId == nil. Sample meals have a string docId.
         // For sample meals, look up the existing doc. There will be three possibilities:
-        //   1. No exceptionThe sample has already been created (and is still present)
+        //   1. The sample has already been created (and is still present)
         //   2. The sample has already been created, but was subsequently deleted.
         //   3. The sample has never been created.
         if let docId = meal.docId {
