@@ -36,7 +36,7 @@ These lessons assume that you have completed the [FoodTracker app][apple-doc] fr
 
 Extract the zip file, `Start-Dev-iOS-Apps-10.zip`, browse into its folder with Finder, and double-click `FoodTracker.xcodeproj`. That will open the project in Xcode. Run the app (Command-R) and confirm that it works correctly. If everything is in order, proceed with these lessons.
 
-<img src="https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Art/8_sim_navbar_2x.png" alt="Image of FoodTracker app" height="559" width="320">
+![The FoodTracker main screen](img/FoodTracker.png)
 
 ## CocoaPods
 
