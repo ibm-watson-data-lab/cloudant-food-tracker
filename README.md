@@ -36,7 +36,7 @@ These lessons assume that you have completed the [FoodTracker app][apple-doc] fr
 
 Extract the zip file, `Start-Dev-iOS-Apps-10.zip`, browse into its folder with Finder, and double-click `FoodTracker.xcodeproj`. That will open the project in Xcode. Run the app (Command-R) and confirm that it works correctly. If everything is in order, proceed with these lessons.
 
-![The FoodTracker main screen](img/FoodTracker.png)
+![The FoodTracker main screen](media/FoodTracker.png)
 
 ## CocoaPods
 
@@ -126,9 +126,9 @@ With your Podfile in place, you can now use CocoaPods to install the CDTDatastor
 
 You will see colorful output from CocoaPods in the terminal.
 
-![Running the pod install command](img/pod-install-begin.png)
+![Running the pod install command](media/pod-install-begin.png)
 
-![Output of the pod install command](img/pod-install-end.png)
+![Output of the pod install command](media/pod-install-end.png)
 
 ### Change from a Project to a Workspace
 
@@ -142,7 +142,7 @@ Because you are now integrating FoodTracker with the third-party CDTDatastore li
 
 You will see a similar XCode view as before, but notice that you now have two projects now.
 
-![FoodTracker workspace has two projects](img/workspace.png)
+![FoodTracker workspace has two projects](media/workspace.png)
 
 *Checkpoint:* Run your app. The app should behave exactly as before. Now you know that everything is in its place and working correctly.
 
@@ -191,19 +191,19 @@ The header file contents are done. But, despite its name, this file is not yet a
   1. Click All to show all build settings
   1. In the search bar, type "bridging header." You should see **Swift Compiler - Code Generation** and inside it, **Objective-C Bridging Header**.
 
-     ![Finding the bridging header value](img/find-bridging-header.png)
+     ![Finding the bridging header value](media/find-bridging-header.png)
   1. Double-click the empty space in the "FoodTracker" column, in the row **Objective-C Bridging Header**.
   1. A prompt window will pop up. Input the following:
 
      ```
      FoodTracker/CloudantSync-Bridging-Header.h
      ```
-     ![Input the bridging header value](img/input-bridging-header.png)
+     ![Input the bridging header value](media/input-bridging-header.png)
   1. Press return
 
 Your bridging header is done! Xcode should look like this:
 
-![Final bridging header setup](img/bridging-header.png)
+![Final bridging header setup](media/bridging-header.png)
 
 ### Check the Build
 
@@ -734,7 +734,7 @@ To see the completed sample project for this lesson, download the file and view 
 [apple-doc-download]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Lesson10.html#//apple_ref/doc/uid/TP40015214-CH14-SW3
 [bridging-header]: https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html
 [cdtdatastore-pod]: https://cocoapods.org/pods/CDTDatastore
-[code-download]: img/FoodTracker-Cloudant-Sync-1.zip
+[code-download]: media/FoodTracker-Cloudant-Sync-1.zip
 [cocoapods]: https://cocoapods.org/
 [cocoapods-getting-started]: https://guides.cocoapods.org/using/getting-started.html
 [couchdb]: http://couchdb.apache.org
