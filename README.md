@@ -6,30 +6,6 @@ This series picks up where that document leaves off: syncing data between device
 
 This document is the first in the series, showing you how to use the Cloudant Sync datastore (CDTDatastore) for FoodTracker on the iOS device. Subsequent posts will cover syncing to the cloud and other advanced features such as accounts and data management.
 
-## Table of Contents
-
-1. [Getting Started](#getting-started)
-1. [CocoaPods](#cocoapods)
-  1. [Learning Objectives](#learning-objectives)
-  1. [Install CocoaPods on your Mac](#install-cocoapods-on-your-mac)
-  1. [Install Cloudant Sync using CocoaPods](#install-cloudant-sync-using-cocoapods)
-  1. [Change from a Project to a Workspace](#change-from-a-project-to-a-workspace)
-1. [Compile with Cloudant Sync](#compile-with-cloudant-sync)
-  1. [Learning Objectives](#learning-objectives-1)
-  1. [Create the CDTDatastore Bridging Header](#create-the-cdtdatastore-bridging-header)
-  1. [Check the Build](#check-the-build)
-1. [Store Data Locally with Cloudant Sync](#store-data-locally-with-cloudant-sync)
-  1. [Learning Objectives](#learning-objectives-2)
-  1. [The Cloudant Document Model](#the-cloudant-document-model)
-  1. [Design Plan](#design-plan)
-  1. [Remove NSCoding](#remove-nscoding)
-  1. [Initialize the Cloudant Sync Datastore](#initialize-the-cloudant-sync-datastore)
-  1. [Deleting the Datastore in the iOS Simulator](#deleting-the-datastore-in-the-ios-simulator)
-  1. [Implement Storing and Querying Meals](#implement-storing-and-querying-meals)
-  1. [Create Sample Meals in the Datastore](#create-sample-meals-in-the-datastore)
-1. [Conclusion](#conclusion)
-1. [Download This Project](#download-this-project)
-
 ## Getting Started
 
 These lessons assume that you have completed the [FoodTracker app][apple-doc] from Apple's walkthrough. First, complete that walkthrough. It will teach you the process of beginning an iOS app and it will end with the chapter, [Persist Data][apple-doc-download]. Download the sample project from the final lesson (the "Download File" link at the bottom of the page).
