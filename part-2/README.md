@@ -52,9 +52,31 @@ Alternatively, you can download the prepared project from the [Part 1 Code downl
 
 ![The FoodTracker main screen](media/FoodTracker@2x.png)
 
-## Create a Free IBM Cloudant Account
+## Getting Started with Cloudant
+
+### Create a Free IBM Cloudant Account
 
 Getting started with IBM Cloudant is free and easy.
+
+### XXX
+
+![Cloudant home page](media/cloudant-01-home@2x.png)
+
+![Cloudant home page](media/cloudant-02-sign-up@2x.png)
+
+![Cloudant dashboard home](media/dashboard-01-home@2x.png)
+
+![Create a Cloudant database](media/dashboard-02-create-db@2x.png)
+
+![The new meals database](media/dashboard-03-meals-db@2x.png)
+
+![Create an API key](media/dashboard-04-api-key@2x.png)
+
+![Grant permissions to the new API key](media/dashboard-05-permissions@2x.png)
+
+![The meals database is ready](media/dashboard-06-meals-db-ready@2x.png)
+
+![Confirm API access using cURL](media/confirm-api-access@2x.png)
 
 ## Conclusion
 
