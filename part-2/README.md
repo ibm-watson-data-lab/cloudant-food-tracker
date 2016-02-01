@@ -6,19 +6,18 @@ This series picks up where that document leaves off: syncing data between device
 
 This document is the second in the series, showing you how to sync the app data to Cloudant. You can also review the previous post in the series, [Part 1: The Datastore][part-1].
 
-If you have been following along, you will continue with your FoodTracker project. Or, you can download the prepared project from the [Part 1 Code download][part-1-download] and begin there.
-
 ## Outline
 
+**This will be removed before publishing**
+
 * Getting Started with FoodTracker
-* Create a Free IBM Cloudant Account
-  * Sign up
-  * Quick Tour of the Dashboard
-  * Links to the REST API documentation, maybe recommend using cURL for development and debugging
+* Getting Started with IBM Cloudant
+  * Create a Free IBM Cloudant Account
+  * Create a database for meals
   * Give FoodTracker access to a database
     * Generate an API key
     * Set permissions
-    * Confirm with curl -i, confirm status code, confirm body
+    * Confirm with curl -I, confirm status code, confirm body
 * How to Start Over
   * How to delete iOS Simulator data
   * How to delete Cloudant data
@@ -43,13 +42,19 @@ If you have been following along, you will continue with your FoodTracker projec
   * Pull to refresh
   * Be vague since I'm less clear what the scope is
 
-## Getting Started
+## Getting Started with FoodTracker
 
-These lessons assume that you have completed the [FoodTracker app][apple-doc] from Apple's walkthrough. First, complete that walkthrough. It will teach you the process of beginning an iOS app and it will end with the chapter, [Persist Data][apple-doc-download]. Download the sample project from the final lesson (the "Download File" link at the bottom of the page).
+If you have been following along, you will continue with your FoodTracker project. Or, you can download
 
-Extract the zip file, `Start-Dev-iOS-Apps-10.zip`, browse into its folder with Finder, and double-click `FoodTracker.xcodeproj`. That will open the project in Xcode. Run the app (Command-R) and confirm that it works correctly. If everything is in order, proceed with these lessons.
+This document assumes that you have completed [Part 1: The Datastore][part-1] of the series. If you have completed that walkthrough, you may continue with your FoodTracker project.
 
-![The FoodTracker main screen](media/FoodTracker.png)
+Alternatively, you can download the prepared project from the [Part 1 Code download][part-1-download] and begin there. Extract the zip file, `FoodTracker-Cloudant-Sync-1.zip`, browse into its folder with Finder, and double-click `FoodTracker.xcworkspace`. That will open the project in Xcode. Run the app (Command-R) and confirm that it works correctly. If everything is in order, proceed with these instructions.
+
+![The FoodTracker main screen](media/FoodTracker@2x.png)
+
+## Create a Free IBM Cloudant Account
+
+Getting started with IBM Cloudant is free and easy.
 
 ## Conclusion
 
