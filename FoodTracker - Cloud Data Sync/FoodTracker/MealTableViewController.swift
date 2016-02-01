@@ -17,12 +17,20 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     var datastoreManager: CDTDatastoreManager?
     var datastore: CDTDatastore?
     var replications = [SyncDirection: CDTReplicator]()
-    var pullTimer = NSTimer.init()
     
+    // Define two sync directions, push and pull.
     enum SyncDirection {
         case Push
         case Pull
     }
+    
+    // MARK: IBM Cloudant Settings
+    
+    // Change these for your own application.
+    let cloudantAccount = "foodtracker"
+    let cloudantDBName = "meals"
+    let cloudantApiKey = "andifecternarlitirsetion"
+    let cloudantApiPassword = "356dcd854fe9930cbca96e77dccbfd2af3f5f83f"
 
 //    override func viewWillAppear(animated: Bool) {
 //        super.viewWillAppear(animated)
@@ -193,9 +201,9 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-        dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
+        dateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        let createdAtISO = dateFormatter.stringFromDate(meal.createdAt) //.stringByAppendingString("Z")
+        let createdAtISO = dateFormatter.stringFromDate(meal.createdAt)
         rev.body["created_at"] = createdAtISO
         
         if let data = UIImagePNGRepresentation(meal.photo!) {
@@ -245,7 +253,8 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         }
     }
     
-    func createMeal(meal: Meal) {
+    // Create a meal. Return true if the meal was created, or false if creation was unnecessary.
+    func createMeal(meal: Meal) -> Bool {
         // User-created meals will have docId == nil. Sample meals have a string docId.
         // For sample meals, look up the existing doc. There will be three possibilities:
         //   1. The sample has already been created (and is still present)
@@ -255,11 +264,11 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
             do {
                 try datastore!.getDocumentWithId(docId)
                 print("Skip \(docId) creation: already exists")
-                return
+                return false
             } catch let error as NSError {
                 if (error.userInfo["NSLocalizedFailureReason"] as? String != "not_found") {
                     print("Skip \(docId) creation: already deleted by user")
-                    return
+                    return false
                 }
                 
                 print("Create sample meal: \(docId)")
@@ -275,6 +284,8 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         } catch {
             print("Error creating meal: \(error)")
         }
+        
+        return true
     }
     
     func storeSampleMeals() {
@@ -299,9 +310,14 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         meal2.createdAt = newYear
         meal3.createdAt = newYear
 
-        createMeal(meal1)
-        createMeal(meal2)
-        createMeal(meal3)
+        let created1 = createMeal(meal1)
+        let created2 = createMeal(meal2)
+        let created3 = createMeal(meal3)
+        
+        if (created1 || created2 || created3) {
+            print("Sample meals changed; begin push sync")
+            sync(.Push)
+        }
     }
     
     func loadMealsFromDataStore() {
@@ -332,13 +348,10 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     }
     
     func cloudURL() -> NSURL {
-        // Change these to reflect your own Cloudant account and credentials.
-        let account = "foodtracker"
-        let dbName = "meals"
-        let apiKey = "andifecternarlitirsetion"
-        let apiPassword = "356dcd854fe9930cbca96e77dccbfd2af3f5f83f"
+        let credentials = "\(cloudantApiKey):\(cloudantApiPassword)"
+        let host = "\(cloudantAccount).cloudant.com"
+        let url = "https://\(credentials)@\(host)/\(cloudantDBName)"
         
-        let url = "https://\(apiKey):\(apiPassword)@\(account).cloudant.com/\(dbName)"
         return NSURL(string: url)!
     }
     
@@ -413,6 +426,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     }
     
     func clearReplicator(replicator: CDTReplicator!) {
+        // Determine the replication direction, given the replicator argument.
         let direction = (replicator == replications[.Push])
             ? SyncDirection.Push
             : SyncDirection.Pull
