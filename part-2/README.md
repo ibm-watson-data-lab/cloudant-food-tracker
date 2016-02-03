@@ -56,15 +56,25 @@ Alternatively, you can download the prepared project from the [Part 1 Code downl
 
 ### Create a Free IBM Cloudant Account
 
-Getting started with IBM Cloudant is free and easy.
+Getting started with IBM Cloudant is free and easy. Begin by signing up on [Cloudant.com][cloudant-home].
 
-### XXX
+![The Cloudant home page](media/cloudant-01-home@2x.png '; figure=left')
 
-![Cloudant home page](media/cloudant-01-home@2x.png)
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue accumsan magna, at blandit sapien. Duis fermentum nibh eget porttitor consequat. Suspendisse eu sapien ac metus pellentesque ullamcorper. Sed quis magna aliquam, gravida arcu in, elementum orci. Quisque quis efficitur erat, fermentum laoreet sapien. Pellentesque nec mi a odio tincidunt malesuada quis eget nisl. Curabitur in nibh libero. Nunc convallis, tellus nec fermentum porta, neque nibh interdum turpis, non pulvinar metus augue ut felis.
 
-![Cloudant home page](media/cloudant-02-sign-up@2x.png)
+Donec laoreet ligula in odio porta, tristique tempor velit pretium. Sed malesuada diam eu tellus luctus suscipit. Vivamus tempus, justo non auctor consectetur, elit risus porta felis, quis tempus metus odio in dolor. In feugiat velit a lectus tincidunt, non ullamcorper est pellentesque. Morbi id ligula ut dolor finibus semper. Etiam risus ante, maximus non consectetur vitae, ullamcorper eu diam. Etiam ornare libero nibh, non auctor ex consectetur vitae. Vestibulum bibendum accumsan mollis. 
 
+![Signing up with Cloudant](media/cloudant-02-sign-up@2x.png "; figure")
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue accumsan magna, at blandit sapien. Duis fermentum nibh eget porttitor consequat. Suspendisse eu sapien ac metus pellentesque ullamcorper. Sed quis magna aliquam, gravida arcu in, elementum orci. Quisque quis efficitur erat, fermentum laoreet sapien. Pellentesque nec mi a odio tincidunt malesuada quis eget nisl. Curabitur in nibh libero. Nunc convallis, tellus nec fermentum porta, neque nibh interdum turpis, non pulvinar metus augue ut felis.
+
+Donec laoreet ligula in odio porta, tristique tempor velit pretium. Sed malesuada diam eu tellus luctus suscipit. Vivamus tempus, justo non auctor consectetur, elit risus porta felis, quis tempus metus odio in dolor. In feugiat velit a lectus tincidunt, non ullamcorper est pellentesque. Morbi id ligula ut dolor finibus semper. Etiam risus ante, maximus non consectetur vitae, ullamcorper eu diam. Etiam ornare libero nibh, non auctor ex consectetur vitae. Vestibulum bibendum accumsan mollis. 
+
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue accumsan magna, at blandit sapien. Duis fermentum nibh eget porttitor consequat. Suspendisse eu sapien ac metus pellentesque ullamcorper. Sed quis magna aliquam, gravida arcu in, elementum orci. Quisque quis efficitur erat, fermentum laoreet sapien. Pellentesque nec mi a odio tincidunt malesuada quis eget nisl. Curabitur in nibh libero. Nunc convallis, tellus nec fermentum porta, neque nibh interdum turpis, non pulvinar metus augue ut felis.
 ![Cloudant dashboard home](media/dashboard-01-home@2x.png)
+
+Donec laoreet ligula in odio porta, tristique tempor velit pretium. Sed malesuada diam eu tellus luctus suscipit. Vivamus tempus, justo non auctor consectetur, elit risus porta felis, quis tempus metus odio in dolor. In feugiat velit a lectus tincidunt, non ullamcorper est pellentesque. Morbi id ligula ut dolor finibus semper. Etiam risus ante, maximus non consectetur vitae, ullamcorper eu diam. Etiam ornare libero nibh, non auctor ex consectetur vitae. Vestibulum bibendum accumsan mollis. 
 
 ![Create a Cloudant database](media/dashboard-02-create-db@2x.png)
 
@@ -102,6 +112,7 @@ Do we want to make a design doc for the shared project where people can create i
 
 [END]: ------------------------------------------------
 
+[cloudant-home]: https://cloudant.com/
 [part-1]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/
 [part-1-download]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/#download-this-project
 [apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
