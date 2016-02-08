@@ -58,46 +58,76 @@ In this section, you will create a free IBM Cloudant account, with which to supp
 
 Getting started with IBM Cloudant is free and easy. Begin by signing up on [Cloudant.com][cloudant-home].
 
-![The Cloudant home page](media/cloudant-01-home@2x.png)
+![The Cloudant home page](media/cloudant-01-home@2x.png '; border')
 
-Click the red "Sign Up" button and fill out the sign-up form. Your **Username** will be the prefix of your database's URL. For example, the user "foodtracker" will be accessible at `https://foodtracker.cloudant.com`, used in the examples in this document. But you must choose your own unique username.
+Click the red "Sign Up" button and fill out the sign-up form. Your *Username* will be in every URL you use. For example, the user *foodtracker* will be accessible at `https://foodtracker.cloudant.com`. This document uses that account for its examples. But you will choose your own unique username.
 
 Complete the form, read the terms of service, and then click the red button, "I agree, sign me up".
 
-![Signing up with Cloudant](media/cloudant-02-sign-up@2x.png)
+![Signing up with Cloudant](media/cloudant-02-sign-up@2x.png '; border')
 
 ### The Cloudant Dashboard
 
-When sign-up is complete, your browser will display the **Dashboard**.
+When sign-up is complete, your browser will display the *Dashboard*.
 
 ![The Cloudant Dashboard home](media/dashboard-01-home@2x.png '; figure')
 
-The Dashboard is a a web application for managing your IBM Cloudant data. From the Dashboard, you can manage your database and work with data. You will use this dashboard to explore and experiment with FoodTracker's data.
+The Dashboard is the web interface to manage your data.
 
-**Use the Dashboard to observe and verify the iOS app's behavior.** This is a major advantage when using Cloudant: you have a simple and pleasant tool to help you do your job. In this walkthrough, you will often use the Dashboard in conjunction with the iOS Simulator.
+**Use the Dashboard to observe and verify FoodTracker's behavior.** This is a major advantage to using Cloudant: you have a simple and pleasant tool to help you do your job. In this walkthrough, you will frequently use the Dashboard in conjunction with the iOS Simulator.
 
 ### Prepare Cloudant for FoodTracker
 
 Use the Dashboard to prepare the database for FoodTracker. To work correctly, FoodTracker will need a few things:
 
-1. A *database*, to store data
-1. An *API key*, to authenticate
+1. A *database*, to store data,
+1. An *API key*, to authenticate, and
 1. *Permission* to use the database
 
-Begin by creating the database for FoodTracker. At the top of the Dashboard is the "Create Database" button. Click it, and a drop-down form will appear. Input the database name using lower-case, underscore format: `food_tracker`.
-First, create a database in the dashboard.
+Begin by creating the database for FoodTracker. At the top of the Dashboard is the "Create Database" button. Click it, and a drop-down form will appear. Input the database name in "C-style" lower-case, underscore format: `food_tracker`.
 
-![Create a Cloudant database](media/dashboard-02-create-db@2x.png)
+![Create a Cloudant database](media/dashboard-02-create-db@2x.png '; border')
 
-![The new meals database](media/dashboard-03-meals-db@2x.png)
+Welcome! Your database, *food_tracker*, presents itself in the Dashboard.
 
-![Create an API key](media/dashboard-04-api-key@2x.png)
+![Database created](media/dashboard-02_1-db_created@2x.png '; figure')
 
-![Grant permissions to the new API key](media/dashboard-05-permissions@2x.png)
+In Cloudant, the database is foundational to an application: it is the "observable universe" of the application. In general, the meat of the Cloudant API applies at the database level. Access control, data validation, and queries all apply uniformly to a specific database and all data stored within.
 
-![The meals database is ready](media/dashboard-06-meals-db-ready@2x.png)
+Because databases are well-isolated from each other, *apps* are well-isolated. A single Cloudant account can bear several different mobile and web applications, simultaneously.
 
-![Confirm API access using cURL](media/confirm-api-access@2x.png)
+To review about names:
+
+* Your *server* is named after your account. For example, the account for this document, `foodtracker`, is available at `https://foodtracker.cloudant.com/`.
+* Your *database* is the storage place for FoodTracker data. For example, the database used in this document, `food_tracker`, is named after the iOS app. It is available at `https://foodtracker.cloudant.com/food_tracker`.
+* Your **server name will be different** from this document
+* Your **database name will be the same** as this document.
+
+To see your database, use the Dashboard. From the "Databases" tab, click the link to *food_tracker*.
+
+![The new meals database](media/dashboard-03-meals-db@2x.png '; border')
+
+#### Create an API Key
+
+Now, you must create an *API key*. The API key is a username and password pair. The FoodTracker app will use these credentials to access the cloud data.
+
+**To create an API key**
+
+1. Open the the *food_tracker* database in the Dashboard.
+1. In the *food_tracker* database, click the "Permissions" link. ![The API Key manager](media/dashboard-03_1-api-key-page@2x.png '; border')
+1. Click the "Generate API key" button and wait for Cloudant to generate a new key. ![Generating and API Key](media/dashboard-03_2-generating-key@2x.png '; border')
+1. Cloudant will tell you when the key is ready. ![A new API key, ready for use](media/dashboard-03_3-new-api-key@2x.png '; border')
+
+**Copy the API key and password now.** You will need to use these to connect from FoodTracker on iOS.
+
+#### Grant API Permissions
+
+The final step is to grant this 
+![Grant permissions to the new API key](media/dashboard-05-permissions@2x.png '; border')
+
+![The meals database is ready](media/dashboard-06-meals-db-ready@2x.png '; border')
+
+![Confirm API access using cURL](media/confirm-api-access@2x.png '; border')
 
 ## Conclusion
 
