@@ -29,8 +29,8 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     // Change these for your own application.
     let cloudantAccount = "foodtracker"
     let cloudantDBName = "meals"
-    let cloudantApiKey = "andifecternarlitirsetion"
-    let cloudantApiPassword = "356dcd854fe9930cbca96e77dccbfd2af3f5f83f"
+    let cloudantApiKey = "facringediftedgentlerrad"
+    let cloudantApiPassword = "ee4c30dbd2f7457ccf6804f9536ad1a79f0ea9ad"
 
 //    override func viewWillAppear(animated: Bool) {
 //        super.viewWillAppear(animated)
