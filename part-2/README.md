@@ -88,9 +88,9 @@ Begin by creating the database for FoodTracker. At the top of the Dashboard is t
 
 ![Create a Cloudant database](media/dashboard-02-create-db@2x.png '; border')
 
-Welcome! Your database, *food_tracker*, presents itself in the Dashboard.
+Welcome to *food_tracker*! You have a brand-new, clean database for FoodTracker to sync with.
 
-![Database created](media/dashboard-02_1-db_created@2x.png '; figure')
+![Database created](media/dashboard-02_1-db_created@2x.png '; figure=left')
 
 In Cloudant, the database is foundational to an application: it is the "observable universe" of the application. In general, the meat of the Cloudant API applies at the database level. Access control, data validation, and queries all apply uniformly to a specific database and all data stored within.
 
@@ -135,15 +135,17 @@ The final step is to grant read, write, and replication access to your API key.
 
 #### Confirm API Access
 
-Now is the time to stop and confirm that everything is ready with your Cloudant service. The best way to do this is simply to use the *curl* command on a Mac. When you use `curl` to query Cloudant, you can easily see whether everything is working correctly.
+Now is the time to stop and confirm that everything is ready with your Cloudant service. The best way to do this on a Mac is to open Terminal and use `curl`. When you "curl" Cloudant, you will immediately see whether everything is working, and you can quickly determine what might be wrong. Begin by running the *Terminal* application.
 
-On a Mac, run the *Terminal* application. The command below will authenticate to Cloudant and display the data. Note that the username and password are inserted in the URL. The username is followed by `:`, then the password, then `@`, and then the usual hostname and path. When you paste this command into Terminal, **change the values to reflect your own server**.
+The command below will authenticate to Cloudant and display the data. Notice that the username and password are inserted in the URL. The username is followed by `:`, then the password, then `@`, and then the usual hostname and path. When you paste this command into Terminal, **change the values to reflect your own server**.
 
-    curl https://facringediftedgentlerrad:ee4c30dbd2f7457ccf6804f9536ad1a79f0ea9ad@foodtracker.cloudant.com/food_tracker/
+    curl https://facringediftedgentlerrad:ee4c30dbd2f7457ccf6804f9536ad1a79f0ea9ad@foodtracker.cloudant.com/food_tracker/_all_docs
 
 ![Confirm API access using cURL](media/confirm-api-access@2x.png '; border')
 
-Good job! You have completed preparations for Cloudant to host the FoodTracker data centrally.
+If you **see an empty listing of documents**, you have completed everything.
+
+Good job! Your Cloudant cloud is all prepared to be a central storage of FoodTracker data.
 
 ## Conclusion
 
