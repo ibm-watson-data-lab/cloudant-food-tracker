@@ -6,42 +6,6 @@ This series picks up where that document leaves off: syncing data between device
 
 This document is the second in the series, showing you how to sync the app data to Cloudant. You can also review the previous post in the series, [Part 1: The Datastore][part-1].
 
-## Outline
-
-**This will be removed before publishing**
-
-* Getting Started with FoodTracker
-* Getting Started with IBM Cloudant
-  * Create a Free IBM Cloudant Account
-  * Create a database for meals
-  * Give FoodTracker access to a database
-    * Generate an API key
-    * Set permissions
-    * Confirm with curl -I, confirm status code, confirm body
-* How to Start Over
-  * How to delete iOS Simulator data
-  * How to delete Cloudant data
-* Push replication
-  * The sync code
-  * Set the user-agent
-    * figure out how to explain why besides ("so we can track adoption")
-    * Maybe because you can use this with CouchDB and you'll want to track it there.
-  * Sync when samples are created
-  * Confirm in dashboard: run the app and look for changes
-  * Sync when the user makes a change
-  * Confirm in dashboard
-* Pull replication
-  * New code: update the sync to support pull
-  * Activate pull sync when the app starts
-  * Confirm
-    * Change a rating in the dashboard
-    * Start the app
-    * Note the star change
-* Next steps: UI integration
-  * Visual feedback of pushing
-  * Pull to refresh
-  * Be vague since I'm less clear what the scope is
-
 ## Getting Started with FoodTracker
 
 ![The FoodTracker main screen](media/FoodTracker@2x.png "; figure")
@@ -76,7 +40,7 @@ The Dashboard is the web interface to manage your data.
 
 **Use the Dashboard to observe and verify FoodTracker's behavior.** This is a major advantage to using Cloudant: you have a simple and pleasant tool to help you do your job. In this walkthrough, you will frequently use the Dashboard in conjunction with the iOS Simulator.
 
-### Prepare Cloudant for FoodTracker
+### Prepare Cloudant for the FoodTracker App
 
 Use the Dashboard to prepare the database for FoodTracker. To work correctly, FoodTracker will need a few things:
 
@@ -133,7 +97,7 @@ The final step is to grant read, write, and replication access to your API key.
 1. Check the columns for *Reader*, *Writer*, and *Replicator*.
 1. Uncheck the column for *Admin*.
 
-#### Confirm API Access
+### Confirm API Access
 
 Now is the time to stop and confirm that everything is ready with your Cloudant service. The best way to do this on a Mac is to open Terminal and use `curl`. When you "curl" Cloudant, you will immediately see whether everything is working, and you can quickly determine what might be wrong. Begin by running the *Terminal* application.
 
@@ -159,6 +123,42 @@ To see the completed sample project for this lesson, download the file and view 
 
 [Download File][code-download]
 
+## Outline
+
+**This will be removed before publishing**
+
+* Getting Started with FoodTracker
+* Getting Started with IBM Cloudant
+  * Create a Free IBM Cloudant Account
+  * Create a database for meals
+  * Give FoodTracker access to a database
+    * Generate an API key
+    * Set permissions
+    * Confirm with curl -I, confirm status code, confirm body
+* How to Start Over
+  * How to delete iOS Simulator data
+  * How to delete Cloudant data
+* Push replication
+  * The sync code
+  * Set the user-agent
+    * figure out how to explain why besides ("so we can track adoption")
+    * Maybe because you can use this with CouchDB and you'll want to track it there.
+  * Sync when samples are created
+  * Confirm in dashboard: run the app and look for changes
+  * Sync when the user makes a change
+  * Confirm in dashboard
+* Pull replication
+  * New code: update the sync to support pull
+  * Activate pull sync when the app starts
+  * Confirm
+    * Change a rating in the dashboard
+    * Start the app
+    * Note the star change
+* Next steps: UI integration
+  * Visual feedback of pushing
+  * Pull to refresh
+  * Be vague since I'm less clear what the scope is
+
 ## XXX Unresolved To-Dos
 
 Is there any good or official documentation about using the dashboard?
@@ -176,4 +176,4 @@ Do we want to make a design doc for the shared project where people can create i
 [code-download]: media/FoodTracker-Cloudant-Sync-2.zip
 [part-1]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/
 [part-1-download]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/#download-this-project
-[prepare-service]: #prepare-cloudant-for-foodtracker
+[prepare-service]: #prepare-cloudant-for-the-foodtracker-app
