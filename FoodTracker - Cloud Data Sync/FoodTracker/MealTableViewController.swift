@@ -196,7 +196,8 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     
     func populateRevision(meal: Meal, revision: CDTDocumentRevision?) {
         // Populate a document revision from a Meal.
-        let rev: CDTDocumentRevision = revision ?? CDTDocumentRevision(docId: meal.docId)
+        let rev: CDTDocumentRevision = revision
+            ?? CDTDocumentRevision(docId: meal.docId)
         rev.body["name"] = meal.name
         rev.body["rating"] = meal.rating
         
@@ -208,7 +209,8 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         rev.body["created_at"] = createdAtISO
         
         if let data = UIImagePNGRepresentation(meal.photo!) {
-            let attachment = CDTUnsavedDataAttachment(data: data, name: "photo.jpg", type: "image/jpg")
+            let attachment = CDTUnsavedDataAttachment(data: data,
+                name: "photo.jpg", type: "image/jpg")
             rev.attachments[attachment.name] = attachment
         }
     }
@@ -254,20 +256,23 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         }
     }
     
-    // Create a meal. Return true if the meal was created, or false if creation was unnecessary.
+    // Create a meal. Return true if the meal was created, or false if
+    // creation was unnecessary.
     func createMeal(meal: Meal) -> Bool {
-        // User-created meals will have docId == nil. Sample meals have a string docId.
-        // For sample meals, look up the existing doc. There will be three possibilities:
-        //   1. The sample has already been created (and is still present)
-        //   2. The sample has already been created, but was subsequently deleted.
-        //   3. The sample has never been created.
+        // User-created meals will have docId == nil. Sample meals have a
+        // string docId. For sample meals, look up the existing doc, with
+        // three possible outcomes:
+        //   1. No exception; the doc is already present. Do nothing.
+        //   2. The doc was created, then deleted. Do nothing.
+        //   3. The doc has never been created. Create it.
         if let docId = meal.docId {
             do {
                 try datastore!.getDocumentWithId(docId)
                 print("Skip \(docId) creation: already exists")
                 return false
             } catch let error as NSError {
-                if (error.userInfo["NSLocalizedFailureReason"] as? String != "not_found") {
+                if (error.userInfo["NSLocalizedFailureReason"] as? String
+                        != "not_found") {
                     print("Skip \(docId) creation: already deleted by user")
                     return false
                 }

@@ -45,7 +45,8 @@ class Meal: NSObject {
         
         super.init()
         
-        // Initialization should fail if there is no name or if the rating is negative.
+        // Initialization should fail if there is no name or if the
+        // rating is negative.
         if name.isEmpty || rating < 0 {
             return nil
         }
@@ -58,10 +59,12 @@ class Meal: NSObject {
             
             var photo: UIImage? = nil
             if let photoAttachment = doc.attachments["photo.jpg"] {
-                photo = UIImage(data: photoAttachment.dataFromAttachmentContent())
+                photo = UIImage(
+                    data:photoAttachment.dataFromAttachmentContent())
             }
             
-            self.init(name:name, photo:photo, rating:rating, docId:doc.docId)
+            self.init(name:name, photo:photo, rating:rating,
+                docId:doc.docId)
         } else {
             print("Error initializing meal from document: \(doc)")
             return nil
