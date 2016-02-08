@@ -44,37 +44,47 @@ This document is the second in the series, showing you how to sync the app data 
 
 ## Getting Started with FoodTracker
 
-If you have been following along, you will continue with your FoodTracker project. Or, you can download
+![The FoodTracker main screen](media/FoodTracker@2x.png "; figure")
 
 This document assumes that you have completed [Part 1: The Datastore][part-1] of the series. If you have completed that walkthrough, you may continue with your FoodTracker project.
 
 Alternatively, you can download the prepared project from the [Part 1 Code download][part-1-download] and begin there. Extract the zip file, `FoodTracker-Cloudant-Sync-1.zip`, browse into its folder with Finder, and double-click `FoodTracker.xcworkspace`. That will open the project in Xcode. Run the app (Command-R) and confirm that it works correctly. If everything is in order, proceed with these instructions.
 
-![The FoodTracker main screen](media/FoodTracker@2x.png)
-
 ## Getting Started with Cloudant
+
+In this section, you will create a free IBM Cloudant account, with which to support FoodTracker. If you already have an account, then you can use it. Just skip down and [prepare the system for FoodTracker][prepare-service].
 
 ### Create a Free IBM Cloudant Account
 
 Getting started with IBM Cloudant is free and easy. Begin by signing up on [Cloudant.com][cloudant-home].
 
-![The Cloudant home page](media/cloudant-01-home@2x.png '; figure=left')
+![The Cloudant home page](media/cloudant-01-home@2x.png)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue accumsan magna, at blandit sapien. Duis fermentum nibh eget porttitor consequat. Suspendisse eu sapien ac metus pellentesque ullamcorper. Sed quis magna aliquam, gravida arcu in, elementum orci. Quisque quis efficitur erat, fermentum laoreet sapien. Pellentesque nec mi a odio tincidunt malesuada quis eget nisl. Curabitur in nibh libero. Nunc convallis, tellus nec fermentum porta, neque nibh interdum turpis, non pulvinar metus augue ut felis.
+Click the red "Sign Up" button and fill out the sign-up form. Your **Username** will be the prefix of your database's URL. For example, the user "foodtracker" will be accessible at `https://foodtracker.cloudant.com`, used in the examples in this document. But you must choose your own unique username.
 
-Donec laoreet ligula in odio porta, tristique tempor velit pretium. Sed malesuada diam eu tellus luctus suscipit. Vivamus tempus, justo non auctor consectetur, elit risus porta felis, quis tempus metus odio in dolor. In feugiat velit a lectus tincidunt, non ullamcorper est pellentesque. Morbi id ligula ut dolor finibus semper. Etiam risus ante, maximus non consectetur vitae, ullamcorper eu diam. Etiam ornare libero nibh, non auctor ex consectetur vitae. Vestibulum bibendum accumsan mollis. 
+Complete the form, read the terms of service, and then click the red button, "I agree, sign me up".
 
-![Signing up with Cloudant](media/cloudant-02-sign-up@2x.png "; figure")
+![Signing up with Cloudant](media/cloudant-02-sign-up@2x.png)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue accumsan magna, at blandit sapien. Duis fermentum nibh eget porttitor consequat. Suspendisse eu sapien ac metus pellentesque ullamcorper. Sed quis magna aliquam, gravida arcu in, elementum orci. Quisque quis efficitur erat, fermentum laoreet sapien. Pellentesque nec mi a odio tincidunt malesuada quis eget nisl. Curabitur in nibh libero. Nunc convallis, tellus nec fermentum porta, neque nibh interdum turpis, non pulvinar metus augue ut felis.
+### The Cloudant Dashboard
 
-Donec laoreet ligula in odio porta, tristique tempor velit pretium. Sed malesuada diam eu tellus luctus suscipit. Vivamus tempus, justo non auctor consectetur, elit risus porta felis, quis tempus metus odio in dolor. In feugiat velit a lectus tincidunt, non ullamcorper est pellentesque. Morbi id ligula ut dolor finibus semper. Etiam risus ante, maximus non consectetur vitae, ullamcorper eu diam. Etiam ornare libero nibh, non auctor ex consectetur vitae. Vestibulum bibendum accumsan mollis. 
+When sign-up is complete, your browser will display the **Dashboard**.
 
+![The Cloudant Dashboard home](media/dashboard-01-home@2x.png '; figure')
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue accumsan magna, at blandit sapien. Duis fermentum nibh eget porttitor consequat. Suspendisse eu sapien ac metus pellentesque ullamcorper. Sed quis magna aliquam, gravida arcu in, elementum orci. Quisque quis efficitur erat, fermentum laoreet sapien. Pellentesque nec mi a odio tincidunt malesuada quis eget nisl. Curabitur in nibh libero. Nunc convallis, tellus nec fermentum porta, neque nibh interdum turpis, non pulvinar metus augue ut felis.
-![Cloudant dashboard home](media/dashboard-01-home@2x.png)
+The Dashboard is a a web application for managing your IBM Cloudant data. From the Dashboard, you can manage your database and work with data. You will use this dashboard to explore and experiment with FoodTracker's data.
 
-Donec laoreet ligula in odio porta, tristique tempor velit pretium. Sed malesuada diam eu tellus luctus suscipit. Vivamus tempus, justo non auctor consectetur, elit risus porta felis, quis tempus metus odio in dolor. In feugiat velit a lectus tincidunt, non ullamcorper est pellentesque. Morbi id ligula ut dolor finibus semper. Etiam risus ante, maximus non consectetur vitae, ullamcorper eu diam. Etiam ornare libero nibh, non auctor ex consectetur vitae. Vestibulum bibendum accumsan mollis. 
+**Use the Dashboard to observe and verify the iOS app's behavior.** This is a major advantage when using Cloudant: you have a simple and pleasant tool to help you do your job. In this walkthrough, you will often use the Dashboard in conjunction with the iOS Simulator.
+
+### Prepare Cloudant for FoodTracker
+
+Use the Dashboard to prepare the database for FoodTracker. To work correctly, FoodTracker will need a few things:
+
+1. A *database*, to store data
+1. An *API key*, to authenticate
+1. *Permission* to use the database
+
+First, create a database in the dashboard.
 
 ![Create a Cloudant database](media/dashboard-02-create-db@2x.png)
 
@@ -112,8 +122,9 @@ Do we want to make a design doc for the shared project where people can create i
 
 [END]: ------------------------------------------------
 
+[apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
 [cloudant-home]: https://cloudant.com/
+[code-download]: media/FoodTracker-Cloudant-Sync-2.zip
 [part-1]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/
 [part-1-download]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/#download-this-project
-[apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
-[code-download]: media/FoodTracker-Cloudant-Sync-2.zip
+[prepare-service]: #prepare-cloudant-for-foodtracker
