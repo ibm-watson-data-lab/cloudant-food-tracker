@@ -233,7 +233,7 @@ With this in mind, consider: how will the sample meals that are pre-loaded into 
 
 To support this requirement, you will use document [tombstones][tombstones]. This will be the basic design:
 
-  * Each meal will be represented by a single document. User-created meals will have an automatically-generated document ID; but sample meals will have hard-coded document IDs: “meal1″, “meal2″, and “meal3″.
+  * Each meal will be represented by a single document. User-created meals will have an automatically-generated document ID; but sample meals will have hard-coded document IDs: "meal1", "meal2", and "meal3".
 
     ``` js
     // An example meal document:
