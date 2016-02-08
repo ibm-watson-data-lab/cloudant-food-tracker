@@ -48,6 +48,8 @@ Use the Dashboard to prepare the database for FoodTracker. To work correctly, Fo
 1. An *API key*, to authenticate, and
 1. *Permission* to use the database
 
+#### Create a Database
+
 Begin by creating the database for FoodTracker. At the top of the Dashboard is the "Create Database" button. Click it, and a drop-down form will appear. Input the database name in "C-style" lower-case, underscore format: `food_tracker`.
 
 ![Create a Cloudant database](media/dashboard-02-create-db@2x.png '; border')
@@ -109,7 +111,38 @@ The command below will authenticate to Cloudant and display the data. Notice tha
 
 If you **see an empty listing of documents**, you have completed everything.
 
-Good job! Your Cloudant cloud is all prepared to be a central storage of FoodTracker data.
+Good job! Your Cloudant cloud is fully prepared.
+
+## Troubleshooting Tip: Deleting Data
+
+When working with data syncing features, you may wish to delete some data, so that you can start over and try again.
+
+These are example commands you can paste into *Terminal*. They will help you to easily remove data from either your Cloudant cloud, or your iOS Cloudant Sync datastore. As you work on syncing, you will notice that documents love to to jump between the cloud and the device. So, you may sometimes wish to delete *both* data sets, to truly start from the beginning.
+
+### Deleting the iOS Datastore
+
+This will remove the Cloudant Sync database. When you restart the app, the app will initialize a new datastore and behave as if this was its first time to run. For example, it will re-create the sample meals again.
+
+**To delete the datastore from the iOS Simulator**
+
+    rm -i -rv $HOME/Library/Developer/CoreSimulator/Devices/*/data/Containers/Data/Application/*/Documents/foodtracker-meals
+
+This command will prompt you to remove the files. If you are confident that the command is working correct, you can omit the `-i` option.
+
+### Deleting a Cloudant database
+
+This procedure will delete the *food_tracker* database in the cloud, removing everything in it. Once deleted, you will want to re-create a new database by following the [database preparation procedure][prepare-service].
+
+**To delete and re-create the database in Cloudant**
+
+1. Open the the *food_tracker* database in the Dashboard.
+1. In the *food_tracker* database, click the settings button, ![The settings icon](media/settings@2x.png), which looks like a gear.
+1. Click the "Delete" button with the rubbish bin icon. ![The delete-database button](media/delete-db@2x.png)
+1. Since this is a significant and permanent change, you must confirm your request by inputing the database name, `food_tracker`, into the form. Press "Delete".
+
+![Confirm deleting a database](media/deleting-db@2x.png)
+
+Finally, [prepare a new database][prepare-service] to replace this one. If your FoodTracker already connects to Cloudant, then **remember to update your API key and password** in the source code.
 
 ## Conclusion
 
@@ -171,9 +204,11 @@ Do we want to make a design doc for the shared project where people can create i
 
 [END]: ------------------------------------------------
 
+[confirm-api]: #confirm-api-access
+[prepare-service]: #prepare-cloudant-for-the-foodtracker-app
+
 [apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
 [cloudant-home]: https://cloudant.com/
 [code-download]: media/FoodTracker-Cloudant-Sync-2.zip
 [part-1]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/
 [part-1-download]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/#download-this-project
-[prepare-service]: #prepare-cloudant-for-the-foodtracker-app
