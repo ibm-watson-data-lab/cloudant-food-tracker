@@ -504,7 +504,7 @@ Next, implement the method to create new meal documents. Note that sample meals 
 
   1. In `MealTableViewController.swift`, in the section `MARK: Datastore`, append a new method:
 
-     ```
+     ``` swift
     // Create a meal. Return true if the meal was created, or false if
     // creation was unnecessary.
     func createMeal(meal: Meal) -> Bool {
