@@ -1,6 +1,6 @@
 # Start Developing iOS Apps (Swift) - With Cloud Data Sync; Part 1: The Datastore
 
-This walk-through is a "sequel" to Apple's well-known iOS programming introduction, [Start Developing iOS Apps (Swift)][apple-doc]. Apple's introduction walks us through the process of building the UI, data, and logic of an example food tracker app, culminating with a section on data persistence: storing the app data as files in the iOS device.
+This walk-through is a sequel to Apple's well-known iOS programming introduction, [Start Developing iOS Apps (Swift)][apple-doc]. Apple's introduction walks us through the process of building the UI, data, and logic of an example food tracker app, culminating with a section on data persistence: storing the app data as files in the iOS device.
 
 This series picks up where that document leaves off: syncing data between devices, through the cloud, with an offline-first design. You will achieve this using open source tools and the IBM Cloudant service.
 
@@ -8,7 +8,7 @@ This document is the first in the series, showing you how to use the Cloudant Sy
 
 ## Getting Started
 
-![The FoodTracker main screen](media/FoodTracker@2x.png; '; figure=left')
+![The FoodTracker main screen](media/FoodTracker@2x.png '; figure=left')
 
 These lessons assume that you have completed the [FoodTracker app][apple-doc] from Apple's walk-through. First, complete that walk-through. It will teach you the process of beginning an iOS app and it will end with the chapter, [Persist Data][apple-doc-download]. Download the sample project from the final lesson (the "Download File" link at the bottom of the page).
 
@@ -174,7 +174,7 @@ The header file contents are done. But, despite its name, this file is not yet a
      ```
      FoodTracker/CloudantSync-Bridging-Header.h
      ```
-     ![Input the bridging header value](media/input-bridging-header.png; '; border')
+     ![Input the bridging header value](media/input-bridging-header.png '; border')
   1. Press return
 
 Your bridging header is done! Xcode should look like this:
