@@ -115,19 +115,35 @@ Now, you must create an *API key*. The API key is a username and password pair. 
 
 1. Open the the *food_tracker* database in the Dashboard.
 1. In the *food_tracker* database, click the "Permissions" link. ![The API Key manager](media/dashboard-03_1-api-key-page@2x.png '; border')
-1. Click the "Generate API key" button and wait for Cloudant to generate a new key. ![Generating and API Key](media/dashboard-03_2-generating-key@2x.png '; border')
+1. In the Permissions tab, click the "Generate API key" button and wait for Cloudant to generate a new key. ![Generating and API Key](media/dashboard-03_2-generating-key@2x.png '; border')
 1. Cloudant will tell you when the key is ready. ![A new API key, ready for use](media/dashboard-03_3-new-api-key@2x.png '; border')
 
 **Copy the API key and password now.** You will need to use these to connect from FoodTracker on iOS.
 
 #### Grant API Permissions
 
-The final step is to grant this 
-![Grant permissions to the new API key](media/dashboard-05-permissions@2x.png '; border')
+The final step is to grant read, write, and replication access to your API key.
 
-![The meals database is ready](media/dashboard-06-meals-db-ready@2x.png '; border')
+![Grant permissions to the new API key](media/dashboard-05-permissions@2x.png '; figure')
+
+**To grant permissions to an API key**
+
+1. In the Permissions tab, find the access control settings at the top of the page.
+1. Find the row for your new API key, for example, *facringediftedgentlerrad*.
+1. Check the columns for *Reader*, *Writer*, and *Replicator*.
+1. Uncheck the column for *Admin*.
+
+#### Confirm API Access
+
+Now is the time to stop and confirm that everything is ready with your Cloudant service. The best way to do this is simply to use the *curl* command on a Mac. When you use `curl` to query Cloudant, you can easily see whether everything is working correctly.
+
+On a Mac, run the *Terminal* application. The command below will authenticate to Cloudant and display the data. Note that the username and password are inserted in the URL. The username is followed by `:`, then the password, then `@`, and then the usual hostname and path. When you paste this command into Terminal, **change the values to reflect your own server**.
+
+    curl https://facringediftedgentlerrad:ee4c30dbd2f7457ccf6804f9536ad1a79f0ea9ad@foodtracker.cloudant.com/food_tracker/
 
 ![Confirm API access using cURL](media/confirm-api-access@2x.png '; border')
+
+Good job! You have completed preparations for Cloudant to host the FoodTracker data centrally.
 
 ## Conclusion
 
