@@ -27,8 +27,9 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     // MARK: IBM Cloudant Settings
     
     // Change these for your own application.
+    let userAgent = "FoodTracker"
     let cloudantAccount = "foodtracker"
-    let cloudantDBName = "meals"
+    let cloudantDBName = "food_tracker"
     let cloudantApiKey = "facringediftedgentlerrad"
     let cloudantApiPassword = "ee4c30dbd2f7457ccf6804f9536ad1a79f0ea9ad"
 
@@ -341,7 +342,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     func interceptRequestInContext(context: CDTHTTPInterceptorContext) -> CDTHTTPInterceptorContext {
         let appVer: AnyObject = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]!
         let osVer = NSProcessInfo().operatingSystemVersionString
-        let ua = "FoodTracker/\(appVer) (iOS \(osVer))"
+        let ua = "\(userAgent)/\(appVer) (iOS \(osVer)h)"
 
         context.request.setValue(ua, forHTTPHeaderField: "User-Agent")
         return context

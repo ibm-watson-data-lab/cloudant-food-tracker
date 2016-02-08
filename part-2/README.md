@@ -142,7 +142,32 @@ This procedure will delete the *food_tracker* database in the cloud, removing ev
 
 ![Confirm deleting a database](media/deleting-db@2x.png)
 
-Finally, [prepare a new database][prepare-service] to replace this one. If your FoodTracker already connects to Cloudant, then **remember to update your API key and password** in the source code.
+Finally, [prepare a new database][prepare-service] to replace this one. If your FoodTracker already connects to Cloudant, then you have two choices:
+
+* Either paste your old API key and press the "Grant Rights" button.
+* Or, generate a new API key, then update your API key and password in the app source code.
+
+## Push Replication
+
+### New Feature: Sync to Cloudant
+
+### Set the User-Agent
+
+### Sync After Creation
+
+### Confirm Sync-to-Cloud Using the Dashboard
+
+### Sync After Updates
+
+## Pull Replication
+
+### Add Functionality to Sync
+
+### Sync on App Start
+
+### Confirm Pull Sync
+
+## Next Steps: User Interface
 
 ## Conclusion
 
