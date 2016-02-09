@@ -106,7 +106,9 @@ With your Podfile in place, you can now use CocoaPods to install the CDTDatastor
 
 You will see colorful output from CocoaPods in the terminal.
 
-![Running the pod install command](media/pod-install-begin.png '; figure=left') ![Output of the pod install command](media/pod-install-end.png '; figure=right')
+![Running the pod install command](media/pod-install-begin.png '; border')
+
+![Output of the pod install command](media/pod-install-end.png '; border')
 
 ### Change from a Project to a Workspace
 
@@ -120,7 +122,7 @@ Because you are now integrating FoodTracker with the third-party CDTDatastore li
 
 You will see a similar XCode view as before, but notice that you now have two projects now.
 
-![FoodTracker workspace has two projects](media/workspace.png)
+![FoodTracker workspace has two projects](media/workspace.png '; border')
 
 **Note**, when you build or run the app, you may see compiler warnings from CDTDatastore code and its dependencies. You can safely ignore these warnings.
 
@@ -179,7 +181,7 @@ The header file contents are done. But, despite its name, this file is not yet a
 
 Your bridging header is done! Xcode should look like this:
 
-![Final bridging header setup](media/bridging-header.png)
+![Final bridging header setup](media/bridging-header.png '; border')
 
 ### Check the Build
 
