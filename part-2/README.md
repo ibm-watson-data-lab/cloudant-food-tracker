@@ -95,7 +95,7 @@ The final step is to grant read, write, and replication access to your API key.
 1. In the Permissions tab, find the access control settings at the top of the page.
 1. Find the row for your new API key, for example, *facringediftedgentlerrad*.
 1. Check the columns for *Reader*, *Writer*, and *Replicator*.
-1. Uncheck the column for *Admin*.
+1. Ensure that the column for *Admin* is not checked.
 
 ![Grant permissions to the new API key](media/dashboard-05-permissions@2x.png '; border')
 
