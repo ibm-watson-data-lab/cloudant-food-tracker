@@ -30,6 +30,8 @@ Complete the form, read the terms of service, and then click the red button, "I 
 
 ![Signing up with Cloudant](media/cloudant-02-sign-up@2x.png '; border')
 
+Alternatively, you can create a [Cloudant service instance within IBM Bluemix](https://console.ng.bluemix.net/catalog/services/cloudant-nosql-db/). You can [sign up for a free trial](https://console.ng.bluemix.net/registration) if you don't already have a Bluemix account. Note that a Cloudant service instance created within Bluemix is assigned a Cloudant username that is automatically generated at the time of service instantiation.
+
 ### The Cloudant Dashboard
 
 ![The Cloudant Dashboard home](media/dashboard-01-home@2x.png '; figure')
