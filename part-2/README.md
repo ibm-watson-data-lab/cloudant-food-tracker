@@ -36,15 +36,15 @@ Alternatively, you can create a [Cloudant service instance within IBM Bluemix](h
 
 ![The Cloudant Dashboard home](media/dashboard-01-home@2x.png '; figure')
 
-When sign-up is complete, your browser will display the *Dashboard*.
+When sign-up is complete, your browser will display the *dashboard*.
 
-The Dashboard is the web interface to manage your data.
+The dashboard is the web interface to manage your data.
 
-**Use the Dashboard to observe and verify FoodTracker's behavior.** This is a major advantage to using Cloudant: you have a simple and pleasant tool to help you do your job. In this walkthrough, you will frequently use the Dashboard in conjunction with the iOS Simulator.
+**Use the dashboard to observe and verify FoodTracker's behavior.** This is a major advantage to using Cloudant: you have a simple and pleasant tool to help you do your job. In this walkthrough, you will frequently use the dashboard in conjunction with the iOS Simulator.
 
 ### Prepare Cloudant for the FoodTracker App
 
-Use the Dashboard to prepare the database for FoodTracker. To work correctly, FoodTracker will need a few things:
+Use the dashboard to prepare the database for FoodTracker. To work correctly, FoodTracker will need a few things:
 
 1. A *database*, to store data,
 1. An *API key*, to authenticate, and
@@ -69,7 +69,7 @@ To review about names:
 * Your **server name will be different** from this document
 * Your **database name will be the same** as this document.
 
-To see your database, use the Dashboard. From the "Databases" tab, click the link to *food_tracker*.
+To see your database, use the dashboard. From the "Databases" tab, click the link to *food_tracker*.
 
 ![The new meals database](media/dashboard-03-meals-db@2x.png '; border')
 
@@ -77,7 +77,7 @@ Now, you must create an *API key*. The API key is a username and password pair. 
 
 **To create an API key**
 
-1. Open the the *food_tracker* database in the Dashboard.
+1. Open the the *food_tracker* database in the dashboard.
 1. In the *food_tracker* database, click the "Permissions" link. ![The API Key manager](media/dashboard-03_1-api-key-page@2x.png '; border')
 1. In the Permissions tab, click the "Generate API key" button and wait for Cloudant to generate a new key.
 
@@ -135,7 +135,7 @@ This procedure will delete the *food_tracker* database in the cloud, removing ev
 
 **To delete and re-create the database in Cloudant**
 
-1. Open the the *food_tracker* database in the Dashboard.
+1. Open the the *food_tracker* database in the dashboard.
 1. In the *food_tracker* database, click the settings button, ![The settings icon](media/settings@2x.png), which looks like a gear.
 1. Click the "Delete" button with the rubbish bin icon. ![The delete-database button](media/delete-db@2x.png '; border')
 1. Since this is a significant and permanent change, you must confirm your request by inputing the database name, `food_tracker`, into the form. Press "Delete".
