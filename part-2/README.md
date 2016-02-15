@@ -58,7 +58,7 @@ Welcome to *food_tracker*! You have a brand-new, clean database for FoodTracker 
 
 ![Database creation complete!](media/dashboard-02_1-db_created@2x.png '; figure')
 
-In Cloudant, the database is foundational to an application: it is the "observable universe" of the application. In general, the meat of the Cloudant API applies at the database level. Access control, data validation, and queries all apply uniformly to a specific database and all data stored within.
+In Cloudant, the database is foundational to an application: it is the "observable universe" of the application. The vast majority of the Cloudant API is around database operations. Access control, data validation, and queries are scoped to a specific database and the data stored within that database.
 
 Because databases are well-isolated from each other, *apps* are well-isolated. A single Cloudant account can bear several different mobile and web applications, simultaneously.
 
