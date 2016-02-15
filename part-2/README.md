@@ -101,7 +101,7 @@ The final step is to grant read, write, and replication access to your API key.
 
 ### Confirm API Access
 
-Now is the time to stop and confirm that everything is ready with your Cloudant service. The best way to do this on a Mac is to open Terminal and use `curl`. When you "curl" Cloudant, you will immediately see whether everything is working, and you can quickly determine what might be wrong. Begin by running the *Terminal* application.
+Now is the time to stop and confirm that everything is ready with your Cloudant service. The best way to do this on a Mac is to open Terminal and use `curl` (curl can also run on a number of other platforms). When you "curl" Cloudant, you will immediately see whether everything is working, and you can quickly determine what might be wrong. Begin by running the *Terminal* application.
 
 The command below will authenticate to Cloudant and display the data. Notice that the username and password are inserted in the URL. The username is followed by `:`, then the password, then `@`, and then the usual hostname and path. When you paste this command into Terminal, **change the values to reflect your own server**.
 
