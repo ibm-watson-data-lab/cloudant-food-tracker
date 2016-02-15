@@ -16,7 +16,7 @@ Alternatively, you can download the prepared project from the [Part 1 Code downl
 
 ## Getting Started with Cloudant
 
-In this section, you will create a free IBM Cloudant account, with which to support FoodTracker. If you already have an account, then you can use it. Just skip down and [prepare the system for FoodTracker][prepare-service].
+In this section you will create a free IBM Cloudant account. This will be the cloud database with which the FoodTracker app will sync its data. If you already have a Cloudant account then you can use your existing account. If you plan on using your existing Cloudant account then skip to the "[Prepare Cloudant for the FoodTracker App](prepare-service)" section of this tutorial.
 
 ### Create a Free IBM Cloudant Account
 
