@@ -50,7 +50,7 @@ Use the dashboard to prepare the database for FoodTracker. To work correctly, Fo
 1. An *API key*, to authenticate, and
 1. *Permission* to use the database
 
-Begin by creating the database for FoodTracker. At the top of the Dashboard is the "Create Database" button. Click it, and a drop-down form will appear. Input the database name in "C-style" lower-case, underscore format: `food_tracker`.
+Begin by creating the database for FoodTracker. At the top of the dashboard is the "Create Database" button. Click it, and a drop-down form will appear. Input the database name in all lower case, underscore format: `food_tracker`.
 
 ![Create a Cloudant database](media/dashboard-02-create-db@2x.png '; border')
 
