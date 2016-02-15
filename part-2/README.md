@@ -111,7 +111,7 @@ The command below will authenticate to Cloudant and display the data. Notice tha
 
 If you **see an empty listing of documents**, you have completed everything.
 
-Good job! Your Cloudant cloud is fully prepared. You are ready to move to the next sections, where you will actually develop the sync feature.
+Good job! Cloudant is fully prepared. You are ready to move to the next sections, where you will actually add the ability for the FoodTracker app to sync with Cloudant.
 
 ## Troubleshooting Tip: Deleting Data
 
