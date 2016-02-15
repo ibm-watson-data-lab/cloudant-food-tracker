@@ -86,7 +86,7 @@ Now, you must create an *API key*. An API key is a username and password pair ge
 
   ![A new API key, ready for use](media/dashboard-03_3-new-api-key@2x.png '; border')
 
-**Copy the API key and password now.** You will need to use these to connect from FoodTracker on iOS.
+**Copy the API key and password now.** You will need to use these to connect the FoodTracker iOS app to Cloudant.
 
 The final step is to grant read, write, and replication access to your API key.
 
