@@ -26,7 +26,7 @@ Getting started with IBM Cloudant is free and easy. Begin by signing up on [Clou
 
 Click the red "Sign Up" button and fill out the sign-up form. Your *Username* will be in every URL you use. For example, the user *foodtracker* will be accessible at `https://foodtracker.cloudant.com`. This *foodtracker* account is used throughout the examples in this tutorial. You will replace *foodtracker* with your unique Cloudant username in these examples.
 
-Complete the form, read the terms of service, and then click the red button, "I agree, sign me up".
+Complete the form, read the terms of service, and then click the red button, "I agree, sign me up."
 
 ![Signing up with Cloudant](media/cloudant-02-sign-up@2x.png '; border')
 
