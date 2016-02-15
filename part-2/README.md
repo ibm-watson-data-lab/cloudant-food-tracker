@@ -60,7 +60,7 @@ Welcome to *food_tracker*! You have a brand-new, clean database for FoodTracker 
 
 In Cloudant, the database is foundational to an application: it is the "observable universe" of the application. The vast majority of the Cloudant API is around database operations. Access control, data validation, and queries are scoped to a specific database and the data stored within that database.
 
-Because databases are well-isolated from each other, *apps* are well-isolated. A single Cloudant account can bear several different mobile and web applications, simultaneously.
+One common approach that we see used is the one-database-per-user pattern. With this approach, each user is given their own Cloudant database in which all of the data applicable to this one user is stored. Since there is no limit to the number of databases that you can create within your Cloudant account, the one-database-per user approach can scale as you add more app users.
 
 To review about names:
 
