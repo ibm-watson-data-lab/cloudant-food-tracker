@@ -117,7 +117,7 @@ Good job! Cloudant is fully prepared. You are ready to move to the next sections
 
 When working with data syncing features, you may wish to delete some data, so that you can start over and try again.
 
-These are example commands you can paste into *Terminal*. They will help you to easily remove data from either your Cloudant cloud, or your iOS Cloudant Sync datastore. As you work on syncing, you will notice that documents love to to jump between the cloud and the device. So, you may sometimes wish to delete *both* data sets, to truly start from the beginning.
+These are example commands you can paste into *Terminal*. These commands will help you to easily remove data from either Cloudant or your iOS Cloudant Sync datastore. As you work on syncing you may notice that documents will often move between the cloud and the device (which is the very nature of syncing data). So, you may sometimes wish to delete *both* data sets, to truly start from the beginning.
 
 ### Deleting the iOS Datastore
 
