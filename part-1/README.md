@@ -2,7 +2,7 @@
 
 This walk-through is a sequel to Apple's well-known iOS programming introduction, [Start Developing iOS Apps (Swift)][apple-doc]. Apple's introduction walks us through the process of building the UI, data, and logic of an example food tracker app, culminating with a section on data persistence: storing the app data as files in the iOS device.
 
-This series picks up where that document leaves off: syncing data between devices, through the cloud, with an offline-first design. You will achieve this using open source tools and the IBM Cloudant service.
+This series picks up where that document leaves off: syncing data between devices, through the cloud, with an offline-first design. You will achieve this using open source tools and the free IBM Cloudant service.
 
 This document is the first in the series, showing you how to use the Cloudant Sync datastore, *CDTDatastore*, for FoodTracker on the iOS device. Subsequent posts will cover syncing to the cloud and other advanced features such as accounts and data management.
 
