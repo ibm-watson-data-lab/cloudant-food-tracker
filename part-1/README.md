@@ -733,7 +733,7 @@ To see the completed sample project for this lesson, download the file and view 
 [apple-doc-download]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/Lesson10.html#//apple_ref/doc/uid/TP40015214-CH14-SW3
 [bridging-header]: https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html
 [cdtdatastore-pod]: https://cocoapods.org/pods/CDTDatastore
-[code-download]: media/FoodTracker-Cloudant-Sync-1.zip
+[code-download]: https://ibm.biz/FoodTracker-Cloudant-Sync-1.zip
 [cocoapods]: https://cocoapods.org/
 [cocoapods-getting-started]: https://guides.cocoapods.org/using/getting-started.html
 [couchdb]: http://couchdb.apache.org
