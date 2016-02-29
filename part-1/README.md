@@ -98,7 +98,7 @@ With your Podfile in place, you can now use CocoaPods to install the CDTDatastor
      # Your 'cd' command may be different; change to the folder you use.
      cd "FoodTracker - Persist Data"
      ```
-  1. Type this command
+  1. Type this command. Note, **this may take a few minutes to complete*.
 
      ```
      pod install --verbose
