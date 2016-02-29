@@ -453,7 +453,7 @@ func initDatastore() {
 }
 ```
 
-### Deleting the Datastore in the iOS Simulator
+### Side Note: Deleting the Datastore in the iOS Simulator
 
 Sometimes during development, you may want to delete the datastore and start over. There are several ways to do this, for example, by deleting the app from the simulated device.
 
