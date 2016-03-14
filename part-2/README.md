@@ -155,9 +155,46 @@ Finally, [prepare a new database][prepare-service] to replace this one. If your 
 
 ## Push Replication
 
-### New Feature: Sync to Cloudant
+Now comes the fun part! The first step is to *push* data from the device up to Cloudant. When you finish this section, all data updates will syncronize to your central Cloudant service: both when the user creates new meals, and also when the user modifies existing meals (for example, changing the meal photo, or its star rating).
 
-### Set the User-Agent
+### First Steps: Set the User-Agent
+
+Most iOS apps should identify themselves properly in the HTTP *User-Agent* header. Typically, the User-Agent value should specify the software name version, and also the operating system version. In this example, we will hard-code the sofwtare name, FoodTracker, and extract the version from the sofware bundle (managed by Xcode).
+
+Defining a User-Agent a very useful habit to develop. For example: remember that this FoodTracker app, and Cloudant Sync is also compatible with Apache CouchDB 2.0. In the future, if you wish to manage your own CouchDB server, or to use a hybrid Cloudant-and-CouchDB system, that will be a straightforward procedure. However, a key part of such a system will be the User-Agent identification coming from all of your deployed apps.
+
+In other words: Set the User-Agent now, just in case. It is easy to do, and you will thank yourself in the future.
+
+**To set the user-agent string**
+
+1. Open `MealTableViewController.swift`
+1. In `MealTableViewController.swift`, find the "Properties" section, where `meals`, `datastoreManager`, and `datastore` are declared.
+1. Insert the following code beneath that:
+
+  ``` swift
+  // MARK: Cloudant Settings
+
+  // Change these for your own application.
+  let userAgent = "FoodTracker"
+  ```
+1. Move to the bottom of the class.
+1. Insert the following code beneath the method `func storeSampleMeals()`
+
+  ``` swift
+  // MARK: Cloudant Sync
+
+  // Intercept HTTP requests and set the User-Agent header.
+  func interceptRequestInContext(context: CDTHTTPInterceptorContext) -> CDTHTTPInterceptorContext {
+      let appVer: AnyObject = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]!
+      let osVer = NSProcessInfo().operatingSystemVersionString
+      let ua = "\(userAgent)/\(appVer) (iOS \(osVer)h)"
+
+      context.request.setValue(ua, forHTTPHeaderField: "User-Agent")
+      return context
+  }
+  ```
+
+Checkpoint: **Run your app.** Of course, the app's behavior will not change; however this is a good place to catch any programming errors.
 
 ### Sync Upon Meal Creation
 

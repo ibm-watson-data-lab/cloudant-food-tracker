@@ -24,7 +24,7 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
         case Pull
     }
     
-    // MARK: IBM Cloudant Settings
+    // MARK: Cloudant Settings
     
     // Change these for your own application.
     let userAgent = "FoodTracker"
