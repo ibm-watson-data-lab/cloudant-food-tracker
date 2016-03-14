@@ -168,29 +168,31 @@ In other words: Set the User-Agent now, just in case. It is easy to do, and you 
 **To set the user-agent string**
 
 1. Open `MealTableViewController.swift`
-1. In `MealTableViewController.swift`, find the "Properties" section, where `meals`, `datastoreManager`, and `datastore` are declared.
+1. Near the top of `MealTableViewController.swift`, find the "Properties" section, where `meals`, `datastoreManager`, and `datastore` are declared.
 1. Insert the following code beneath that:
 
   ``` swift
   // MARK: Cloudant Settings
 
-  // Change these for your own application.
   let userAgent = "FoodTracker"
   ```
-1. Move to the bottom of the class.
-1. Insert the following code beneath the method `func storeSampleMeals()`
+1. Scroll down to the bottom of the class.
+1. Below the method `func storeSampleMeals()`, insert the following code:
 
   ``` swift
   // MARK: Cloudant Sync
 
   // Intercept HTTP requests and set the User-Agent header.
-  func interceptRequestInContext(context: CDTHTTPInterceptorContext) -> CDTHTTPInterceptorContext {
-      let appVer: AnyObject = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"]!
-      let osVer = NSProcessInfo().operatingSystemVersionString
-      let ua = "\(userAgent)/\(appVer) (iOS \(osVer)h)"
+  func interceptRequestInContext(context: CDTHTTPInterceptorContext)
+      -> CDTHTTPInterceptorContext {
+          let info = NSBundle.mainBundle().infoDictionary!
+          let appVer = info["CFBundleShortVersionString"]
+          let osVer = NSProcessInfo().operatingSystemVersionString
+          let ua = "\(userAgent)/\(appVer) (iOS \(osVer)"
 
-      context.request.setValue(ua, forHTTPHeaderField: "User-Agent")
-      return context
+          context.request.setValue(ua,
+              forHTTPHeaderField: "User-Agent")
+          return context
   }
   ```
 
