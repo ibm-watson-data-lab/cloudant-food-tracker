@@ -16,14 +16,16 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     
     var datastoreManager: CDTDatastoreManager?
     var datastore: CDTDatastore?
-    var replications = [SyncDirection: CDTReplicator]()
     
-    // Define two sync directions, push and pull.
+    // Define two sync directions: push and pull.
+    // .Push will copy local data from this app to Cloudant.
+    // .Pull will copy remote data from Cloudant to this app.
     enum SyncDirection {
         case Push
         case Pull
     }
-    
+    var replications = [SyncDirection: CDTReplicator]()
+
     // MARK: Cloudant Settings
     
     // Change these for your own application.

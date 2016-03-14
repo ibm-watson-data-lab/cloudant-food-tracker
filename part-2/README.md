@@ -198,7 +198,52 @@ In other words: Set the User-Agent now, just in case. It is easy to do, and you 
 
 Checkpoint: **Run your app.** Of course, the app's behavior will not change; however this is a good place to catch any programming errors.
 
+### Define Your Sync Information
+
+The next step is also straightforward. You will define the information that FoodTracker will need to connect to Cloudant: the account name, the login credentials, etc.
+
+**To define key Cloudant Sync information**
+
+1. In `MealTableViewController.swift`, scroll to the section, `MARK: Properties`.
+1. Below the `datastoreManager` and `datastore` properties, insert the following code:
+
+  ``` swift
+
+  // Define two sync directions: push and pull.
+  // .Push will copy local data from FoodTracker to Cloudant.
+  // .Pull will copy remote data from Cloudant to FoodTracker.
+  enum SyncDirection {
+      case Push
+      case Pull
+  }
+
+  // Track pending .Push and .Pull replications here.
+  var replications = [SyncDirection: CDTReplicator]()
+  ```
+1. Scroll to the section, `MARK: Cloudant Settings`.
+1. Find the line where you defined `userAgent`.
+1. Below that line, insert the following code:
+
+  ``` swift
+
+  // NOTE: You must change these values for your own application.
+  let cloudantAccount = "foodtracker"
+  let cloudantDBName = "food_tracker"
+  let cloudantApiKey = "facringediftedgentlerrad"
+  let cloudantApiPassword = "ee4c30dbd2f7457ccf6804f9536ad1a79f0ea9ad"
+  ```
+
+  Remember when you copied down your API key credentials? Paste them here, as the values for `cloudantApiKey` and `cloudantApiPassword`. If you haven't got them handy, you can simply [create a new API key](#the-api-key) (and remember to grant credentials too).
+
+Checkpoint: **Run your app.** Again, the app's behavior will not change. But when the app compiles and runs, you will know you haven't got any errors or typos.
+
 ### Sync Upon Meal Creation
+
+Everything is now in place. Now, you will add a sync-to-cloudant feature to FoodTracker.
+
+First, define the information that FoodTracker will need to connect to Cloudant: the account name, the API key, etc. Next, you will define a `SyncDirection` enum, which allows you to specify `.Push` or `.Pull` 
+
+1. Define the account name, API key, etc.
 
 ### Confirm New Meals in the Dashboard
 
