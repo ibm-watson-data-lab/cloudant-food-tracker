@@ -159,11 +159,13 @@ Finally, [prepare a new database][prepare-service] to replace this one. If your 
 
 ### Set the User-Agent
 
-### Sync After Creation
+### Sync Upon Meal Creation
 
-### Confirm Sync-to-Cloud Using the Dashboard
+### Confirm New Meals in the Dashboard
 
-### Sync After Updates
+### Sync Upon Meal Update
+
+### Confirm Updated Meals in the Dashboard
 
 ## Pull Replication
 
