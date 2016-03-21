@@ -202,6 +202,21 @@ Checkpoint: **Run your app.** Of course, the app's behavior will not change; how
 
 The next step is also straightforward. You will define the information that FoodTracker will need to connect to Cloudant: the account name, the login credentials, etc.
 
+Another important property is the `replications` dictionary, which will keep track of pending replications. Replications are not instant. It takes time to transfer data and images to and from the central server. So, FoodTracker will remember which replications are currently running. If the code attempts to run a duplicate replication (for example, it wants to push when an existing push is already in progress), then FoodTracker can simply ignore the second sync call. The execution will work like this:
+
+1. The user creates or modifies a meal.
+2. FoodTracker begins the push replication procedure.
+3. `replications[.Push]` is `nil`. No push replications are in-flight, so:
+  1. A new replication begins.
+  2. FoodTracker stores this replication object in `replications[.Push]`.
+4. Before the replication completes, the user makes another change.
+5. FoodTracker again automatically begins a the push replication procedure.
+6. But this time, it sees that `replications[.Push]` already has a replication underway, so it *does nothing*.
+7. The original push replication will see the latest change from step 4 and includes that in the replication. (Thanks, CDTDatastore!)
+8. Once the replication is complete, FoodTracker sets `replications[.Push]` to `nil`, indicating that the next replication can proceed.
+
+Of course, the same logic will apply to pull replications.
+
 **To define key Cloudant Sync information**
 
 1. In `MealTableViewController.swift`, scroll to the section, `MARK: Properties`.
@@ -239,9 +254,7 @@ Checkpoint: **Run your app.** Again, the app's behavior will not change. But whe
 
 ### Sync Upon Meal Creation
 
-Everything is now in place. Now, you will add a sync-to-cloudant feature to FoodTracker.
-
-First, define the information that FoodTracker will need to connect to Cloudant: the account name, the API key, etc. Next, you will define a `SyncDirection` enum, which allows you to specify `.Push` or `.Pull` 
+Everything is now in place. Now, you will add a sync-to-cloudant ("push") feature to FoodTracker. You will write the methods to start a `.Push` replication. Then, modify the meal creation code, so that every time a meal is created, 
 
 1. Define the account name, API key, etc.
 
