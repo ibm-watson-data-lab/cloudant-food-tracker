@@ -205,7 +205,7 @@ In other words: Set the User-Agent now, just in case. It is easy to do, and you 
 
 Checkpoint: **Run your app.** Of course, the app's behavior will not change; however this is a good place to catch any programming errors.
 
-### Define Your Sync Information
+### Preparing to Sync
 
 The next step is also straightforward. You will define the information that FoodTracker will need to connect to Cloudant: the account name, the login credentials, etc.
 
@@ -259,9 +259,61 @@ Of course, the same logic will apply to pull replications.
 
 Checkpoint: **Run your app.** Again, the app's behavior will not change. But when the app compiles and runs, you will know you haven't got any errors or typos.
 
-### Push Replication: Sync to Cloudant
+### Managing a replication: CDTReplicatorDelegate
 
-Everything is now in place. Now, you will implement the push-to-Cloudant feature. You will write the methods to start a `.Push` replication. Then, modify the meal creation code, so that every time the user creates a meal, they trigger a new push. Concurrent, or "overlapping" push replications will not be a problem, because your code will see in the `replications` property if a replication is already underway.
+A replication to or from Cloudant will take a certain amount of time, while data and images are copied over the Internet. Also, various noteworthy events may happen during replication, for example: some progress is made, or the replication has completed, or the replication has encountered an error. To handle these events, you class must implement the `CDTReplicatorDelegate` interface. Once that groundwork is done, it is a simple matter to keep an eye on replications as they transpire.
+
+For now, you will implement the interface, but the methods will do little except logging the replication status, and clearing the `replications` dictionary when a replication is done.
+
+**To implement the CDTReplicatorDelegate interface**
+
+1. In `MealTableViewController.swift`, find the `MealTableViewController` class declaration line.
+1. Append the `CDTReplicatorDelegate` interface, so that the declaration now looks as follows:
+
+  ``` swift
+  class MealTableViewController: UITableViewController,
+      CDTHTTPInterceptor, CDTReplicatorDelegate {
+  ```
+1. Go to the very bottom of the class, and append the relevant functions.
+  ``` swift
+  func replicatorDidChangeState(replicator: CDTReplicator!) {
+      // The new state is in replicator.state.
+  }
+  
+  func replicatorDidChangeProgress(replicator: CDTReplicator!) {
+      // See replicator.changesProcessed and replicator.changesTotal
+      // for progress data.
+  }
+  
+  func replicatorDidComplete(replicator: CDTReplicator!) {
+      print("Replication complete \(replicator)")
+      clearReplicator(replicator)
+  }
+  
+  func replicatorDidError(replicator: CDTReplicator!, info:NSError!) {
+      print("Replicator error \(replicator) \(info)")
+      clearReplicator(replicator)
+  }
+  
+  func clearReplicator(replicator: CDTReplicator!) {
+      // Determine the replication direction, given the replicator
+      // argument.
+      let direction = (replicator == replications[.Push])
+          ? SyncDirection.Push
+          : SyncDirection.Pull
+      
+      print("Clear replication: \(direction)")
+      replications[direction] = nil
+  }
+  ```
+
+You are encouraged to flesh out the empty methods, `replicatorDidChangeState(_:)` and `replicatorDidChangeProgress(_:)`! But, for now, these examples will keep them empty, for simplicity.
+
+Checkpoint: **Run your app.** The app's behavior will not change. But when the app compiles and runs, you will know you haven't got any errors or typos.
+
+### The Heart of Replication: The Sync Method
+
+Everything is now in place. Now, you will implement the method to sync to Cloudant. The method takes one argument, indicating whether to copy local data to Cloudant (`.Push`), or to copy remote data from Cloudant (`.Pull`). The method will detect if the user triggers a concurrent replication (one which would begin before the previous one has finished), and it will simply do nothing.
 
 **To implement Cloudant Sync replication**
 
@@ -295,7 +347,13 @@ Everything is now in place. Now, you will implement the push-to-Cloudant feature
       job.addInterceptor(self)
 
       do {
+          // Ready: Create the replication job.
           replications[direction] = try factory.oneWay(job)
+
+          // Set: Assign myself as the replication delegate.
+          replications[direction]!.delegate = self
+
+          // Go!
           try replications[direction]!.start()
       } catch {
           print("Error initializing \(direction) sync: \(error)")
@@ -306,12 +364,63 @@ Everything is now in place. Now, you will implement the push-to-Cloudant feature
   }
   ```
 
-Next, of course, you want to trigger a push replication when any local data changes.
+Checkpoint: **Run your app.** The app's behavior will not change. But when the app compiles and runs, you will know you haven't got any errors or typos.
 
-**To replicate when a user creates or modifies a meal**
+That is it for the heavy lifting and the "do-nothing" checkpoints! From this point forward, expect to see very cool features emerge.
 
-1. In `MealTableViewController.swift`, go to the method `tableview(_:commitEditingStyle:forRowAtIndexPath:)`
-1. In the first `if` block, add a call to the `sync()` method. The code will look as follows:
+### Push to Cloudant When a Change is Made
+
+When should FoodTracker push to Cloudant? Well, first of all, recall that triggering a push very frequently is not a problem. Only one replication per direction (push or pull) will be running at a time. After it completes, if FoodTracker replicates again, that relpication will complete very quickly, since all the data is already synced.
+
+Therefore, it is prudent to call `sync(.Push)` any time the local datastore has changed:
+
+1. After the sample meals are created
+1. After the user deletes a meal
+1. After the user edits or creates a meal
+
+To do this, you must modify `createMeal(_:)` so that it notifies the caller whether the datastore has changed at all. (Sometimes it can no-op to avoid creating duplicate sample meals.) Change this method to return `true` or `false`, where `true` effectively means *time to push to Cloudant*.
+
+**To replicate to Cloudant (Push) when local data changes**
+
+1. In `MealTableViewController.swift`, in the section **Datastore**, go to the method `createMeal(_:)`.
+1. Modify its signature to look as follows:
+
+  ``` swift
+  func createMeal(meal: Meal) -> Bool {
+  ```
+1. Modify both early `return` calls to return `false`, indicating that no change was made. The code in the first `if` block will look as follows:
+
+  ``` swift
+  do {
+      try datastore!.getDocumentWithId(docId)
+      print("Skip \(docId) creation: already exists")
+      return false
+  } catch let error as NSError {
+      if (error.userInfo["NSLocalizedFailureReason"] as? String != "not_found") {
+          print("Skip \(docId) creation: already deleted by user")
+          return false
+      }
+      
+      print("Create sample meal: \(docId)")
+  }
+  ```
+1. At the bottom of the method, after the do/catch block, append one `return true` statement, indicating that a change was made. The code will look as follows:
+
+  ``` swift
+  do {
+      let result = try datastore!.createDocumentFromRevision(rev)
+      print("Created \(result.docId) \(result.revId)")
+      
+      // Remember the new ID assigned by the datastore.
+      meal.docId = result.docId
+  } catch {
+      print("Error creating meal: \(error)")
+  }
+
+  return true
+  ```
+1. In the section **Table view data source**, go to the method `tableview(_:commitEditingStyle:forRowAtIndexPath:)`.
+1. In the first `if` block, add a call to `sync(.Push)`. The code will look as follows:
 
   ``` swift
   if editingStyle == .Delete {
@@ -321,10 +430,10 @@ Next, of course, you want to trigger a push replication when any local data chan
       meals.removeAtIndex(indexPath.row)
       tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
       
-      // Immediately sync to Cloudant.
+      // Push this deletion to Cloudant.
       sync(.Push)
   ```
-1. Go to the method `unwindToMealList(_:)`
+1. In the section **Navigation**, go to the method `unwindToMealList(_:)`.
 1. Below the `else` block, insert a call to the `sync()` method. The code will look as follows:
 
   ``` swift
@@ -336,10 +445,11 @@ Next, of course, you want to trigger a push replication when any local data chan
       createMeal(meal)
   }
   
+  // Push this edit or creation to Cloudant.
   sync(.Push)
   ```
-1. In the section **Datastore**, go to the method `storeSampleMeals()`
-1. At the bottom of the method are three calls to `createMeal`. Delete those, and replace them with the following code:
+1. In the section **Datastore**, go to the method `storeSampleMeals()`.
+1. At the bottom of the method are three calls to `createMeal()`. Delete those lines and replace them with the following code:
 
   ``` swift
   let created1 = createMeal(meal1)
@@ -352,7 +462,19 @@ Next, of course, you want to trigger a push replication when any local data chan
   }
   ```
 
+Checkpoint: **Run your app.** The app's *outward* behavior will not change; however, it is patiently waiting for a reason to sync to Cloudant.
+
+Because the sample meals already existed (a one-off situation the app will not encounter in the real world), it has not yet pushed anything. But, you can trigger a push by making any change. Try changing the star rating of the Caprese salad.
+
+Remember, a replication will copy *everything* in the datastore. It will bring Cloudant current, reflecting the *all documents*, not one specific document. So, when you make one change to a meal, Cloudant Sync will sync *all* meals to Cloudant, because none had been on the server previously. But if you make a subsequent change, Cloudant Sync will know to copy only that one document. This is the magic of Cloudant Sync, really. It transfers the minimum amount of data to synchronize the *entire datastore*.
+
+Be sure to watch the console log in Xcode. You will see printouts indicating the replication progress, and when it has finished.
+
+![Push replication log](media/push-01-log@2x.png)
+
 ### Confirm New Meals in the Dashboard
+
+Open your web browser to admire your work!
 
 ### Sync Upon Meal Update
 
