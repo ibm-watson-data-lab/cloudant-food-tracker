@@ -259,11 +259,98 @@ Of course, the same logic will apply to pull replications.
 
 Checkpoint: **Run your app.** Again, the app's behavior will not change. But when the app compiles and runs, you will know you haven't got any errors or typos.
 
-### Sync Upon Meal Creation
+### Push Replication: Sync to Cloudant
 
-Everything is now in place. Now, you will add a sync-to-cloudant ("push") feature to FoodTracker. You will write the methods to start a `.Push` replication. Then, modify the meal creation code, so that every time a meal is created, 
+Everything is now in place. Now, you will implement the push-to-Cloudant feature. You will write the methods to start a `.Push` replication. Then, modify the meal creation code, so that every time the user creates a meal, they trigger a new push. Concurrent, or "overlapping" push replications will not be a problem, because your code will see in the `replications` property if a replication is already underway.
 
-1. Define the account name, API key, etc.
+**To implement Cloudant Sync replication**
+
+1. In `MealTableViewController.swift`, scroll to the bottom of the file, in the section, `MARK: Cloudant Sync`
+1. Below the method `interceptRequestInContext(context: CDTHTTPInterceptorContext)`, append the following code:
+
+  ``` swift
+  // Return an NSURL to the database, with authentication.
+  func cloudURL() -> NSURL {
+      let credentials = "\(cloudantApiKey):\(cloudantApiPassword)"
+      let host = "\(cloudantAccount).cloudant.com"
+      let url = "https://\(credentials)@\(host)/\(cloudantDBName)"
+
+      return NSURL(string: url)!
+  }
+
+  // Push or pull local data to or from the central cloud.
+  func sync(direction: SyncDirection) {
+      let existingReplication = replications[direction]
+      guard existingReplication == nil else {
+          print("Ignore \(direction) replication; already running")
+          return
+      }
+
+      let factory = CDTReplicatorFactory(
+          datastoreManager: datastoreManager)
+
+      let job = (direction == .Push)
+          ? CDTPushReplication(source: datastore!, target: cloudURL())
+          : CDTPullReplication(source: cloudURL(), target: datastore!)
+      job.addInterceptor(self)
+
+      do {
+          replications[direction] = try factory.oneWay(job)
+          try replications[direction]!.start()
+      } catch {
+          print("Error initializing \(direction) sync: \(error)")
+          return
+      }
+
+      print("Started \(direction) sync: \(replications[direction])")
+  }
+  ```
+
+Next, of course, you want to trigger a push replication when any local data changes.
+
+**To replicate when a user creates or modifies a meal**
+
+1. In `MealTableViewController.swift`, go to the method `tableview(_:commitEditingStyle:forRowAtIndexPath:)`
+1. In the first `if` block, add a call to the `sync()` method. The code will look as follows:
+
+  ``` swift
+  if editingStyle == .Delete {
+      // Delete the row from the data source
+      let meal = meals[indexPath.row]
+      deleteMeal(meal)
+      meals.removeAtIndex(indexPath.row)
+      tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+      
+      // Immediately sync to Cloudant.
+      sync(.Push)
+  ```
+1. Go to the method `unwindToMealList(_:)`
+1. Below the `else` block, insert a call to the `sync()` method. The code will look as follows:
+
+  ``` swift
+  } else {
+      // Add a new meal.
+      let newIndexPath = NSIndexPath(forRow: meals.count, inSection: 0)
+      meals.append(meal)
+      tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
+      createMeal(meal)
+  }
+  
+  sync(.Push)
+  ```
+1. In the section **Datastore**, go to the method `storeSampleMeals()`
+1. At the bottom of the method are three calls to `createMeal`. Delete those, and replace them with the following code:
+
+  ``` swift
+  let created1 = createMeal(meal1)
+  let created2 = createMeal(meal2)
+  let created3 = createMeal(meal3)
+  
+  if (created1 || created2 || created3) {
+      print("Sample meals changed; begin push sync")
+      sync(.Push)
+  }
+  ```
 
 ### Confirm New Meals in the Dashboard
 
