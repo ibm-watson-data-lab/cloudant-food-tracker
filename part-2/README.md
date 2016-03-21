@@ -195,6 +195,13 @@ In other words: Set the User-Agent now, just in case. It is easy to do, and you 
           return context
   }
   ```
+1. Scroll to the top of the class and find the class declaration line.
+1. Append the `CDTHTTPInterceptor` interface, so that the declaration now looks as follows:
+
+  ``` swift
+  class MealTableViewController: UITableViewController,
+      CDTHTTPInterceptor {
+  ```
 
 Checkpoint: **Run your app.** Of course, the app's behavior will not change; however this is a good place to catch any programming errors.
 
