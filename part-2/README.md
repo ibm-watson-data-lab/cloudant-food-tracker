@@ -488,9 +488,34 @@ And finally, click "View Attachments" and select `photo.jpg`. There is the meal.
 
 ## Pull Replication
 
+By now, you may have a strong urge to *modify* the meal data from the Cloudant dashboard. However, if you do so, those changes will not be reflected in FoodTracker. To accomplish that, you must first implement *pull replication*, so that FoodTracker will download updates from Cloudant.
+
+Would you believe, this will take a single line of code?
+
 ### Sync on App Start
 
+In future posts in this series, you will learn to replicate from Cloudant at certain times (for example, when the user executes a well-known "pull to refresh" gesture). However, for now, the easiest thing to do is to pull from Cloudant when the app starts.
+
+**To replicate from Cloudant (Pull) when FoodTracker starts**
+
+1. In `MealTableViewController.swift`, go to the method `viewDidLoad()`.
+1. At the bottom of the method, after the call to `initDatastore()`, append the following code:
+
+  ``` swift
+
+  // Immediately pull changes from Cloudant.
+  sync(.Pull)
+  ```
+
+Checkpoint: **Run your app.** Keep an eye on the console log in Xcode. You will see a *Pull* replication begin, and then quickly complete (because there is no data needing to be copied).
+
 ### Confirm Pull Sync
+
+Open your web browser, log in to Cloudant, enter the `food_tracker` database, and open a meal document. Make a change. For example, change the `"name"` or `"rating"` of a meal. (Be careful not to change types. The name is a string; the rating is an integer. You have not implemented data validation yet, so if you are careless, you might get bad data into FoodTracker, where it is less forgiving than your web browser.)
+
+Save your changes.
+
+Now, close and restart FoodTracker. Note the replication logs. When replication is complete (it should be quick), notice your changes reflected in the app. What do you think? Pretty fancy!
 
 ## Next Steps: User Interface
 
