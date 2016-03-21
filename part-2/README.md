@@ -472,17 +472,21 @@ Be sure to watch the console log in Xcode. You will see printouts indicating the
 
 ![Push replication log](media/push-01-log@2x.png)
 
-### Confirm New Meals in the Dashboard
+### Confirm Replication in the Cloudant Dashboard
 
-Open your web browser to admire your work!
+Open your web browser to admire your work! Log in to Cloudant and open the `food_tracker` database. You will see the three sample documents.
 
-### Sync Upon Meal Update
+![Pushed data, document listing](media/push-02-document-list@2x.png)
 
-### Confirm Updated Meals in the Dashboard
+Click the edit icon (a pencil) in the upper right of a document. This will open a detailed view of that document. Here, you will see the meal data. Doesn't it seem so accessible in JSON format, from a web browser? There is the name (`"name":"Caprese Salad"`). There is the rating (`"rating":4`). What could be simpler?
+
+![Pushed data, document detail](media/push-03-document-detail@2x.png)
+
+And finally, click "View Attachments" and select `photo.jpg`. There is the meal. Congratulations! You have synced an iOS app to the cloud!
+
+![Pushed data, photo attachment](media/push-04-photo@2x.png)
 
 ## Pull Replication
-
-### Add Functionality to Sync
 
 ### Sync on App Start
 
