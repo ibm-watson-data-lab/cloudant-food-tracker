@@ -548,7 +548,7 @@ Is there any good or official documentation about using the dashboard?
 
 Crop the stupid drop shadow on the screenshots
 
-Do we want to make a design doc for the shared project where people can create images? We could probably reuse that work in a future chapter about security
+Produce the download .zip file.
 
 [END]: ------------------------------------------------
 
