@@ -287,6 +287,17 @@ For now, you will implement the interface, but the methods will do little except
   
   func replicatorDidComplete(replicator: CDTReplicator!) {
       print("Replication complete \(replicator)")
+
+      if (replicator == replications[.Pull]) {
+          if (replicator.changesProcessed > 0) {
+              // Reload the meals, and refresh the UI.
+              loadMealsFromDatastore()
+              dispatch_async(dispatch_get_main_queue(), {
+                  self.tableView.reloadData()
+              })
+          }
+      }
+
       clearReplicator(replicator)
   }
   
