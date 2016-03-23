@@ -531,47 +531,9 @@ To see the completed sample project for this lesson, download the file and view 
 
 [Download File][code-download]
 
-## Outline
-
-**This will be removed before publishing**
-
-* Getting Started with FoodTracker
-* Getting Started with IBM Cloudant
-  * Create a Free IBM Cloudant Account
-  * Create a database for meals
-  * Give FoodTracker access to a database
-    * Generate an API key
-    * Set permissions
-    * Confirm with curl -I, confirm status code, confirm body
-* How to Start Over
-  * How to delete iOS Simulator data
-  * How to delete Cloudant data
-* Push replication
-  * The sync code
-  * Set the user-agent
-    * figure out how to explain why besides ("so we can track adoption")
-    * Maybe because you can use this with CouchDB and you'll want to track it there.
-  * Sync when samples are created
-  * Confirm in dashboard: run the app and look for changes
-  * Sync when the user makes a change
-  * Confirm in dashboard
-* Pull replication
-  * New code: update the sync to support pull
-  * Activate pull sync when the app starts
-  * Confirm
-    * Change a rating in the dashboard
-    * Start the app
-    * Note the star change
-* Next steps: UI integration
-  * Visual feedback of pushing
-  * Pull to refresh
-  * Be vague since I'm less clear what the scope is
-
 ## XXX Unresolved To-Dos
 
 Is there any good or official documentation about using the dashboard?
-
-Set user-agent
 
 Crop the stupid drop shadow on the screenshots
 
