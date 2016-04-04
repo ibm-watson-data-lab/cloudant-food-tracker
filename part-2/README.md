@@ -1,4 +1,5 @@
-# Start Developing iOS Apps (Swift) with Cloud Sync; Part 2: Sync to Cloudant
+# Offline-First iOS Apps with Swift & Cloudant Sync; Part 2: Sync to the Cloud
+
 
 This walkthrough is a sequel to Apple's well-known iOS programming introduction, [Start Developing iOS Apps (Swift)][apple-doc]. Apple's introduction walks us through the process of building the UI, data, and logic of an example food tracker app, culiminating with a section on data persistence: storing the app data as files in the iOS device.
 
