@@ -53,7 +53,7 @@ Use the dashboard to prepare the database for FoodTracker. To work correctly, Fo
 
 #### The Database
 
-Begin by creating the database for FoodTracker. At the top of the dashboard is the "Create Database" button. Click it, and a drop-down form will appear. Input the database name in all lower case, underscore format: `food_tracker`.
+Begin by creating the database for FoodTracker. At the top of the dashboard is the "Create Database" button. Click it, and a drop-down form will appear. Input the database name in all lower case, underscore format: `food_tracker`; and then click the Create utton.
 
 ![Create a Cloudant database](media/dashboard-02-create-db@2x.png '; border')
 
@@ -160,9 +160,9 @@ Now comes the fun part! The first step is to *push* data from the device up to C
 
 ### First Steps: Set the User-Agent
 
-Most iOS apps should identify themselves properly in the HTTP *User-Agent* header. Typically, the User-Agent value should specify the software name version, and also the operating system version. In this example, we will hard-code the sofwtare name, FoodTracker, and extract the version from the sofware bundle (managed by Xcode).
+Most iOS apps should identify themselves properly in the HTTP *User-Agent* header. Typically, the User-Agent value should specify the software name version, and also the operating system version. In this example, we will hard-code the software name, FoodTracker, and extract the version from the sofware bundle (managed by Xcode).
 
-Defining a User-Agent a very useful habit to develop. For example: remember that this FoodTracker app, and Cloudant Sync is also compatible with Apache CouchDB 2.0. In the future, if you wish to manage your own CouchDB server, or to use a hybrid Cloudant-and-CouchDB system, that will be a straightforward procedure. However, a key part of such a system will be the User-Agent identification coming from all of your deployed apps.
+Defining a User-Agent is a very useful habit to develop. For example: remember that this FoodTracker app, and Cloudant Sync is also compatible with Apache CouchDB 2.0. In the future, if you wish to manage your own CouchDB server, or to use a hybrid Cloudant-and-CouchDB system, that will be a straightforward procedure. However, a key part of such a system will be the User-Agent identification coming from all of your deployed apps.
 
 In other words: Set the User-Agent now, just in case. It is easy to do, and you will thank yourself in the future.
 
