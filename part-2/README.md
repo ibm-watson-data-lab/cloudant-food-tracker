@@ -189,7 +189,7 @@ Another important property is the `replications` dictionary, which will keep tra
 7. The original push replication will see the latest change from step 4 and includes that in the replication. (Thanks, CDTDatastore!)
 8. Once the replication is complete, FoodTracker sets `replications[.Push]` to `nil`, indicating that the next replication can proceed.
 
-Of course, the same logic will apply to pull replications.
+The same logic will apply to pull replications.
 
 **To define key Cloudant Sync information**
 
