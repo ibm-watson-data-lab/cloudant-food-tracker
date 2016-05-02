@@ -228,7 +228,7 @@ Checkpoint: **Run your app.** Again, the app's behavior will not change. But whe
 
 ### Managing a replication: CDTReplicatorDelegate
 
-A replication to or from Cloudant will take a certain amount of time, while data and images are copied over the Internet. Also, various noteworthy events may happen during replication, for example: some progress is made, or the replication has completed, or the replication has encountered an error. To handle these events, you class must implement the `CDTReplicatorDelegate` interface. Once that groundwork is done, it is a simple matter to keep an eye on replications as they transpire.
+A replication to or from Cloudant will take a certain amount of time, while data and images are copied over the Internet. Also, various noteworthy events may happen during replication, for example: some progress is made, or the replication has completed, or the replication has encountered an error. To handle these events, your class must implement the `CDTReplicatorDelegate` interface. Once that groundwork is done, it is a simple matter to keep an eye on replications as they transpire.
 
 For now, you will implement the interface, but the methods will do little except logging the replication status, and clearing the `replications` dictionary when a replication is done.
 
