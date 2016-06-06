@@ -157,8 +157,7 @@ In other words: Set the User-Agent now, just in case. It is easy to do, and you 
           let osVer = NSProcessInfo().operatingSystemVersionString
           let ua = "\(userAgent)/\(appVer) (iOS \(osVer)"
 
-          context.request.setValue(ua,
-              forHTTPHeaderField: "User-Agent")
+          context.request.setValue(ua, forHTTPHeaderField: "User-Agent")
           return context
   }
   ```
@@ -214,12 +213,12 @@ The same logic will apply to pull replications.
 1. Below that line, insert the following code:
 
   ``` swift
+  let cloudantDBName = "food_tracker"
 
   // NOTE: You must change these values for your own application.
   let cloudantAccount = "foodtracker"
-  let cloudantDBName = "food_tracker"
-  let cloudantApiKey = "facringediftedgentlerrad"
-  let cloudantApiPassword = "ee4c30dbd2f7457ccf6804f9536ad1a79f0ea9ad"
+  let cloudantApiKey = "dshromeactseedirseemaske"
+  let cloudantApiPassword = "b039114f3e2194db4ff813228340c4eae269e9b5"
   ```
 
   Remember when you copied down your API key credentials? Paste them here, as the values for `cloudantApiKey` and `cloudantApiPassword`. If you haven't got them handy, you can simply [create a new API key](#the-api-key) (and remember to grant credentials too).
@@ -285,7 +284,7 @@ For now, you will implement the interface, but the methods will do little except
   }
   ```
 
-You are encouraged to flesh out the empty methods, `replicatorDidChangeState(_:)` and `replicatorDidChangeProgress(_:)`! But, for now, these examples will keep them empty, for simplicity.
+Feel free to flesh out the empty methods, `replicatorDidChangeState(_:)` and `replicatorDidChangeProgress(_:)`. But, for now, these examples will keep them empty, for simplicity.
 
 Checkpoint: **Run your app.** The app's behavior will not change. But when the app compiles and runs, you will know you haven't got any errors or typos.
 
