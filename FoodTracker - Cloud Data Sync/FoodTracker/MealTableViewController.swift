@@ -27,13 +27,13 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     var replications = [SyncDirection: CDTReplicator]()
 
     // MARK: Cloudant Settings
+    let cloudantDBName = "food_tracker"
     
     // Change these for your own application.
     let userAgent = "FoodTracker"
     let cloudantAccount = "foodtracker"
-    let cloudantDBName = "food_tracker"
-    let cloudantApiKey = "facringediftedgentlerrad"
-    let cloudantApiPassword = "ee4c30dbd2f7457ccf6804f9536ad1a79f0ea9ad"
+    let cloudantApiKey = "andougstonlyingeoledteat"
+    let cloudantApiPassword = "995f34498cb918334c7f0b962b8e973ced13003d"
 
 //    override func viewWillAppear(animated: Bool) {
 //        super.viewWillAppear(animated)
@@ -43,7 +43,10 @@ class MealTableViewController: UITableViewController, CDTReplicatorDelegate, CDT
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.refreshControl?.addTarget(self, action: "handleRefresh:", forControlEvents: UIControlEvents.ValueChanged)
+        
+        self.refreshControl?.addTarget(self, action:
+            #selector(MealTableViewController.handleRefresh(_:)),
+            forControlEvents: UIControlEvents.ValueChanged)
         
         // Use the edit button item provided by the table view controller.
         navigationItem.leftBarButtonItem = editButtonItem()
