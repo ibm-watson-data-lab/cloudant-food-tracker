@@ -463,6 +463,10 @@ And finally, click "View Attachments" and select `photo.jpg`. There is the meal.
 
 ![Pushed data, photo attachment](media/push-04-photo@2x.png)
 
+Here is a desktop screenshot which demonstrates everything working together.
+
+![App, log, and dashboard review](media/push-05-big_picture@2x.png)
+
 ## Pull Replication
 
 By now, you may have a strong urge to *modify* the meal data from the Cloudant dashboard. However, if you do so, those changes will not be reflected in FoodTracker. To accomplish that, you must first implement *pull replication*, so that FoodTracker will download updates from Cloudant.
@@ -528,27 +532,26 @@ Finally, [prepare a new database][prepare-service] to replace this one. If your 
 * Either paste your old API key and press the "Grant Rights" button.
 * Or, generate a new API key, then update your API key and password in the app source code.
 
-## Next Steps: User Interface
-
 ## Conclusion
 
-Congratulations! XXX Explain what has been accomplished
+Congratulations! This is a great accomplishment. You have already built so much:
 
-XXX Tease the next section
+1. An iOS app,
+2. Powered by a fast, local datastore (CDTDatastore),
+3. Which syncs all changes to and from its replica in the cloud (IBM Cloudant),
+4. And always fully supporting offline operation, with cloud syncronization performed when possible.
+
+**An exercise** for the reader is to begin replication when the device comes online (for example, when the user disables airplane mode).
+
+## Next Steps: User Interface
+
+In the next section, we will build user interface features which give the user some visibility and control of the replication process. For example: a pull-to-refresh feature.
 
 ## Download This Project
 
 To see the completed sample project for this lesson, download the file and view it in Xcode.
 
 [Download File][code-download]
-
-## XXX Unresolved To-Dos
-
-Is there any good or official documentation about using the dashboard?
-
-Crop the stupid drop shadow on the screenshots
-
-Produce the download .zip file.
 
 [END]: ------------------------------------------------
 
