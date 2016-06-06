@@ -465,7 +465,7 @@ And finally, click "View Attachments" and select `photo.jpg`. There is the meal.
 
 Here is a desktop screenshot which demonstrates everything working together.
 
-![App, log, and dashboard review](media/push-05-big_picture@2x.png)
+![App, log, and dashboard review](media/push-05-big_picture@2x.png "; figure")
 
 ## Pull Replication
 
