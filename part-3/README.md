@@ -37,6 +37,73 @@ Checkpoint: **Run your app.** In the console log, you should see messages indica
 
 If you download the prepared project, when you first open it with Xcode, you may see warnings about *CDTDatastore* and related names. This will go away on its own once Xcode has indexed the project. **Wait for Xcode to index** the project. Then, **run a build (Command-B)**. When that completes, you will know that everything is working correctly.
 
+## Pull to Refresh
+
+Pull-to-refresh is a great feature to give users visibility and control of the replication process. With pull-to-refresh, the user drags their finger downward, indicating their desire to retrieve updates from the cloud. This is a perfect place to trigger a pull replication!
+
+Begin by enabling refreshing in the storyboard.
+
+1. Open `Main.storyboard`
+1. Look in the tree navigation panel, on the left. **Click the "Your Meals" view controller**, which has the yellow icon.
+
+  ![Your meals view controller](media/refresh-15-view_controller@2x.png '; border')
+
+  You will also see that the view controller is selected in the storyboard.
+
+  ![Your meals view controller](media/refresh-20-view_controller@2x.png '; border')
+  
+1. In the Utilities (the rightmost panel in Xcode), be sure that you have selected the Attributes inspector. Visually scan down the attributes until you find the **View Table Controller** section.
+1. In the **View Table Controller** section, **set the Refreshing attribute to Enabled**.
+1. In the section `MARK: Cloudant Sync`, insert this function just above `cloudURL()`
+
+When complete, Xcode should look like this.
+
+![Enabled refreshing in the "Your Meals" view controller](media/refresh-10-ui_screenshot@2x.png '; figure')
+
+Next, implement the "refresh" function. It is very simple: just trigger pull replication.
+
+1. In `MealTableViewController.swift`, find the section, `MARK: Cloudant Settings`
+1. In the section `MARK: Cloudant Sync`, insert this function just above `cloudURL()`
+
+  ``` swift
+  func handleRefresh(refreshControl: UIRefreshControl) {
+      print("Pull to refresh!")
+      sync(.Pull)
+  }
+  ```
+
+And of course, if manipulating the UI triggers replication, when the replication is complete, it should reflect in the UI. The only thing you need to do end the refresh control when a pull replication completes. (If the refresh control was not active, then nothing will happen, which is harmless.)
+
+1. In `MealTableViewController.swift`, find the section, `MARK: Cloudant Sync`
+1. Go to the function, `replicatorDidComplete(_:)`
+1. In the code block for pull replications, append the code to end the refresh control. The beginning of the function should now look like this:
+
+  ``` swift
+  if (replicator == replications[.Pull]) {
+     if (replicator.changesProcessed > 0) {
+         // Reload the meals, and refresh the UI.
+         loadMealsFromDatastore()
+         dispatch_async(dispatch_get_main_queue(), {
+             self.tableView.reloadData()
+         })
+     }
+
+     // End the refresh spinner, if necessary.
+     self.refreshControl?.endRefreshing()
+  }
+  ```
+
+in viewDidLoad
+  ``` swift
+  super.viewDidLoad()
+  
+  // Activate the pull-to-refresh control.
+  self.refreshControl = UIRefreshControl()
+  self.refreshControl?.addTarget(self, action:
+      #selector(MealTableViewController.handleRefresh(_:)),
+      forControlEvents: UIControlEvents.ValueChanged)
+  ```
+
 ## Next Steps: User Interface
 
 ## Conclusion
