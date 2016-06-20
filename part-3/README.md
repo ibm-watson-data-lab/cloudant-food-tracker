@@ -4,7 +4,7 @@ This walkthrough is a sequel to Apple's well-known iOS programming introduction,
 
 This series picks up where that document leaves off: syncing data between devices, through the cloud, with an offline-first design. You will achieve this using the free IBM Cloudant service, with open source tools.
 
-This document is the third in the series, showing you how to sync the app data to Cloudant. You can also review the previous post in the series:
+This document is the third in the series, covering useful user interface features related to Cloudant Sync. You can also review the previous post in the series:
 
 1. [Part 1: The Datastore][part-1].
 1. [Part 2: Sync to the Cloud][part-2].
@@ -72,7 +72,7 @@ Next, implement the "refresh" function. It is very simple: just trigger pull rep
   }
   ```
 
-And of course, if manipulating the UI triggers replication, when the replication is complete, it should reflect in the UI. The only thing you need to do end the refresh control when a pull replication completes. (If the refresh control was not active, then nothing will happen, which is harmless.)
+Of course, when the replication completes, the UI should reflect that. The only thing you need to do end the refresh control when a pull replication completes. (If the refresh control was not active, then nothing will happen, which is harmless.)
 
 1. In `MealTableViewController.swift`, find the section, `MARK: Cloudant Sync`
 1. Go to the function, `replicatorDidComplete(_:)`
