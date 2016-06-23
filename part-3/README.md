@@ -112,8 +112,6 @@ The final step is to connect the UI refresh control to this code.
 
 Checkpoint: **Run your app.** As always do not worry about compiler warnings from third-party, open source libraries.
 
-## Next Steps: User Interface
-
 ## Conclusion
 
 Congratulations! Today's accomplishment is so delightful! Your users will appreciate these clear, tangible features: sync status spinners and pull-to-refresh. Although part 2 of this series lays the foundation for syncing, Food Tracker simply wasn't much fun to use without visual feedback and tactile control.
