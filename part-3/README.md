@@ -19,7 +19,7 @@ Alternatively, you can download the prepared project from the [Part 2 Code downl
 
 ## Configure for Your Cloudant Account
 
-If you downloaded the FoodTracker source code from the link above, then you must re-configure it to work with your own IBM Cloudant account. In FoodTracker, these credentials are simply hard-coded in the source code.
+If you downloaded the FoodTracker source code from the link above, then you must re-configure it to work with your own IBM Cloudant account. For a simple example like FoodTracker, these credentials are simply hard-coded in the source code. If you want to generate a new API key for your app, see the section in [Part 2, Prepare Cloudant for the Food Tracker App][part-2-prep].
 
 1. Open `MealTableViewController.swift`
 1. In `MealTableViewController.swift`, find the section, `MARK: Cloudant Settings`
@@ -33,7 +33,9 @@ If you downloaded the FoodTracker source code from the link above, then you must
   let cloudantApiPassword = "995f34498cb918334c7f0b962b8e973ced13003d"
   ```
 
-Checkpoint: **Run your app.** In the console log, you should see messages indicating a successful pull replication. If everything is in order, proceed with these instructions. If you have a problem with compilation or replication, compare your code carefully to the code from [part 2][part-2].
+Checkpoint: **Run your app.** As always do not worry about compiler warnings from third-party, open source libraries.
+
+In the console log, you should see messages indicating a successful pull replication. If everything is in order, proceed with these instructions. If you have a problem with compilation or replication, compare your code carefully to the code from [part 2][part-2].
 
 If you download the prepared project, when you first open it with Xcode, you may see warnings about *CDTDatastore* and related names. This will go away on its own once Xcode has indexed the project. **Wait for Xcode to index** the project. Then, **run a build (Command-B)**. When that completes, you will know that everything is working correctly.
 
@@ -54,7 +56,6 @@ Begin by enabling refreshing in the storyboard.
   
 1. In the Utilities (the rightmost panel in Xcode), be sure that you have selected the Attributes inspector. Visually scan down the attributes until you find the **View Table Controller** section.
 1. In the **View Table Controller** section, **set the Refreshing attribute to Enabled**.
-1. In the section `MARK: Cloudant Sync`, insert this function just above `cloudURL()`
 
 When complete, Xcode should look like this.
 
@@ -62,7 +63,7 @@ When complete, Xcode should look like this.
 
 Next, implement the "refresh" function. It is very simple: just trigger pull replication.
 
-1. In `MealTableViewController.swift`, find the section, `MARK: Cloudant Settings`
+1. In `MealTableViewController.swift`, find the section, `MARK: Cloudant Sync`
 1. In the section `MARK: Cloudant Sync`, insert this function just above `cloudURL()`
 
   ``` swift
@@ -72,11 +73,11 @@ Next, implement the "refresh" function. It is very simple: just trigger pull rep
   }
   ```
 
-Of course, when the replication completes, the UI should reflect that. The only thing you need to do end the refresh control when a pull replication completes. (If the refresh control was not active, then nothing will happen, which is harmless.)
+Of course, when the replication completes, the UI should reflect that. All you need to do is to stop the refresh control when a pull replication completes. (If the refresh control was not active, then nothing will happen, which is harmless.)
 
 1. In `MealTableViewController.swift`, find the section, `MARK: Cloudant Sync`
 1. Go to the function, `replicatorDidComplete(_:)`
-1. In the code block for pull replications, append the code to end the refresh control. The beginning of the function should now look like this:
+1. In the code block for pull replications, append the code to end the refresh control. The `if` block in the middle of the function should now look like this:
 
   ``` swift
   if (replicator == replications[.Pull]) {
@@ -93,7 +94,12 @@ Of course, when the replication completes, the UI should reflect that. The only 
   }
   ```
 
-in viewDidLoad
+The final step is to connect the UI refresh control to this code.
+
+1. In `MealTableViewController.swift`, find the section, `MARK: Cloudant Settings`
+1. Go to the function, `viewDidLoad()`
+1. Add the following code, so that the beginning of the function looks like so:
+
   ``` swift
   super.viewDidLoad()
   
@@ -103,6 +109,8 @@ in viewDidLoad
       #selector(MealTableViewController.handleRefresh(_:)),
       forControlEvents: UIControlEvents.ValueChanged)
   ```
+
+Checkpoint: **Run your app.** As always do not worry about compiler warnings from third-party, open source libraries.
 
 ## Next Steps: User Interface
 
@@ -123,3 +131,4 @@ In the next section, we will build user interface features which give the user s
 [part-1]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/
 [part-2]: http://developer.ibm.com/clouddataservices/?p=5451
 [part-2-download]: https://developer.ibm.com/clouddataservices/2016/06/08/offline-first-ios-apps-part-2-cloud-sync/#download-this-project
+[part-2-prep]: https://developer.ibm.com/clouddataservices/2016/06/08/offline-first-ios-apps-part-2-cloud-sync/#prepare-cloudant-for-the-foodtracker-app
