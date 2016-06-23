@@ -116,4 +116,4 @@ Congratulations! XXX Explain what has been accomplished XXX
 [code-download]: media/FoodTracker-Cloudant-Sync-3.zip
 [part-1]: https://developer.ibm.com/clouddataservices/2016/01/25/start-developing-ios-apps-swift-with-cloud-sync-part-1-the-datastore/
 [part-2]: http://developer.ibm.com/clouddataservices/?p=5451
-[part-2-download]: https://developer.ibm.com/clouddataservices/?p=5451&preview=true#download-this-project
+[part-2-download]: https://developer.ibm.com/clouddataservices/2016/06/08/offline-first-ios-apps-part-2-cloud-sync/#download-this-project
