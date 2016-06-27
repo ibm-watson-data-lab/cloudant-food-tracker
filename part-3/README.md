@@ -118,10 +118,6 @@ Congratulations! Today's accomplishment is so delightful! Your users will apprec
 
 This concludes the major parts of this series. If you have followed along, then you have created an iOS app in Swift, using the local data store, `CDTDatastore`. You connected that datastore to IBM Cloudant, with bi-directional replication to and from Cloudant. Finally, you added user interface features to let users interact with these capabilities.
 
-## Next Steps: User Interface
-
-In the next section, we will build user interface features which give the user some visibility and control of the replication process. For example: a pull-to-refresh feature.
-
 [END]: ------------------------------------------------
 
 [apple-doc]: https://developer.apple.com/library/prerelease/ios/referencelibrary/GettingStarted/DevelopiOSAppsSwift/index.html
