@@ -41,11 +41,11 @@ If you download the prepared project, when you first open it with Xcode, you may
 
 ## The Problem: No Transparency for Users
 
-Suppose a user creates a new meal. Presumably, they are aware of Food Tracker's cloud sync capabilities. Indeed, that is a major selling point!
+Suppose a user creates a new meal. Presumably, they are aware of Food Tracker's offline-first behavior and cloud sync capabilities. Indeed, that is a major selling point!
 
 Unfortunately, the user will now expect some sort of feedback to tell them when the meal is "saved," or "synced." They know that data takes some time to transfer to the cloud. They know that somtimes the network is fast; sometimes it is slow.
 
-Now suppose the user knows that new meals are already synced in the cloud (for example, they have created meals on a different iOS device). They know that an update is "due" but they have no way to tell Food Tracker, "Hey! Sync from the cloud now. New data awaits!"
+Now suppose the user knows that new meals are already synced in the cloud (for example, they have created meals on a different iOS device). They know that an update is "due" but they have no way to tell Food Tracker, "Hey, sync from the cloud now. New data awaits you!"
 
 If Food Tracker just quietly accepts new meals, and also vaguely promises to sync to and from the cloud, but there is no transparency for the user to see what is going on, then the user will be disappointed. As you use mobile and web apps for yourself, notice the abundance of subtle feedback cues, often telling you when syncing is in-process (usually a spinning spinner), and when it's been completed (the spinner goes away, or a green check appears, etc.)
 
