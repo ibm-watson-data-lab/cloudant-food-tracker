@@ -39,9 +39,145 @@ In the console log, you should see messages indicating a successful pull replica
 
 If you download the prepared project, when you first open it with Xcode, you may see warnings about *CDTDatastore* and related names. This will go away on its own once Xcode has indexed the project. **Wait for Xcode to index** the project. Then, **run a build (Command-B)**. When that completes, you will know that everything is working correctly.
 
+## The Problem: No Transparency for Users
+
+Suppose a user creates a new meal. Presumably, they are aware of Food Tracker's cloud sync capabilities. Indeed, that is a major selling point!
+
+Unfortunately, the user will now expect some sort of feedback to tell them when the meal is "saved," or "synced." They know that data takes some time to transfer to the cloud. They know that somtimes the network is fast; sometimes it is slow.
+
+Now suppose the user knows that new meals are already synced in the cloud (for example, they have created meals on a different iOS device). They know that an update is "due" but they have no way to tell Food Tracker, "Hey! Sync from the cloud now. New data awaits!"
+
+If Food Tracker just quietly accepts new meals, and also vaguely promises to sync to and from the cloud, but there is no transparency for the user to see what is going on, then the user will be disappointed. As you use mobile and web apps for yourself, notice the abundance of subtle feedback cues, often telling you when syncing is in-process (usually a spinning spinner), and when it's been completed (the spinner goes away, or a green check appears, etc.)
+
+## The "Pushing" Spinner
+
+Start by showing the user when a push is underway. When the user adds or changes a meal, you should superimpose a "spinner" on top of the meal thumbnail. This lets them know that their change is in-flight, destined for permanance in the cloud, somewhere.
+
+When the push completes, simply remove the spinner, and the user will know: Push complete! Start in the storyboard, with the spinner.
+
+**To create the activity indicator**
+
+1. Open `Main.storyboard`
+1. Look in the tree navigation panel, on the left. Click **Your Meals Scene** and position the display so that you can see the photo in the prototype cell.
+
+  !["Your Meals" prototype cell](media/storyboard-10-prototype_cell@2x.png)
+
+1. Make sure that the Utilities panel is visible (the rightmost panel). Click the Object Library, and in the filter prompt, type *activity*. This will reveal the Activity Indicator View object.
+
+  ![The Activity Indicator View object](media/storyboard-20-activity_object@2x.png)
+
+1. Drag the Activity Indicator View and position it centered over the meal photo.
+
+  !["Your Meals" prototype cell](media/storyboard-30-place_the_activity_object@2x.png)
+
+1. With the new Activity Indicator View selected, select the Attributes Inspector in the utilities panel.
+1. Set **Style** to *Large White*.
+1. Set **Color** to *Light Gray Color*.
+1. For Behavior, check *Hides When Stopped*.
+1. Rename the indicator in the tree view of your scene. Renaming works the same as the Mac OS Finder: With the indicator already highlighted, click it once. A prompt will pop up, and enter, *Sync Indicator*
+
+The final step is to make an outlet, so that this sync indicator is declared in the `MealTableViewCell` class.
+
+**To create an outlet for the sync indicator**
+
+1. With `Main.storyboard` still open, show the assistant editor (the icon of two linked circles). Now, you have one editor with your storyboard, and another with Swift source code.
+1. In the source code editor, select `MealTableViewCell.swift`. You should now see that file's contents in the editor.
+1. Back in the storyboard, right-click **Sync Indicator**. A window for outlets will pop up.
+1. Find the row "New Referencing Outlet" and drag and drop: from the circle (it will become a plus sign when you mouse over), over to the `MealTableViewCell.swift` source code, where the existing variables are declared.
+1. A prompt will pop up, asking for information about this connection. Under **Name**, enter *syncIndicator* and then click Connect.
+
+You may switch back to the Standard Editor if you like. Looking at `MealTableViewCell.swift`, you will see a new property declared: `@IBOutlet weak var syncIndicator: UIActivityIndicatorView!`
+
+Great! Now you can reference a cell's `.syncIndicator` property. All that remains is to activate it when push replication begins, and to stop it when replication completes.
+
+**To use the sync indicator**
+
+1. Open `MealTableViewController.swift`
+1. In `MealTableViewController.swift`, find the method, `unwindToMealList(_:)`.
+1. Notice that the method is mostly one if/else branch, the "if" block handling meal updates, and the "else" handling new meal creation.
+1. In the "if" block, after the call to `updateMeal(meal)`, insert these lines:
+
+  ``` swift
+  // Mark the meal in-flight. When sync completes, the
+  // indicator will stop.
+  let cell = tableView.cellForRowAtIndexPath(selectedIndexPath)
+      as! MealTableViewCell
+  cell.syncIndicator.startAnimating()
+  ```
+1. In the "else" block, after the call to `createMeal(meal)`, insert these lines:
+
+  ``` swift
+  // Mark the meal in-flight. When sync completes, the
+  // indicator will stop.
+  let cell = tableView.cellForRowAtIndexPath(selectedIndexPath)
+      as! MealTableViewCell
+  cell.syncIndicator.startAnimating()
+  ```
+
+To double-check, your complete `unwindToMealList(_:)` method will look like this:
+
+``` swift
+@IBAction func unwindToMealList(sender: UIStoryboardSegue) {
+    if let sourceViewController = sender.sourceViewController as? MealViewController, meal = sourceViewController.meal {
+        if let selectedIndexPath = tableView.indexPathForSelectedRow {
+            // Update an existing meal.
+            meals[selectedIndexPath.row] = meal
+            tableView.reloadRowsAtIndexPaths([selectedIndexPath], withRowAnimation: .None)
+            updateMeal(meal)
+            
+            // Mark the meal in-flight. When sync completes, the
+            // indicator will stop.
+            let cell = tableView.cellForRowAtIndexPath(selectedIndexPath)
+                as! MealTableViewCell
+            cell.syncIndicator.startAnimating()
+        } else {
+            // Add a new meal.
+            let newIndexPath = NSIndexPath(forRow: meals.count, inSection: 0)
+            meals.append(meal)
+            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Bottom)
+            createMeal(meal)
+            
+            // Mark the meal in-flight. When sync completes, the
+            // indicator will stop.
+            let cell = tableView.cellForRowAtIndexPath(newIndexPath)
+                as! MealTableViewCell
+            cell.syncIndicator.startAnimating()
+        }
+        
+        sync(.Push)
+    }
+}
+```
+
+The final step is to stop the spinners when replication completes.
+
+**To stop the activity indicator when replication completes**
+
+1. In `MealTableViewController.swift`, find the method, `replicatorDidComplete(_:)`.
+1. Notice that the method is mostly one "if" block, handing a completed pull replication.
+1. Immediately after the "if" block, append an "else if" block, to handle a completed push replication:
+
+  ``` swift
+  } else if (replicator == replications[.Push]) {
+      // Stop all active spinners. Note, this does not perfectly
+      // reflect the real replication state; however, it is very
+      // simple, and it typically works well enough.
+      dispatch_async(dispatch_get_main_queue(), {
+          for cell in self.tableView.visibleCells
+              as! [MealTableViewCell] {
+                  cell.syncIndicator.stopAnimating()
+          }
+      })
+  }
+  ```
+
+Checkpoint: **Run your app.** Change a meal rating. Create a new meal. Notice the spinner superimposed on your meal image. If you watch the app log in Xcode, you can confirm that, when replication completes, the spinners stop and become invisible again.
+
+In a more full-featured app, of course you will want to handle other situations in a more clever way. What if the phone is in airplane mode? What if the cellular bandwidth is very slow, causing the replication to fail? What about when service is restored and everything finally syncs with Cloudant? For a mature, full-featured app, you will want to add different behaviors for all of these situations. (But of course, Food Tracker is an app for learning.)
+
 ## Pull to Refresh
 
-Pull-to-refresh is a great feature to give users visibility and control of the replication process. With pull-to-refresh, the user drags their finger downward, indicating their desire to retrieve updates from the cloud. This is a perfect place to trigger a pull replication!
+Pull-to-refresh is a great feature to give users visibility and control of the incoming pull replication process. With pull-to-refresh, the user drags their finger downward, indicating their desire to retrieve updates from the cloud. This is a perfect place to trigger a pull replication!
 
 Begin by enabling refreshing in the storyboard.
 
@@ -54,8 +190,8 @@ Begin by enabling refreshing in the storyboard.
 
   ![Your meals view controller](media/refresh-20-view_controller@2x.png '; border')
   
-1. In the Utilities (the rightmost panel in Xcode), be sure that you have selected the Attributes inspector. Visually scan down the attributes until you find the **View Table Controller** section.
-1. In the **View Table Controller** section, **set the Refreshing attribute to Enabled**.
+1. In the Utilities (the rightmost panel in Xcode), be sure that you have selected the Attributes inspector. Visually scan down the attributes until you find the **Table View Controller** section.
+1. In the **Table View Controller** section, **set the Refreshing attribute to Enabled**.
 
   ![Refreshing option in the "Your Meals" view controller](media/refresh-12-ui_screenshot_circle.png '; figure')
 
