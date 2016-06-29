@@ -68,25 +68,39 @@ When the push completes, simply remove the spinner, and the user will know: Push
 
 1. Drag the Activity Indicator View and position it centered over the meal photo.
 
-  !["Your Meals" prototype cell](media/storyboard-30-place_the_activity_object@2x.png)
+  ![Drop the Activity Indicator over the meal photo](media/storyboard-30-place_the_activity_object@2x.png)
 
 1. With the new Activity Indicator View selected, select the Attributes Inspector in the utilities panel.
 1. Set **Style** to *Large White*.
 1. Set **Color** to *Light Gray Color*.
 1. For Behavior, check *Hides When Stopped*.
+
+  ![Activity Indicator attributes](media/storyboard-40-activity_indicator_attributes@2x.png)
+
 1. Rename the indicator in the tree view of your scene. Renaming works the same as the Mac OS Finder: With the indicator already highlighted, click it once. A prompt will pop up, and enter, *Sync Indicator*
+
+  ![Rename the sync indicator](media/storyboard-50-rename_sync_indicator@2x.png)
 
 The final step is to make an outlet, so that this sync indicator is declared in the `MealTableViewCell` class.
 
 **To create an outlet for the sync indicator**
 
-1. With `Main.storyboard` still open, show the assistant editor (the icon of two linked circles). Now, you have one editor with your storyboard, and another with Swift source code.
+1. With `Main.storyboard` still open, show the assistant editor (the icon of two linked circles). Now, you have one editor with your storyboard, and another with Swift source code. ![Show the Assistant Editor](media/assistant-10-show@2x.png)
 1. In the source code editor, select `MealTableViewCell.swift`. You should now see that file's contents in the editor.
+
+  ![Assistant editor with MealTableViewCell.swift](media/assistant-20-cell@2x.png)
 1. Back in the storyboard, right-click **Sync Indicator**. A window for outlets will pop up.
 1. Find the row "New Referencing Outlet" and drag and drop: from the circle (it will become a plus sign when you mouse over), over to the `MealTableViewCell.swift` source code, where the existing variables are declared.
+
+  ![New outlet](media/assistant-30-new_outlet@2x.png)
+
 1. A prompt will pop up, asking for information about this connection. Under **Name**, enter *syncIndicator* and then click Connect.
 
-You may switch back to the Standard Editor if you like. Looking at `MealTableViewCell.swift`, you will see a new property declared: `@IBOutlet weak var syncIndicator: UIActivityIndicatorView!`
+  ![New outlet](media/assistant-40-rename@2x.png)
+
+You may switch back to the Standard Editor if you like. Looking at `MealTableViewCell.swift`, you will see a new property declared: `@IBOutlet weak var syncIndicator: UIActivityIndicatorView!`. When complete, the source code will look like this:
+
+![Complete cell class properties](media/assistant-50-source_code@2x.png)
 
 Great! Now you can reference a cell's `.syncIndicator` property. All that remains is to activate it when push replication begins, and to stop it when replication completes.
 
