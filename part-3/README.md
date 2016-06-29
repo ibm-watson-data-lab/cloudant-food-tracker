@@ -55,7 +55,9 @@ Begin by enabling refreshing in the storyboard.
   ![Your meals view controller](media/refresh-20-view_controller@2x.png '; border')
   
 1. In the Utilities (the rightmost panel in Xcode), be sure that you have selected the Attributes inspector. Visually scan down the attributes until you find the **View Table Controller** section.
-1. In the **View Table Controller** section, **set the Refreshing attribute to Enabled**. ![Refreshing option in the "Your Meals" view controller](media/refresh-12-ui_screenshot_circle@2x.png '; figure')
+1. In the **View Table Controller** section, **set the Refreshing attribute to Enabled**.
+
+  ![Refreshing option in the "Your Meals" view controller](media/refresh-12-ui_screenshot_circle.png '; figure')
 
 When complete, Xcode should look like this.
 
